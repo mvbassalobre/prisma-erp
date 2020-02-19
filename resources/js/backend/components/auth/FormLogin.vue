@@ -3,12 +3,11 @@
         <div class="card">
             <div class="card-body">
                 <div class="brand-logo d-flex justify-content-center align-items-center mt-3">
-                    <a href="/">
-                        <img src="/assets/images/logo.png" alt="logo" />
-                    </a>
-                    <span class="name">
-                        <b>Delta</b>ERP
-                    </span>
+                    <img src="/assets/images/logo.png" alt="logo" />
+                    <div class="d-flex flex-column title">
+                        <b class="name">Prisma</b>
+                        <div class="sub">ezCore</div>
+                    </div>
                 </div>
                 <h4>Bem-Vindo de Volta!</h4>
                 <h6 class="font-weight-light">Fico Feliz em ve-lo novamente!</h6>
@@ -108,12 +107,24 @@ export default {
         .brand-logo {
             margin-bottom: 2rem;
             img {
-                width: 50px;
+                width: 80px;
             }
-            .name {
-                font-size: 1.25rem;
-                margin-left: 0.31rem;
-                color: #31343d;
+            .title {
+                img {
+                    height: 80px;
+                }
+                position: relative;
+                .name {
+                    font-size: 45px;
+                }
+                .sub {
+                    font-size: 12px;
+                    color: rgb(182, 182, 182);
+                    top: 50px;
+                    right: 0;
+                    font-weight: 500;
+                    position: absolute;
+                }
             }
         }
     }

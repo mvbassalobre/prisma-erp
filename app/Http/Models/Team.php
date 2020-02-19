@@ -9,15 +9,21 @@ class Team extends DefaultModel
     protected $table = "teams";
     // public $cascadeDeletes = [];
     // public $restrictDeletes = [];
-    protected $appends = ['code', 'f_created_at', 'last_update', 'f_flag'];
+    protected $appends = ['code', 'f_created_at', 'last_update', 'f_flag', 'qty_integrantes'];
 
     public  $casts = [
         "flag" => "array"
     ];
 
+    public function getQtyIntegrantesAttribute()
+    {
+        $qty = $this->users->count();
+        return $qty . " integrante" . ($qty > 1 ? "s" : "");
+    }
+
     public function getLastUpdateAttribute()
     {
-        if (!$this->updated_at) return $this->created_at->diffForHumans();
+        if (!$this->updated_at) return;
         return $this->updated_at->diffForHumans();
     }
 
@@ -31,5 +37,15 @@ class Team extends DefaultModel
     {
         if (!$this->flag) return;
         return "<img class='avatar-rounded ' src='" . $this->flag[0] . "' />";
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(\App\User::class, "user_team");
     }
 }

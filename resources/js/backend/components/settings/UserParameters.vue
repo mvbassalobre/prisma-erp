@@ -1,8 +1,6 @@
 <template>
     <div>
-        <section-settings :settings="settings">
-            <section-whitelist :whitelist="whitelist" />
-        </section-settings>
+        <section-settings :settings="settings" />
     </div>
 </template>
 <script>
@@ -19,7 +17,6 @@ export default {
     },
     components: {
         "section-settings": require("./partials/-settings.vue").default,
-        "section-whitelist": require("./partials/-whitelist.vue").default,
     }
 }
 </script>

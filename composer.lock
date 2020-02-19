@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "485343c4189cd2e9245818c8b8fcb31f",
+    "content-hash": "02435ebf6f51d1cf344c4726f84c0f4e",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -1498,16 +1498,16 @@
         },
         {
             "name": "marcusvbda/vstack",
-            "version": "1.0.1",
+            "version": "2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcusvbda/vstack.git",
-                "reference": "8a45212990b8ac0cab6339d0385edd089168401d"
+                "reference": "9074a8448e5c84fc98a1dc7446198409823f0261"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marcusvbda/vstack/zipball/8a45212990b8ac0cab6339d0385edd089168401d",
-                "reference": "8a45212990b8ac0cab6339d0385edd089168401d",
+                "url": "https://api.github.com/repos/marcusvbda/vstack/zipball/9074a8448e5c84fc98a1dc7446198409823f0261",
+                "reference": "9074a8448e5c84fc98a1dc7446198409823f0261",
                 "shasum": ""
             },
             "require": {
@@ -1534,7 +1534,7 @@
                     "email": "bassalobre.vinicius@gmail.com"
                 }
             ],
-            "time": "2020-02-13T20:56:41+00:00"
+            "time": "2020-02-19T03:03:40+00:00"
         },
         {
             "name": "monolog/monolog",

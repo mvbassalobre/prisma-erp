@@ -5,7 +5,6 @@
                 <div class="card-body">
                     <div class="row d-flex justify-content-center mb-3">
                         <div class="col-md-10 col-sm-12">
-                            <slot></slot>
                             <template v-for="(setting,s) in settings">
                                 <v-input
                                     :key="s"

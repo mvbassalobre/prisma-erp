@@ -9,7 +9,8 @@ use marcusvbda\vstack\Fields\{
     Text,
     BelongsTo,
     Upload,
-    Check
+    Check,
+    BelongsToMany
 };
 use App\Http\Metrics\Users\UserByRole;
 use App\Http\Models\Tenant;
@@ -126,7 +127,17 @@ class Users extends Resource
                 "rules" => "required"
             ]);
         }
-        return [new Card("Informações", $fields)];
+        $cards = [new Card("Informações", $fields)];
+        $cards[] = new Card("", [
+            new BelongsToMany([
+                "label" => "Integrantes",
+                "pluck_value" => "name",
+                "model" => \App\Http\Models\Team::class,
+                "field" => "teams",
+                "placeholder" => "Selecione os integrantes do time"
+            ])
+        ]);
+        return $cards;
     }
 
     public function metrics()

@@ -69,7 +69,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getLastUpdateAttribute()
     {
-        if (!$this->updated_at) return $this->created_at->diffForHumans();
+        if (!$this->updated_at) return;
         return $this->updated_at->diffForHumans();
     }
 
@@ -121,6 +121,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getTenantNameAttribute()
     {
+        if (!$this->tenant) return;
         return $this->tenant->name;
+    }
+
+    public function teams()
+    {
+        return $this->belongsToMany(\App\Http\Models\Team::class, "user_team");
     }
 }

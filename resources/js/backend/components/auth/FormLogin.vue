@@ -7,7 +7,7 @@
                         <img src="/assets/images/logo.png" alt="logo" />
                     </a>
                     <span class="name">
-                        <b>EzCore</b>ERP
+                        <b>Delta</b>ERP
                     </span>
                 </div>
                 <h4>Bem-Vindo de Volta!</h4>

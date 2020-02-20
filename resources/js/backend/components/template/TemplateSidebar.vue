@@ -159,6 +159,9 @@ export default {
                 width: 200px;
                 .el-menu-item-group {
                     background-color: $quaternary;
+                    ul {
+                        overflow: hidden;
+                    }
                     .el-menu-item-group__title {
                         padding: unset;
                     }

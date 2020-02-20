@@ -64,7 +64,7 @@ class Tenant extends Resource
 
     public function menu()
     {
-        return "Cadastros";
+        return "Tabelas";
     }
 
     public function canViewList()

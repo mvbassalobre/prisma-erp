@@ -26,7 +26,12 @@ class Users extends Resource
 
     public function menu()
     {
-        return "Cadastros";
+        return "Times";
+    }
+
+    public function menuIcon()
+    {
+        return "el-icon-s-help";
     }
 
     public function label()

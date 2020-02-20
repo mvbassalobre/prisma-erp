@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Http\Resources;
+
 use marcusvbda\vstack\Resource;
 use Auth;
 use marcusvbda\vstack\Fields\{
-    Card, 
-    Text, 
+    Card,
+    Text,
     TextArea,
     BelongsTo
 };
@@ -15,14 +17,14 @@ class Settings extends Resource
 
     public function menu()
     {
-        return "Cadastros";
+        return "Tabelas";
     }
 
     public function label()
     {
         return "Parâmetros";
     }
-    
+
     public function singularLabel()
     {
         return "Parâmetro";
@@ -33,7 +35,7 @@ class Settings extends Resource
         return "el-icon-s-tools";
     }
 
-    public function search() 
+    public function search()
     {
         return ["name"];
     }
@@ -43,8 +45,8 @@ class Settings extends Resource
         return [
             "name" => ["label" => "Nome"],
             "examples"  => ["label" => "Exemplos de Uso", "sortable" => false],
-            "type" => ["label"=> "Tipo"],
-            "default" => ["label"=> "Valor Padrão"],
+            "type" => ["label" => "Tipo"],
+            "default" => ["label" => "Valor Padrão"],
             "f_created_at" => ["label" => "Data de Criação", "sortable_index" => "created_at"],
             "last_update"  => ["label" => "Ultima atualização", "sortable" => false],
         ];
@@ -83,31 +85,31 @@ class Settings extends Resource
     public function fields()
     {
         return [
-            new Card("Informações",[
+            new Card("Informações", [
                 new Text([
-                    "label" => "Nome", 
-                    "field" => "name", 
+                    "label" => "Nome",
+                    "field" => "name",
                     "required" => true,
-                    "placeholder" => "Digite o nome aqui ...", 
+                    "placeholder" => "Digite o nome aqui ...",
                     "rules" => "required|max:255"
                 ]),
                 new BelongsTo([
-                    "label" => "Tipo", 
+                    "label" => "Tipo",
                     "field" => "type",
-                    "options" => ["boolean","text","integer","float"],
+                    "options" => ["boolean", "text", "integer", "float"],
                     "rules" => "required",
                     "required" => true,
                     "default" => "boolean"
                 ]),
                 new Text([
-                    "label" => "Valor Padrão", 
-                    "field" => "default", 
+                    "label" => "Valor Padrão",
+                    "field" => "default",
                     "required" => true,
-                    "placeholder" => "Digite o valor padrão aqui ...", 
+                    "placeholder" => "Digite o valor padrão aqui ...",
                 ]),
                 new TextArea([
-                    "label" => "Descrição", 
-                    "field" => "description", 
+                    "label" => "Descrição",
+                    "field" => "description",
                     "required" => true,
                     "placeholder" => "Digite o descrição aqui ...",
                 ]),
@@ -124,5 +126,4 @@ class Settings extends Resource
     {
         return false;
     }
-
 }

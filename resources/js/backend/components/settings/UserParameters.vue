@@ -10,10 +10,6 @@ export default {
             type: Array,
             default: () => ([])
         },
-        whitelist: {
-            type: Array,
-            default: () => ([])
-        }
     },
     components: {
         "section-settings": require("./partials/-settings.vue").default,

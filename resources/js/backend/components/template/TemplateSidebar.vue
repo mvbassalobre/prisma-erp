@@ -168,6 +168,7 @@ export default {
                     .el-menu-item {
                         color: #ffffff94 !important;
                         background-color: $quaternary !important;
+                        padding-left: 21px !important;
                         &.is-active {
                             a,
                             i {

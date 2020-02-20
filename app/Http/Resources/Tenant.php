@@ -64,7 +64,12 @@ class Tenant extends Resource
 
     public function menu()
     {
-        return "Tabelas";
+        return "Registros";
+    }
+
+    public function menuIcon()
+    {
+        return "el-icon-s-operation";
     }
 
     public function canViewList()

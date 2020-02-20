@@ -3,35 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use DB;
 use Auth;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $cards["now"] = $this->mountNowCard();
-        return view("admin.home",compact('cards'));
+        return view("admin.home");
     }
 
-    private function mountNowCard()
+    public function getInfo(Request $request)
     {
-        $menus = \ResourcesHelpers::all();
-        $data = [];
-        foreach($menus as $menu)
-        {
-            foreach($menu as $key => $value)
-            {
-                if($value->canViewList())
-                {
-                    $data[$value->label()] = [
-                        "qty" => $value->model->count(),
-                        "label" => $value->label(),
-                        "route" => $value->route(),
-                        "icon" => $value->icon(),
-                    ];
-                }
-            }
-        }
-        return $data;
+        $user = Auth::user();
+        return $this->{$request["type"]}($user);
+    }
+
+    public function qtyCustomers($user)
+    {
+        return ["qty" => DB::table("customers")->where("tenant_id", $user->tenant_id)->count()];
     }
 }

@@ -17,12 +17,12 @@ class Settings extends Resource
 
     public function menu()
     {
-        return "Configurações";
+        return "Registros";
     }
 
     public function menuIcon()
     {
-        return "el-icon-attract";
+        return "el-icon-s-operation";
     }
 
     public function label()

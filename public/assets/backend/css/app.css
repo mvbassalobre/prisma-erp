@@ -11685,3 +11685,13 @@ body {
   box-shadow: -1px 2px 44px -13px #9e6de0;
 }
 
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+

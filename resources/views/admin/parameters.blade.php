@@ -22,7 +22,6 @@
     
     <user-parameters
         :settings="{{json_encode($settings)}}"
-        :whitelist="{{json_encode($whitelist ? $whitelist : [])}}"
     >
     </user-parameters>
 @endsection

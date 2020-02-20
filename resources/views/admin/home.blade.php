@@ -5,7 +5,8 @@
     <i class="el-icon-s-home mr-2 font-weight-bolder"></i>
     Dashboard
 </h3>
-<div class="row d-flex flex-wrap flex-row">
+<small>{{Auth::user()->getSettings("mensagem-dashboard")}}</small>
+<div class="row d-flex flex-wrap flex-row mt-3">
     @if(@$cards["now"])
         <div class="col-md-4 col-sm-12">
             <div class="card dashboard">

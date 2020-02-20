@@ -17,7 +17,12 @@ class Settings extends Resource
 
     public function menu()
     {
-        return "Tabelas";
+        return "Configurações";
+    }
+
+    public function menuIcon()
+    {
+        return "el-icon-attract";
     }
 
     public function label()

@@ -10,23 +10,23 @@ use marcusvbda\vstack\Fields\{
 };
 use Auth;
 
-class Banks extends Resource
+class MaritalStatuses extends Resource
 {
-    public $model = \App\Http\Models\Bank::class;
+    public $model = \App\Http\Models\MaritalStatus::class;
 
     public function label()
     {
-        return "Bancos";
+        return "Estados Civis";
     }
 
     public function singularLabel()
     {
-        return "Banco";
+        return "Estado Civil";
     }
 
     public function icon()
     {
-        return "el-icon-money";
+        return "el-icon-files";
     }
 
     public function menu()
@@ -39,21 +39,20 @@ class Banks extends Resource
         return "el-icon-tickets";
     }
 
-    public function search()
-    {
-        return ["name", "number"];
-    }
-
     public function globallySearchable()
     {
         return false;
     }
 
+    public function search()
+    {
+        return ["name"];
+    }
+
     public function table()
     {
         $columns =  [
-            "name" => ["label" => "Nome"],
-            "number" => ["label" => "Código"],
+            "name" => ["label" => "Nome"]
         ];
         if (Auth::user()->hasRole(["super-admin"])) {
             $columns["tenant->name"] = ["label" => "Tenant", "sortable_index" => "tenant_id"];
@@ -69,13 +68,6 @@ class Banks extends Resource
                 "field" => "name",
                 "required" => true,
                 "placeholder" => "Digite o nome aqui ...",
-                "rules" => "required|max:255"
-            ]),
-            new Text([
-                "label" => "Código",
-                "field" => "number",
-                "required" => true,
-                "placeholder" => "Digite o código aqui ...",
                 "rules" => "required|max:255"
             ])
         ];

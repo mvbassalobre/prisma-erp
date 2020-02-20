@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMaritialStatus extends Migration
+class CreateMaritalStatus extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateMaritialStatus extends Migration
      */
     public function up()
     {
-        Schema::create('maritial_statuses', function (Blueprint $table) {
+        Schema::create('marital_statuses', function (Blueprint $table) {
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
             $table->engine = 'InnoDB';
@@ -36,6 +36,6 @@ class CreateMaritialStatus extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('maritial_statuses');
+        Schema::dropIfExists('marital_statuses');
     }
 }

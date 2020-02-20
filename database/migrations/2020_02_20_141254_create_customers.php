@@ -30,10 +30,10 @@ class CreateCustomers extends Migration
                 ->references('id')
                 ->on('genders')
                 ->onDelete('restrict');
-            $table->unsignedBigInteger('maritial_status_id');
-            $table->foreign('maritial_status_id')
+            $table->unsignedBigInteger('marital_status_id');
+            $table->foreign('marital_status_id')
                 ->references('id')
-                ->on('maritial_statuses')
+                ->on('marital_statuses')
                 ->onDelete('restrict');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')

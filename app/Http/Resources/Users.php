@@ -13,7 +13,6 @@ use marcusvbda\vstack\Fields\{
     BelongsToMany
 };
 use App\Http\Metrics\Users\UserByRole;
-use App\Http\Models\Tenant;
 
 class Users extends Resource
 {
@@ -128,7 +127,7 @@ class Users extends Resource
             $fields[] = new BelongsTo([
                 "label" => "Tenant",
                 "field" => "tenant_id",
-                "model" => Tenant::class,
+                "model" => \App\Http\Models\Tenant::class,
                 "rules" => "required"
             ]);
         }

@@ -64,7 +64,7 @@ class Customers extends Resource
     {
         $fields = [
             new Text([
-                "label" => "Nome",
+                "label" => "Nome Completo",
                 "field" => "name",
                 "required" => true,
                 "placeholder" => "Digite o nome aqui ...",
@@ -75,7 +75,8 @@ class Customers extends Resource
                 "field" => "email",
                 "required" => true,
                 "placeholder" => "Digite o email aqui ...",
-                "rules" => "required|max:255"
+                "rules" => "required|max:255",
+                "description" => "Notificações e lembretes serão enviados para este email"
             ]),
             new Text([
                 "label" => "Data de Nascimento",
@@ -95,6 +96,7 @@ class Customers extends Resource
                 "placeholder" => "Selecione o estato civil ...",
                 "model" => \App\Http\Models\MaritalStatus::class,
                 "rules" => "required",
+                "description" => "Apenas para o caso de pessoa física"
             ]),
         ];
         $cards =  [new Card("Informações", $fields)];
@@ -126,14 +128,16 @@ class Customers extends Resource
                 "placeholder" => "Digite o CPF ou CNPJ aqui ...",
                 "mask" => ['###.###.###-##', '##.###.###/####-##'],
                 "rules" => "required|max:255",
-                "required" => true
+                "required" => true,
+                "description" => "Digite o CPF do cliente para o caso de cliente pessoa física ou CNPJ para cliente pessoa jurídica"
             ]),
             new Text([
                 "label" => "RG/IE",
                 "field" => "ierg",
                 "placeholder" => "Digite o RG ou IE aqui ...",
                 "rules" => "required|max:255",
-                "required" => true
+                "required" => true,
+                "description" => "Digite o RG do cliente para o caso de cliente pessoa física ou IE para cliente pessoa jurídica"
             ]),
         ]);
         //endereço

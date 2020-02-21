@@ -149,7 +149,8 @@ export default {
             }
             .el-submenu__title {
                 &:hover {
-                    &:not(.is-active) {
+                    &:not(.is-active),
+                    i {
                         transition: 0.5s;
                         color: white !important;
                     }
@@ -181,7 +182,8 @@ export default {
                             }
                         }
                         &:hover {
-                            &:not(.is-active) {
+                            &:not(.is-active),
+                            i {
                                 background-color: $quaternary !important;
                                 transition: 0.5s;
                                 color: white !important;
@@ -196,7 +198,8 @@ export default {
             a {
                 color: #ffffff94 !important;
                 &:hover {
-                    &:not(.is-active) {
+                    &:not(.is-active),
+                    i {
                         transition: 0.5s;
                         color: white !important;
                         .el-icon-setting {

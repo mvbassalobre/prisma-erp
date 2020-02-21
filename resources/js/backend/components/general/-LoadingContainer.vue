@@ -26,3 +26,11 @@ export default {
     }
 }
 </script>
+<style lang="scss" scoped>
+img {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+    filter: gray;
+    opacity: 0.5;
+}
+</style>

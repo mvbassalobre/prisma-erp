@@ -4,8 +4,8 @@
     >
         <div class="title d-flex flex-column">
             <div class="mb-2">Clientes</div>
-            <loading-container :height="33" :loaded="loaded">
-                <h3 class="mb-0">{{qty}}</h3>
+            <loading-container :height="22" :loaded="loaded">
+                <h3 class="mb-0 number">{{qty}}</h3>
             </loading-container>
         </div>
         <div>
@@ -29,7 +29,7 @@ export default {
         this.$http.post(laravel.general.root_url + "/admin/dashboard/get_info", { type: "qtyCustomers" }).then(res => {
             setTimeout(() => {
                 res = res.data
-                this.qty = res.qty
+                this.qty = res.qty <= 0 ? "Nenhum" : res.qty
                 this.loaded = true
             }, 500)
         }).catch(er => {
@@ -47,6 +47,9 @@ export default {
     }
     .icon {
         font-size: 100px;
+    }
+    .number {
+        font-size: 18px;
     }
 }
 </style>

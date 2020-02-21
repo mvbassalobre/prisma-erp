@@ -22,12 +22,12 @@ class Teams extends Resource
 
     public function menu()
     {
-        return "Funcionários";
+        return "Cadastros";
     }
 
     public function menuIcon()
     {
-        return "el-icon-picture-outline-round";
+        return "el-icon-document-add";
     }
 
     public function label()

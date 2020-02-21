@@ -31,12 +31,12 @@ class Banks extends Resource
 
     public function menu()
     {
-        return "Cadastros";
+        return "Auxiliares";
     }
 
     public function menuIcon()
     {
-        return "el-icon-document-add";
+        return "el-icon-star-on";
     }
 
     public function search()

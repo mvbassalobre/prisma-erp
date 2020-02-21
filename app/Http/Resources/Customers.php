@@ -78,11 +78,6 @@ class Customers extends Resource
                 "rules" => "required|max:255"
             ]),
             new Text([
-                "label" => "Profissão",
-                "field" => "profession",
-                "placeholder" => "Digite a profissão aqui ...",
-            ]),
-            new Text([
                 "label" => "Data de Nascimento",
                 "field" => "birthday",
                 "type"  => "date",
@@ -103,6 +98,45 @@ class Customers extends Resource
             ]),
         ];
         $cards =  [new Card("Informações", $fields)];
+        $cards[] =  new Card("Profissional", [
+            new Text([
+                "label" => "Profissão",
+                "field" => "profession",
+                "placeholder" => "Digite a profissão aqui ...",
+            ])
+        ]);
+        $cards[] =  new Card("Contato", [
+            new Text([
+                "label" => "Telefone Fixo",
+                "field" => "phone",
+                "placeholder" => "Digite o telefone fixo aqui ...",
+                "mask" => "(##) ####-####"
+            ]),
+            new Text([
+                "label" => "Celular",
+                "field" => "cellphone",
+                "placeholder" => "Digite o celular aqui ...",
+                "mask" => ['(##) ####-####', '(##) #####-####']
+            ])
+        ]);
+        $cards[] =  new Card("Documentos", [
+            new Text([
+                "label" => "CPF/CNPJ",
+                "field" => "cpfcnpj",
+                "placeholder" => "Digite o CPF ou CNPJ aqui ...",
+                "mask" => ['###.###.###-##', '##.###.###/####-##'],
+                "rules" => "required|max:255",
+                "required" => true
+            ]),
+            new Text([
+                "label" => "RG/IE",
+                "field" => "ierg",
+                "placeholder" => "Digite o RG ou IE aqui ...",
+                "rules" => "required|max:255",
+                "required" => true
+            ]),
+        ]);
+        //endereço
         return $cards;
     }
 

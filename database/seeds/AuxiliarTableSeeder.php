@@ -5,10 +5,6 @@ use App\Http\Models\{
     Gender,
     MaritalStatus,
     Bank,
-    AddressType,
-    DocType,
-    PhoneType,
-    AccountType
 };
 
 class AuxiliarTableSeeder extends Seeder
@@ -23,10 +19,6 @@ class AuxiliarTableSeeder extends Seeder
         $this->createGenders();
         $this->createMaritalStatuses();
         $this->createBanks();
-        $this->createAddressesTypes();
-        $this->createDocTypes();
-        $this->createPhoneTypes();
-        $this->createAccountTypes();
     }
 
     private function createGenders()
@@ -55,19 +47,6 @@ class AuxiliarTableSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
-    private function createAddressesTypes()
-    {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::table("addresses_types")->truncate();
-        foreach (["Comercial", "Residencial"] as $value) {
-            AddressType::create([
-                "name" => $value,
-                "tenant_id" => 1
-            ]);
-        }
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-    }
-
     private function createBanks()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -81,45 +60,6 @@ class AuxiliarTableSeeder extends Seeder
             Bank::create([
                 "name" => $value["name"],
                 "number" => $value["number"],
-                "tenant_id" => 1
-            ]);
-        }
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-    }
-
-    private function createDocTypes()
-    {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::table("doc_types")->truncate();
-        foreach (["CPF", "CNPJ", "RG", "Inscrição Estadual", "Inscrição Municipal"] as $value) {
-            DocType::create([
-                "name" => $value,
-                "tenant_id" => 1
-            ]);
-        }
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-    }
-
-    private function createPhoneTypes()
-    {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::table("phone_types")->truncate();
-        foreach (["Celular Particular", "Celular Comercial", "Fixo Particular", "Fixo Comercial"] as $value) {
-            PhoneType::create([
-                "name" => $value,
-                "tenant_id" => 1
-            ]);
-        }
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-    }
-
-    private function createAccountTypes()
-    {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::table("account_types")->truncate();
-        foreach (["Pessoal", "Comercial"] as $value) {
-            AccountType::create([
-                "name" => $value,
                 "tenant_id" => 1
             ]);
         }

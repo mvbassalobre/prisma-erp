@@ -24,6 +24,10 @@ class CreateCustomers extends Migration
             $table->string("name");
             $table->string("email");
             $table->string("profession")->nullable();
+            $table->string("phone")->nullable();
+            $table->string("cellphone")->nullable();
+            $table->string("cpfcnpj");
+            $table->string("ierg")->nullable();
             $table->date("birthday")->nullable();
             $table->unsignedBigInteger('gender_id');
             $table->foreign('gender_id')

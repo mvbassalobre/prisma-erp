@@ -11300,6 +11300,10 @@ a.text-dark:focus {
   border: 1px solid #9e6de0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 a {
   display: inline-block;
   position: relative;

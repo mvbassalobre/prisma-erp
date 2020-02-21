@@ -12,7 +12,6 @@ use marcusvbda\vstack\Fields\{
     Check,
     BelongsToMany
 };
-use App\Http\Metrics\Users\UserByRole;
 
 class Users extends Resource
 {
@@ -25,12 +24,12 @@ class Users extends Resource
 
     public function menu()
     {
-        return "Times";
+        return "Funcionários";
     }
 
     public function menuIcon()
     {
-        return "el-icon-s-help";
+        return "el-icon-picture-outline-round";
     }
 
     public function label()
@@ -142,22 +141,6 @@ class Users extends Resource
             ])
         ]);
         return $cards;
-    }
-
-    public function metrics()
-    {
-        if (Auth::user()->hasRole(["super-admin"])) return [
-            new UserByRole()
-        ];
-        return [];
-    }
-
-    public function lenses()
-    {
-        return [
-            "Apenas Ativos" => ["field" => "active", "value" => true],
-            "Apenas Inativos" => ["field" => "active", "value" => false],
-        ];
     }
 
     public function canCreate()

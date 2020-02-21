@@ -31,12 +31,12 @@ class AddressesTypes extends Resource
 
     public function menu()
     {
-        return "Tabelas";
+        return "Cadastros";
     }
 
     public function menuIcon()
     {
-        return "el-icon-tickets";
+        return "el-icon-document-add";
     }
 
     public function search()

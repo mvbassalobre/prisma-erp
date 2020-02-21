@@ -15,7 +15,8 @@ class DatabaseSeeder extends Seeder
             RolesSeeder::class,
             UserSeeder::class,
             SettingSeeder::class,
-            AuxiliarTableSeeder::class
+            AuxiliarTableSeeder::class,
+            FakerCustomerSeeder::class,
         ]);
     }
 }

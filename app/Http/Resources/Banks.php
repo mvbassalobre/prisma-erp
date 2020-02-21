@@ -31,7 +31,7 @@ class Banks extends Resource
 
     public function menu()
     {
-        return "Auxiliares";
+        return "Tabelas";
     }
 
     public function menuIcon()

@@ -7,8 +7,7 @@ use marcusvbda\vstack\Models\DefaultModel;
 class Tenant extends DefaultModel
 {
     protected $table = "tenants";
-    // public $cascadeDeletes = [];
-    public $restrictDeletes = ["users", "arts", "settings"];
+    public $cascadeDeletes = ["settings", "users", "customers", "banks", "genders", "teams"];
 
 
     public static function hasTenant()
@@ -26,8 +25,23 @@ class Tenant extends DefaultModel
         return $this->belongsToMany(Setting::class, 'setting_tenant');
     }
 
-    public function arts()
+    public function customers()
     {
-        return $this->hasMany(Art::class);
+        return $this->hasMany(Customer::class);
+    }
+
+    public function banks()
+    {
+        return $this->hasMany(Bank::class);
+    }
+
+    public function genders()
+    {
+        return $this->hasMany(Gender::class);
+    }
+
+    public function teams()
+    {
+        return $this->hasMany(Team::class);
     }
 }

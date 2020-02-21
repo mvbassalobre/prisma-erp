@@ -28,6 +28,24 @@ class CreateCustomers extends Migration
             $table->string("cellphone")->nullable();
             $table->string("cpfcnpj");
             $table->string("ierg")->nullable();
+            $table->date("date_exp_rg")->nullable();
+            $table->string("exp_rg")->nullable();
+            $table->string("org_rg")->nullable();
+            $table->string("uf_rg")->nullable();
+            $table->string("zipcode")->nullable();
+            $table->string("street")->nullable();
+            $table->string("number")->nullable();
+            $table->string("complement")->nullable();
+            $table->string("district")->nullable();
+            $table->string("state")->nullable();
+            $table->string("city")->nullable();
+            $table->unsignedBigInteger('bank_id');
+            $table->foreign('bank_id')
+                ->references('id')
+                ->on('banks')
+                ->onDelete('restrict');
+            $table->string("agency")->nullable();
+            $table->string("account")->nullable();
             $table->date("birthday")->nullable();
             $table->unsignedBigInteger('gender_id');
             $table->foreign('gender_id')

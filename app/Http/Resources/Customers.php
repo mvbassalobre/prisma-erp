@@ -6,7 +6,7 @@ use marcusvbda\vstack\Resource;
 use marcusvbda\vstack\Fields\{
     Card,
     Text,
-    BelongsTo
+    BelongsTo,
 };
 use Auth;
 
@@ -31,12 +31,12 @@ class Customers extends Resource
 
     public function label()
     {
-        return "Cliente";
+        return "Clientes";
     }
 
     public function singularLabel()
     {
-        return "Clientes";
+        return "Cliente";
     }
 
     public function icon()
@@ -54,7 +54,11 @@ class Customers extends Resource
         $user = Auth::user();
         $columns = [];
         $columns["name"] = ["label" => "Nome"];
-        if ($user->hasRole(["super-admin",])) $columns["tenant->name"] = ["label" => "Tenant", "sortable_index" => "tenant_id"];
+        $columns["email"] = ["label" => "Email"];
+        $columns["phones"] = ["label" => "Telefones", "sortable" => false];
+        $columns["profession"] = ["label" => "Profissão"];
+        if ($user->hasRole(["super-admin"])) $columns["tenant->name"] = ["label" => "Tenant", "sortable_index" => "tenant_id"];
+        if ($user->hasRole(["super-admin", "admin"])) $columns["user->name"] = ["label" => "Responsável", "sortable_index" => "user_id"];
         $columns["f_created_at"] = ["label" => "Data de Criação", "sortable_index" => "created_at"];
         $columns["last_update"] = ["label" => "Ultima atualização", "sortable" => false];
         return $columns;
@@ -92,13 +96,29 @@ class Customers extends Resource
             ]),
             new BelongsTo([
                 "label" => "Estado Civil",
-                "field" => "gender_id",
+                "field" => "marital_status_id",
                 "placeholder" => "Selecione o estato civil ...",
                 "model" => \App\Http\Models\MaritalStatus::class,
                 "rules" => "required",
                 "description" => "Apenas para o caso de pessoa física"
             ]),
         ];
+        if (Auth::user()->hasRole(["super-admin"])) {
+            $fields[] = new BelongsTo([
+                "label" => "Tenant",
+                "field" => "tenant_id",
+                "model" => \App\Http\Models\Tenant::class,
+                "rules" => "required"
+            ]);
+        }
+        if (Auth::user()->hasRole(["super-admin", "admin"])) {
+            $fields[] = new BelongsTo([
+                "label" => "Responsável",
+                "field" => "user_id",
+                "model" => \App\User::class,
+                "rules" => "required"
+            ]);
+        }
         $cards =  [new Card("Informações", $fields)];
         $cards[] =  new Card("Profissional", [
             new Text([
@@ -121,6 +141,44 @@ class Customers extends Resource
                 "mask" => ['(##) ####-####', '(##) #####-####']
             ])
         ]);
+        $cards[] =  new Card("Endereço", [
+            new Text([
+                "label" => "CEP",
+                "field" => "zipcode",
+                "placeholder" => "Digite o CEP aqui ...",
+                "rules" => "required|max:255",
+            ]),
+            new Text([
+                "label" => "Rua",
+                "field" => "street",
+                "placeholder" => "Digite a rua aqui ...",
+            ]),
+            new Text([
+                "label" => "Número",
+                "field" => "number",
+                "placeholder" => "Digite o número aqui ...",
+            ]),
+            new Text([
+                "label" => "Complemento",
+                "field" => "complement",
+                "placeholder" => "Digite o complemento aqui ...",
+            ]),
+            new Text([
+                "label" => "Bairro",
+                "field" => "district",
+                "placeholder" => "Digite a bairro aqui ...",
+            ]),
+            new Text([
+                "label" => "Estado",
+                "field" => "state",
+                "placeholder" => "Digite a estado aqui ...",
+            ]),
+            new Text([
+                "label" => "Cidade",
+                "field" => "city",
+                "placeholder" => "Digite a cidade aqui ...",
+            ]),
+        ]);
         $cards[] =  new Card("Documentos", [
             new Text([
                 "label" => "CPF/CNPJ",
@@ -139,38 +197,48 @@ class Customers extends Resource
                 "required" => true,
                 "description" => "Digite o RG do cliente para o caso de cliente pessoa física ou IE para cliente pessoa jurídica"
             ]),
+            new Text([
+                "type" => "date",
+                "label" => "Data de Expedição",
+                "field" => "date_exp_rg",
+            ]),
+            new Text([
+                "label" => "Orgão Expedidor",
+                "field" => "exp_rg",
+                "placeholder" => "Digite o orgão expedidor aqui ...",
+                "rules" => "max:3",
+                "max" => 3,
+                "mask"  => "AAA"
+            ]),
+            new Text([
+                "label" => "UF de Emissão",
+                "field" => "uf_rg",
+                "placeholder" => "Digite o UF de emissão aqui ...",
+                "rules" => "max:2",
+                "max" => 2,
+                "mask"  => "AA"
+            ]),
         ]);
-        //endereço
+        $cards[] =  new Card("Dados Bancários", [
+            new BelongsTo([
+                "label" => "Banco",
+                "field" => "bank_id",
+                "placeholder" => "Selecione o banco ...",
+                "model" => \App\Http\Models\Bank::class,
+            ]),
+            new Text([
+                "label" => "Agencia",
+                "field" => "agency",
+                "placeholder" => "Digite a agência aqui ...",
+                "mask" => ['####', '####-#', '####-##']
+            ]),
+            new Text([
+                "label" => "Conta Corrente",
+                "field" => "account",
+                "placeholder" => "Digite a conta bancária ...",
+                "mask" => ['#####-#', '######-#', '#######-#', '########-#', '#########-#', '###########-#']
+            ]),
+        ]);
         return $cards;
-    }
-
-    public function canCreate()
-    {
-        return Auth::user()->hasRole(["super-admin", "admin"]);
-    }
-
-    public function canUpdate()
-    {
-        return Auth::user()->hasRole(["super-admin", "admin"]);
-    }
-
-    public function canDelete()
-    {
-        return Auth::user()->hasRole(["super-admin", "admin"]);
-    }
-
-    public function canCustomizeMetrics()
-    {
-        return Auth::user()->hasRole(["super-admin", "admin"]);
-    }
-
-    public function canImport()
-    {
-        return true;
-    }
-
-    public function canExport()
-    {
-        return true;
     }
 }

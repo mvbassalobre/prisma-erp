@@ -24,6 +24,12 @@ class Customer extends DefaultModel
         static::addGlobalScope(new UserScope());
     }
 
+    public function getLastUpdateAttribute()
+    {
+        if (!$this->updated_at) return;
+        return $this->updated_at->diffForHumans();
+    }
+
     public function tenant()
     {
         return $this->belongsTo(Tenant::class);

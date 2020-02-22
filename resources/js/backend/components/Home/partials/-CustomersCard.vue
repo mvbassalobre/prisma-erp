@@ -1,6 +1,7 @@
 <template>
     <div
         class="col-md-3 col-sm-12 dashcard d-flex flex-row justify-content-between align-items-center"
+        @click="$goTo('/admin/customers')"
     >
         <div class="title d-flex flex-column">
             <div class="mb-2">Clientes</div>
@@ -26,30 +27,21 @@ export default {
         "loading-container": require("../../general/-LoadingContainer").default
     },
     mounted() {
-        this.$http.post(laravel.general.root_url + "/admin/dashboard/get_info", { type: "qtyCustomers" }).then(res => {
-            setTimeout(() => {
-                res = res.data
-                this.qty = res.qty <= 0 ? "Nenhum" : res.qty
-                this.loaded = true
-            }, 500)
-        }).catch(er => {
-            this.loaded = true
-        })
+        this.initialize()
+    },
+    methods: {
+        initialize() {
+            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info`, { type: "qtyCustomers" }).then(res => {
+                setTimeout(() => {
+                    res = res.data
+                    this.qty = res.qty <= 0 ? "Nenhum" : res.qty
+                    this.loaded = true
+                }, 500)
+            }).catch(er => {
+                console.log(er)
+                this.initialize()
+            })
+        }
     }
 }
 </script>
-<style scoped lang="scss">
-.dashcard {
-    background-color: #0fceab;
-    color: white;
-    .title {
-        font-size: 30px;
-    }
-    .icon {
-        font-size: 100px;
-    }
-    .number {
-        font-size: 18px;
-    }
-}
-</style>

@@ -46,7 +46,7 @@ class Customers extends Resource
 
     public function search()
     {
-        return ["name"];
+        return ["name", "email", "cpfcnpj", "ierg"];
     }
 
     public function table()
@@ -120,6 +120,46 @@ class Customers extends Resource
             ]);
         }
         $cards =  [new Card("Informações", $fields)];
+        $cards[] =  new Card("Documentos", [
+            new Text([
+                "label" => "CPF/CNPJ",
+                "field" => "cpfcnpj",
+                "placeholder" => "Digite o CPF ou CNPJ aqui ...",
+                "mask" => ['###.###.###-##', '##.###.###/####-##'],
+                "rules" => "required|max:255",
+                "required" => true,
+                "description" => "Digite o CPF do cliente para o caso de cliente pessoa física ou CNPJ para cliente pessoa jurídica"
+            ]),
+            new Text([
+                "label" => "RG/IE",
+                "field" => "ierg",
+                "placeholder" => "Digite o RG ou IE aqui ...",
+                "rules" => "required|max:255",
+                "required" => true,
+                "description" => "Digite o RG do cliente para o caso de cliente pessoa física ou IE para cliente pessoa jurídica"
+            ]),
+            new Text([
+                "type" => "date",
+                "label" => "Data de Expedição",
+                "field" => "date_exp_rg",
+            ]),
+            new Text([
+                "label" => "Orgão Expedidor",
+                "field" => "exp_rg",
+                "placeholder" => "Digite o orgão expedidor aqui ...",
+                "rules" => "max:3",
+                "max" => 3,
+                "mask"  => "AAA"
+            ]),
+            new Text([
+                "label" => "UF de Emissão",
+                "field" => "uf_rg",
+                "placeholder" => "Digite o UF de emissão aqui ...",
+                "rules" => "max:2",
+                "max" => 2,
+                "mask"  => "AA"
+            ]),
+        ]);
         $cards[] =  new Card("Profissional", [
             new Text([
                 "label" => "Profissão",
@@ -177,46 +217,6 @@ class Customers extends Resource
                 "label" => "Cidade",
                 "field" => "city",
                 "placeholder" => "Digite a cidade aqui ...",
-            ]),
-        ]);
-        $cards[] =  new Card("Documentos", [
-            new Text([
-                "label" => "CPF/CNPJ",
-                "field" => "cpfcnpj",
-                "placeholder" => "Digite o CPF ou CNPJ aqui ...",
-                "mask" => ['###.###.###-##', '##.###.###/####-##'],
-                "rules" => "required|max:255",
-                "required" => true,
-                "description" => "Digite o CPF do cliente para o caso de cliente pessoa física ou CNPJ para cliente pessoa jurídica"
-            ]),
-            new Text([
-                "label" => "RG/IE",
-                "field" => "ierg",
-                "placeholder" => "Digite o RG ou IE aqui ...",
-                "rules" => "required|max:255",
-                "required" => true,
-                "description" => "Digite o RG do cliente para o caso de cliente pessoa física ou IE para cliente pessoa jurídica"
-            ]),
-            new Text([
-                "type" => "date",
-                "label" => "Data de Expedição",
-                "field" => "date_exp_rg",
-            ]),
-            new Text([
-                "label" => "Orgão Expedidor",
-                "field" => "exp_rg",
-                "placeholder" => "Digite o orgão expedidor aqui ...",
-                "rules" => "max:3",
-                "max" => 3,
-                "mask"  => "AAA"
-            ]),
-            new Text([
-                "label" => "UF de Emissão",
-                "field" => "uf_rg",
-                "placeholder" => "Digite o UF de emissão aqui ...",
-                "rules" => "max:2",
-                "max" => 2,
-                "mask"  => "AA"
             ]),
         ]);
         $cards[] =  new Card("Dados Bancários", [

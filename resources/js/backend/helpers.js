@@ -51,3 +51,5 @@ Vue.prototype.$colors = {
         return `rgb(${rgb.r},${rgb.g},${rgb.b})`
     }
 }
+
+Vue.prototype.$goTo = (url) => window.location.href = url

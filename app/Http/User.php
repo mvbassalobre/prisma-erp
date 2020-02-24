@@ -33,6 +33,9 @@ class User extends Authenticatable implements MustVerifyEmail
                 static::addGlobalScope(new TenantScope());
             }
         }
+        self::creating(function ($model) {
+            unset($model->teams);
+        });
     }
 
     public function getCodeAttribute()

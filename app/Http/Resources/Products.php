@@ -111,6 +111,6 @@ class Products extends Resource
 
     public function canExport()
     {
-        return false;
+        return true;
     }
 }

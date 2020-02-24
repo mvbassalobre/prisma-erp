@@ -239,4 +239,14 @@ class Customers extends Resource
         ]);
         return $cards;
     }
+
+    public function canDelete()
+    {
+        return Auth::user()->hasRole(["super-admin", "admin"]);
+    }
+
+    public function canCustomizeMetrics()
+    {
+        return false;
+    }
 }

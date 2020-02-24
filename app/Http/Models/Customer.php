@@ -27,7 +27,7 @@ class Customer extends DefaultModel
         self::creating(function ($model) use ($user) {
             $user = $user ? $user->name : "root";
             $model->timeline = [[
-                "title" => "cadastro",
+                "title" => "Cadastro",
                 "description" => "cadastrado no sistema por <b>$user</b>",
                 "datetime" => Carbon::now()->format('d/m/Y - H:i:s')
             ]];

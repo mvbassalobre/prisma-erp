@@ -10,7 +10,6 @@ use marcusvbda\vstack\Fields\{
     BelongsTo,
     Upload,
     Check,
-    BelongsToMany
 };
 
 class Users extends Resource
@@ -88,13 +87,6 @@ class Users extends Resource
                 "field" => "active",
                 "default" => true
             ]),
-            new BelongsToMany([
-                "label" => "Times",
-                "pluck_value" => "name",
-                "model" => \App\Http\Models\Team::class,
-                "field" => "teams",
-                "placeholder" => "Selecione os times que este usuário faz parte"
-            ])
         ];
         if ($user->hasRole(["super-admin", "admin"])) {
             $fields[] = new BelongsTo([

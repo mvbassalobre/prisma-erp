@@ -6,7 +6,7 @@ require('./libs/axios')
 require('./libs/element')
 require('./helpers')
 require('./libs/echo')
-
+require('./libs/modal')
 
 import Vue from 'vue'
 Vue.config.productionTip = false

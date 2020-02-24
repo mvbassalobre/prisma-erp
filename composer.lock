@@ -1498,16 +1498,16 @@
         },
         {
             "name": "marcusvbda/vstack",
-            "version": "2.8",
+            "version": "2.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcusvbda/vstack.git",
-                "reference": "e4ed2472ca96abbbc2124300aff84e7d82a353cf"
+                "reference": "f53a3a096a332ec8a0a3bea989882369ace6a915"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marcusvbda/vstack/zipball/e4ed2472ca96abbbc2124300aff84e7d82a353cf",
-                "reference": "e4ed2472ca96abbbc2124300aff84e7d82a353cf",
+                "url": "https://api.github.com/repos/marcusvbda/vstack/zipball/f53a3a096a332ec8a0a3bea989882369ace6a915",
+                "reference": "f53a3a096a332ec8a0a3bea989882369ace6a915",
                 "shasum": ""
             },
             "require": {
@@ -1534,7 +1534,7 @@
                     "email": "bassalobre.vinicius@gmail.com"
                 }
             ],
-            "time": "2020-02-22T01:30:14+00:00"
+            "time": "2020-02-24T15:51:27+00:00"
         },
         {
             "name": "monolog/monolog",

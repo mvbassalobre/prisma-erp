@@ -56,11 +56,9 @@ class Customers extends Resource
         $columns["name"] = ["label" => "Nome"];
         $columns["email"] = ["label" => "Email"];
         $columns["phones"] = ["label" => "Telefones", "sortable" => false];
-        $columns["profession"] = ["label" => "Profissão"];
         if ($user->hasRole(["super-admin"])) $columns["tenant->name"] = ["label" => "Tenant", "sortable_index" => "tenant_id"];
         if ($user->hasRole(["super-admin", "admin"])) $columns["user->name"] = ["label" => "Responsável", "sortable_index" => "user_id"];
-        $columns["f_created_at"] = ["label" => "Data de Criação", "sortable_index" => "created_at"];
-        $columns["last_update"] = ["label" => "Ultima atualização", "sortable" => false];
+        $columns["actions"] = ["label" => "Ações", "sortable" => false];
         return $columns;
     }
 

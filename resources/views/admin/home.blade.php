@@ -1,7 +1,20 @@
 @extends("templates.admin")
 @section('title',"Home")
-@section('content')
-<h3></h3><i class="el-icon-s-home mr-2 font-weight-bolder"></i>Dashboard</h3>
+@section('breadcrumb')
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/admin" class="link">Dashboard</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
+@endsection
+@section("content")
+<h3>Dashboard</h3>
 <small>{{Auth::user()->getSettings("mensagem-dashboard")}}</small>
 <?php $user = Auth::user(); ?>
 <home-dashboard

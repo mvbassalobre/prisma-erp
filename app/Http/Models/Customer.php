@@ -6,18 +6,33 @@ use marcusvbda\vstack\Models\DefaultModel;
 use marcusvbda\vstack\Models\Scopes\UserScope;
 use marcusvbda\vstack\Models\Observers\UserObserver;
 use Auth;
+use Carbon\Carbon;
 
 class Customer extends DefaultModel
 {
     protected $table = "customers";
-    // public $cascadeDeletes = [];
+    public $cascadeDeletes = ["products"];
     // public $restrictDeletes = [];
-    protected $appends = ['code', 'f_created_at', 'last_update', 'phones'];
+    protected $appends = ['code', 'f_created_at', 'last_update', 'phones', 'actions'];
+
+    public $casts = [
+        "timeline" => "Array"
+    ];
 
     public static function boot()
     {
         $user = Auth::user();
         parent::boot();
+
+        self::creating(function ($model) use ($user) {
+            $user = $user ? $user->name : "root";
+            $model->timeline = [[
+                "title" => "cadastro",
+                "description" => "cadastrado no sistema por <b>$user</b>",
+                "datetime" => Carbon::now()->format('d/m/Y - H:i:s')
+            ]];
+        });
+
         if (!$user) return;
         if ($user->hasRole(["super-admin", "admin"])) return;
         static::observe(new UserObserver());
@@ -28,6 +43,16 @@ class Customer extends DefaultModel
     {
         if (!$this->updated_at) return;
         return $this->updated_at->diffForHumans();
+    }
+
+    public function getActionsAttribute()
+    {
+        return "<div class='d-flex flex-column'>
+                    <div>Atualizado " . $this->last_update . "</div>
+                    <a href='" . route('admin.customers.attendance.index', ['code' => $this->code]) . "' class='crud-btns link d-flex align-items-center'>
+                        <i class='el-icon-s-finance mr-1'></i> Atendimento
+                    </a>
+                </div>";
     }
 
     public function tenant()
@@ -41,12 +66,6 @@ class Customer extends DefaultModel
         return @$this->created_at->format("d/m/Y - H:i:s");
     }
 
-    public function getFFlagAttribute()
-    {
-        if (!$this->flag) return;
-        return "<img class='avatar-rounded ' src='" . $this->flag[0] . "' />";
-    }
-
     public function getPhonesAttribute()
     {
         return "<p class='mb-0'>" . $this->phone . "</p><p class='mb-0'>" . $this->cellphone . "</p>";
@@ -54,21 +73,26 @@ class Customer extends DefaultModel
 
     public function gender()
     {
-        return $this->belongsTo(\app\Http\Models\Gender::class);
+        return $this->belongsTo(Gender::class);
     }
 
     public function maritalStatus()
     {
-        return $this->belongsTo(\app\Http\Models\MaritalStatus::class);
+        return $this->belongsTo(MaritalStatus::class);
     }
 
     public function bank()
     {
-        return $this->belongsTo(\app\Http\Models\Bank::class);
+        return $this->belongsTo(\Bank::class);
     }
 
     public function user()
     {
-        return $this->belongsTo(\app\User::class);
+        return $this->belongsTo(\App\User::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(CustomerProduct::class);
     }
 }

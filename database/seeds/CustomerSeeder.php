@@ -4,7 +4,7 @@ use App\Http\Models\Customer;
 use Illuminate\Database\Seeder;
 use Faker\Factory;
 
-class FakerCustomerSeeder extends Seeder
+class CustomerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,11 +16,11 @@ class FakerCustomerSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $faker = Factory::create('pt_BR');
         DB::table("customers")->truncate();
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 89; $i++) {
             Customer::create([
                 "name"  => $faker->name,
                 "email" => $faker->email,
-                "profession" => "lorem ipsum",
+                "profession" => $faker->text(15),
                 "phone" => "(" . random_int(10, 20) . ") " . $faker->phone,
                 "cellphone" => "(" . random_int(10, 20) . ") " . $faker->phone,
                 "cpfcnpj" => $faker->cpf,
@@ -29,12 +29,12 @@ class FakerCustomerSeeder extends Seeder
                 "exp_rg" => "SSP",
                 "uf_rg" => "SP",
                 "zipcode" => "000000",
-                "street" => "lorem ipsum",
+                "street" => $faker->text(50),
                 "number" => 15,
-                "district" => "ipsum",
-                "complement" => "ipsum ipsum lorem",
-                "state" => "lorem lorem",
-                "city" => "tatuine",
+                "district" => $faker->text(20),
+                "complement" => $faker->text(50),
+                "state" => $faker->text(50),
+                "city" => $faker->text(10),
                 "bank_id"  => random_int(1, 3),
                 "agency"  => "000",
                 "account" => 111111111,

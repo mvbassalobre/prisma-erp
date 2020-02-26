@@ -6,7 +6,8 @@ use marcusvbda\vstack\Resource;
 use marcusvbda\vstack\Fields\{
     Card,
     Text,
-    ResourceField
+    ResourceField,
+    Upload
 };
 use Auth;
 
@@ -37,7 +38,8 @@ class Tenant extends Resource
     public function table()
     {
         return [
-            "name" => ["label" => "Nome", "size" => "30%"]
+            "name" => ["label" => "Nome", "size" => "30%"],
+            "logos" => ["label" => "Logos", "size" => "30%", "sortable" => false],
         ];
     }
 
@@ -45,6 +47,20 @@ class Tenant extends Resource
     {
         return [
             new Card("Informações", [
+                new Upload([
+                    "label" => "Logo Grande",
+                    "field" => "big_logo",
+                    "preview"  => true,
+                    "multiple" => false,
+                    "accept"   => "image/*"
+                ]),
+                new Upload([
+                    "label" => "Logo Pequeno",
+                    "field" => "small_logo",
+                    "preview"  => true,
+                    "multiple" => false,
+                    "accept"   => "image/*"
+                ]),
                 new Text([
                     "label" => "Nome",
                     "field" => "name",

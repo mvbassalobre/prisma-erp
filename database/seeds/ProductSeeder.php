@@ -19,6 +19,7 @@ class ProductSeeder extends Seeder
         for ($i = 0; $i < 20; $i++) {
             Product::create([
                 "name"  => str_replace(".", "", $faker->text(25)),
+                "price" => rand(1, 50) + (rand(1, 10) / 10),
                 "tenant_id" => 1,
             ]);
         }

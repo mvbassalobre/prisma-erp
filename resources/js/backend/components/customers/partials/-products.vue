@@ -44,6 +44,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Nome</th>
+                                                <th>Preço</th>
                                                 <th>Adicionado Por ...</th>
                                                 <th>Adicionado em ..</th>
                                                 <th>Ações</th>
@@ -52,6 +53,7 @@
                                         <tbody>
                                             <tr v-for="(p,i) in products" :key="i">
                                                 <td>{{p.product.name}}</td>
+                                                <td>{{p.product.fprice}}</td>
                                                 <td>{{p.user.name}}</td>
                                                 <td>{{p.f_created_at}}</td>
                                                 <td>
@@ -100,6 +102,7 @@
                     <div class="row">
                         <div class="col-12">
                             <v-select
+                                ref="products"
                                 v-model="form.product_id"
                                 list_model="\App\Http\Models\Product"
                                 label="Produto"
@@ -108,6 +111,16 @@
                                 :route_list="`/admin/inputs/option_list`"
                             />
                         </div>
+                        <template v-if="form.product_id">
+                            <div class="col-12">
+                                <div class="form-group row mb-3 d-flex align-items-center">
+                                    <label class="col-sm-2 col-form-label">Preço</label>
+                                    <div class="col-sm-10 col-sm-10">
+                                        <b>{{product.fprice}}</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
                     </div>
                     <div class="mt-auto">
                         <div class="d-flex flex-row align-items-center justify-content-end">
@@ -141,7 +154,13 @@ export default {
             form: {
                 product_id: null,
                 loading: null
-            }
+            },
+            product: {}
+        }
+    },
+    watch: {
+        "form.product_id"(val) {
+            this.product = this.$refs.products.options.find(x => x.id == val)
         }
     },
     methods: {

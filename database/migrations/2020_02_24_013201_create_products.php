@@ -19,6 +19,7 @@ class CreateProducts extends Migration
             $table->engine = 'InnoDB';
             $table->bigIncrements('id');
             $table->string("name");
+            $table->decimal("price")->default(0);
             $table->unsignedBigInteger('tenant_id');
             $table->foreign('tenant_id')
                 ->references('id')

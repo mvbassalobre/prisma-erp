@@ -53,6 +53,7 @@ class Products extends Resource
     {
         $columns =  [
             "name" => ["label" => "Nome"],
+            "fprice" => ["label" => "Preço", "sortable_index" => "price"],
         ];
         if (Auth::user()->hasRole(["super-admin"])) {
             $columns["tenant->name"] = ["label" => "Tenant", "sortable_index" => "tenant_id"];
@@ -69,6 +70,16 @@ class Products extends Resource
                 "required" => true,
                 "placeholder" => "Digite o nome aqui ...",
                 "rules" => "required|max:255"
+            ]),
+            new Text([
+                "label" => "Preço",
+                "field" => "price",
+                "type"  => "number",
+                "prepend" => "R$",
+                "required" => true,
+                "min" => 0,
+                "placeholder" => "Digite o preço aqui ...",
+                "rules" => "required|min:0"
             ]),
         ];
         if (Auth::user()->hasRole(["super-admin"])) {

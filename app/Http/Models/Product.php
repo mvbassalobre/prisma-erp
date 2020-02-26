@@ -17,4 +17,11 @@ class Product extends DefaultModel
     {
         return $this->belongsTo(Tenant::class);
     }
+
+    public $appends = ["fprice"];
+
+    public function getFpriceAttribute()
+    {
+        return "R$ " . $this->price;
+    }
 }

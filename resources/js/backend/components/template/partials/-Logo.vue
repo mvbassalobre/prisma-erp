@@ -6,8 +6,7 @@
                 v-if="!$root.sidebarCollapse"
                 class="sidebar-logo d-flex flex-row align-items-center justify-content-center"
             >
-                <img v-if="logo" :src="logo.src" style="width: 40px;" />
-                <div class="title">Prisma</div>
+                <img v-if="logo" :src="logo.src" class="big_logo" />
             </a>
             <a :href="smalllogo.href" v-else class="sidebar-smalllogo">
                 <img v-if="logo" :src="smalllogo.src" style="width: 30px;" />
@@ -32,17 +31,14 @@ export default {
     background: $secondary;
     text-align: center;
     overflow: hidden;
+    .big_logo {
+        height: 55px;
+        width: auto;
+    }
     a {
         &:hover {
             text-decoration: unset;
         }
-    }
-    .title {
-        color: #e5e5e5;
-        font-size: 25px;
-        margin-left: 10px;
-        font-weight: 400;
-        padding-top: 5px;
     }
 }
 </style>

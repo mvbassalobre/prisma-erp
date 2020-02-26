@@ -37,8 +37,8 @@ class UsersController extends Controller
 
         $data = $request->except(["_token", "password_confirmation", "roleName", "resource_id", "tenantName"]);
 
-        if (!@$request["tenantName"]) $data["tenant_id"] = $user->tenant_id;
-        else $data["tenant_id"] = $data["tenant_id"];
+        if (!@$request["tenant_id"]) $data["tenant_id"] = $_user->tenant_id;
+        else $data["tenant_id"] = $request["tenant_id"];
 
         $data["avatar"] = is_array(@$data["avatar"]) ? @$data["avatar"][0] : "";
         $data["email_verified_at"] = date("Y-m-d H:i:s");
@@ -61,15 +61,14 @@ class UsersController extends Controller
 
         $this->validate($request, $roles);
 
-        $data = $request->except(["id", "_token", "password_confirmation", "roleName", "resource_id", "tenantName"]);
+        $data = $request->except(["id", "_token", "password_confirmation", "roleName", "resource_id", "tenant_id"]);
 
         if (!$data["password"]) unset($data["password"]);
         $user = User::findOrFail($request["id"]);
         $data["avatar"] = is_array($data["avatar"]) ? (@$data["avatar"] ? $data["avatar"][0] : "") : "";
 
-        if (!@$request["tenantName"]) $data["tenant_id"] = $_user->tenant_id;
-        else $data["tenant_id"] = $data["tenant_id"];
-
+        if (!@$request["tenant_id"]) $data["tenant_id"] = $_user->tenant_id;
+        else $data["tenant_id"] = $request["tenant_id"];
         $user->fill($data);
         $user->save();
         $user->roles()->detach();

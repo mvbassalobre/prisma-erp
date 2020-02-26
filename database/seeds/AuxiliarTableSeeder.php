@@ -28,7 +28,7 @@ class AuxiliarTableSeeder extends Seeder
         foreach (["Masculino", "Feminino", "Outro"] as $value) {
             Gender::create([
                 "name" => $value,
-                "tenant_id" => 1
+                "tenant_id" => 2
             ]);
         }
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
@@ -41,7 +41,7 @@ class AuxiliarTableSeeder extends Seeder
         foreach (["Solteiro(a)", "Casado(a)", "Divorciado(a)", "Viúvo(a)"] as $value) {
             MaritalStatus::create([
                 "name" => $value,
-                "tenant_id" => 1
+                "tenant_id" => 2
             ]);
         }
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
@@ -60,7 +60,7 @@ class AuxiliarTableSeeder extends Seeder
             Bank::create([
                 "name" => $value["name"],
                 "number" => $value["number"],
-                "tenant_id" => 1
+                "tenant_id" => 2
             ]);
         }
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

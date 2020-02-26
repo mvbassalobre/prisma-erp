@@ -5,7 +5,15 @@
 		<script> window.laravel = {!! $javascript_globals !!}</script>
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<link rel="stylesheet" href="{{ URL::asset('assets/backend/css/app.css') }}">
-		<link rel="icon" type="image/png" href="{{ URL::asset('/assets/images/logo.png') }}" />
+		<?php
+		$image = URL::asset('/assets/images/logo.png');
+		if(Auth::check())
+		{
+			$tenant = Auth::user()->tenant;
+			$image = @$tenant->small_logo[0] ? $tenant->small_logo[0] : URL::asset('/assets/images/logo.png');
+		}
+		?>
+		<link rel="icon" type="image/png" href="{{ $image }}" />
 		<title>{{config("app.name")}} - @yield("title")</title>
 	</head>
 	<body>

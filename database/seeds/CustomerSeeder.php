@@ -41,7 +41,7 @@ class CustomerSeeder extends Seeder
                 "birthday" => $faker->date,
                 "gender_id" => random_int(1, 2),
                 "user_id" => random_int(2, 3),
-                "tenant_id" => 1,
+                "tenant_id" => 2,
                 "marital_status_id" => random_int(1, 2),
                 "created_at" => $faker->date,
                 "updated_at" => $faker->date,

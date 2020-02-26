@@ -20,7 +20,7 @@ class ProductSeeder extends Seeder
             Product::create([
                 "name"  => str_replace(".", "", $faker->text(25)),
                 "price" => rand(1, 50) + (rand(1, 10) / 10),
-                "tenant_id" => 1,
+                "tenant_id" => 2,
             ]);
         }
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

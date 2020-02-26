@@ -5,8 +5,10 @@ namespace App\Http\Models;
 use marcusvbda\vstack\Models\DefaultModel;
 use marcusvbda\vstack\Models\Scopes\UserScope;
 use marcusvbda\vstack\Models\Observers\UserObserver;
-use Auth;
 use Carbon\Carbon;
+use marcusvbda\vstack\Models\Scopes\TenantScope;
+use marcusvbda\vstack\Models\Observers\TenantObserver;
+use Auth;
 
 class Customer extends DefaultModel
 {
@@ -19,11 +21,21 @@ class Customer extends DefaultModel
         "timeline" => "Array"
     ];
 
+    public static function hasTenant()
+    {
+        return false;
+    }
+
     public static function boot()
     {
         $user = Auth::user();
         parent::boot();
-
+        if (Auth::check()) {
+            if ($user->hasRole(["admin", "user"])) {
+                static::observe(new TenantObserver());
+                static::addGlobalScope(new TenantScope());
+            }
+        }
         self::creating(function ($model) use ($user) {
             $user = $user ? $user->name : "root";
             $model->timeline = [[

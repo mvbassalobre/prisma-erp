@@ -3,6 +3,9 @@
 namespace App\Http\Models;
 
 use marcusvbda\vstack\Models\DefaultModel;
+use marcusvbda\vstack\Models\Scopes\TenantScope;
+use marcusvbda\vstack\Models\Observers\TenantObserver;
+use Auth;
 
 class Team extends DefaultModel
 {
@@ -10,6 +13,22 @@ class Team extends DefaultModel
     // public $cascadeDeletes = [];
     // public $restrictDeletes = [];
     protected $appends = ['code', 'f_created_at', 'last_update', 'f_flag', 'qty_integrantes'];
+
+    public static function hasTenant()
+    {
+        return false;
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        if (Auth::check()) {
+            if (Auth::user()->hasRole(["admin", "user"])) {
+                static::observe(new TenantObserver());
+                static::addGlobalScope(new TenantScope());
+            }
+        }
+    }
 
     public  $casts = [
         "flag" => "array"

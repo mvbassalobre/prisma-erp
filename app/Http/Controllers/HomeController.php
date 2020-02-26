@@ -23,7 +23,7 @@ class HomeController extends Controller
 
     public function qtyCustomers($user)
     {
-        if (Auth::user()->hasRole(["super-admin", "admin"])) return ["qty" => DB::table("customers")->where("tenant_id", $user->tenant_id)->count()];
+        if (Auth::user()->hasRole(["admin"])) return ["qty" => DB::table("customers")->where("tenant_id", $user->tenant_id)->count()];
         return ["qty" => Customer::count()];
     }
 }

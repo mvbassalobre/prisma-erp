@@ -8,7 +8,8 @@ use marcusvbda\vstack\Fields\{
     Card,
     Text,
     Upload,
-    BelongsToMany
+    BelongsToMany,
+    BelongsTo,
 };
 
 class Teams extends Resource
@@ -65,6 +66,8 @@ class Teams extends Resource
 
     public function fields()
     {
+        $user = Auth::user();
+
         $fields = [
             new Upload([
                 "label" => "Bandeira",
@@ -81,17 +84,23 @@ class Teams extends Resource
                 "rules" => "required|max:255"
             ]),
         ];
-        $cards =  [new Card("Informações", $fields)];
-        $cards[] = new Card("", [
-            new BelongsToMany([
-                "label" => "Integrantes",
-                "pluck_value" => "name",
-                "model" => \App\User::class,
-                "field" => "users",
-                "placeholder" => "Selecione os integrantes do time"
-            ])
+        $fields[] = new BelongsToMany([
+            "label" => "Integrantes",
+            "pluck_value" => "name",
+            "model" => \App\User::class,
+            "field" => "users",
+            "placeholder" => "Selecione os integrantes do time"
         ]);
-        return $cards;
+
+        if ($user->hasRole(["super-admin"])) {
+            $fields[] = new BelongsTo([
+                "label" => "Tenant",
+                "field" => "tenant_id",
+                "model" => \App\Http\Models\Tenant::class,
+                "rules" => "required"
+            ]);
+        }
+        return [new Card("Informações", $fields)];
     }
 
     public function canCreate()

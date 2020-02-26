@@ -28,7 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         parent::boot();
         if (Auth::check()) {
-            if (Auth::user()->hasRole(["admin"])) {
+            if (Auth::user()->hasRole(["admin", "user"])) {
                 static::observe(new TenantObserver());
                 static::addGlobalScope(new TenantScope());
             }

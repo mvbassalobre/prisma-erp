@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f963ce8a5f4cb53189583862f688e909",
+    "content-hash": "1c97a12f121aaac214b13c5380132306",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -1498,7 +1498,7 @@
         },
         {
             "name": "marcusvbda/vstack",
-            "version": "2.9",
+            "version": "3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcusvbda/vstack.git",

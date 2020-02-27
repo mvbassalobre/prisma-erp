@@ -19,8 +19,6 @@ class CreateTenants extends Migration
             $table->engine = 'InnoDB';
             $table->bigIncrements('id');
             $table->string('name');
-            $table->longText('big_logo')->nullable();
-            $table->longText('small_logo')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

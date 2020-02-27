@@ -5,6 +5,7 @@
                 <div class="card-body">
                     <div class="row d-flex justify-content-center mb-3">
                         <div class="col-md-10 col-sm-12">
+                            <slot></slot>
                             <template v-for="(setting,s) in settings">
                                 <v-input
                                     :key="s"
@@ -14,6 +15,19 @@
                                     :type="(['integer','float'].includes(setting.type) ? 'number' : 'text')"
                                     :description="setting.description"
                                     v-model="form[setting.id]"
+                                />
+                                <v-upload
+                                    :key="s"
+                                    v-if="['image'].includes(setting.type)"
+                                    class="mb-3"
+                                    :label="setting.name"
+                                    :uploadroute="uploadRoute"
+                                    v-model="form[setting.id]"
+                                    :multiple="false"
+                                    :preview="true"
+                                    :limit="1"
+                                    listtype="picture-card"
+                                    accept="image/*"
                                 />
                                 <div
                                     :key="s"
@@ -56,6 +70,11 @@ export default {
             timeout: null
         }
     },
+    computed: {
+        uploadRoute() {
+            return laravel.vstack.default_upload_route
+        }
+    },
     async created() {
         this.initValues().then(x => this.initialized = true)
     },
@@ -74,7 +93,9 @@ export default {
     methods: {
         async initValues() {
             for (let i in this.settings) {
-                this.$set(this.form, this.settings[i].id, this.settings[i].value)
+                let value = this.settings[i].value
+                if (this.settings[i].type == "image") value = JSON.parse(value)
+                this.$set(this.form, this.settings[i].id, value)
             }
         },
         update() {

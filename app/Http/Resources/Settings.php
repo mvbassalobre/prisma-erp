@@ -101,7 +101,7 @@ class Settings extends Resource
                 new BelongsTo([
                     "label" => "Tipo",
                     "field" => "type",
-                    "options" => ["boolean", "text", "integer", "float"],
+                    "options" => ["boolean", "text", "integer", "float", "image"],
                     "rules" => "required",
                     "required" => true,
                     "default" => "boolean"

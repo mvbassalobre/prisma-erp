@@ -47,20 +47,6 @@ class Tenant extends Resource
     {
         return [
             new Card("Informações", [
-                new Upload([
-                    "label" => "Logo Grande",
-                    "field" => "big_logo",
-                    "preview"  => true,
-                    "multiple" => false,
-                    "accept"   => "image/*"
-                ]),
-                new Upload([
-                    "label" => "Logo Pequeno",
-                    "field" => "small_logo",
-                    "preview"  => true,
-                    "multiple" => false,
-                    "accept"   => "image/*"
-                ]),
                 new Text([
                     "label" => "Nome",
                     "field" => "name",

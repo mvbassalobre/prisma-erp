@@ -16,10 +16,12 @@ class SettingSeeder extends Seeder
         DB::table("setting_tenant")->truncate();
         DB::table("settings")->truncate();
         Setting::create([
-            "name" => "Mensagem Dashboard",
-            "type" => "text",
-            "default" => "Olá, aqui no dashboard você verá um informativo resumido a respeito de sua empresa",
-            "description" => "Está mensagem aparecerá no topo do dashboard toda vez que for acessado"
+            "name" => "Logo Pequeno",
+            "type" => "image",
+        ]);
+        Setting::create([
+            "name" => "Logo Grande",
+            "type" => "image",
         ]);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

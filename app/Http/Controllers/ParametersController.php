@@ -39,6 +39,11 @@ class ParametersController extends Controller
             return ["setting_id" => $key, "setting_value" =>  $value];
         }, array_keys($data));
         $tenant->settings()->detach();
+        foreach ($values as $key => $value) {
+            $values[$key] = array_map(function ($x) {
+                return json_encode($x);
+            }, $value);
+        }
         $tenant->settings()->attach($values);
         return ['success' => true];
     }

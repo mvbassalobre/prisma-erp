@@ -15,7 +15,7 @@
 @endsection
 @section("content")
 <h3>Dashboard</h3>
-<small>{{Auth::user()->getSettings("mensagem-dashboard")}}</small>
+<small>Olá, aqui no dashboard você verá um informativo resumido a respeito de sua empresa</small>
 <?php $user = Auth::user(); ?>
 <home-dashboard
     :roles="{{json_encode($user->roles)}}"

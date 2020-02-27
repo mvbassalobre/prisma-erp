@@ -9,8 +9,8 @@
 		$image = URL::asset('/assets/images/logo.png');
 		if(Auth::check())
 		{
-			$tenant = Auth::user()->tenant;
-			$image = @$tenant->small_logo[0] ? $tenant->small_logo[0] : URL::asset('/assets/images/logo.png');
+			$small_logo = @json_decode(Auth::user()->getSettings("logo-pequeno"))[0];
+			$image = $small_logo ? $small_logo : URL::asset('/assets/images/logo.png');
 		}
 		?>
 		<link rel="icon" type="image/png" href="{{ $image }}" />

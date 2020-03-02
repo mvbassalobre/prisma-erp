@@ -20,12 +20,11 @@ class UserSeeder extends Seeder
         $user = User::create([
             "name"     => "Vinicius Bassalobre",
             "email"    => "bassalobre.vinicius@gmail.com",
-            "password" => bcrypt("v1n1c1u5"),
+            "password" => "*****",
             "email_verified_at" => date("Y-m-d H:i:s"),
             "tenant_id" => $tenant->id
         ]);
         $user->assignRole("super-admin");
-        Tenant::create(["name" => "Activc"]);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

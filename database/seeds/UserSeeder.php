@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
         $tenant = Tenant::create(["name" => "App"]);
         $user = User::create([
             "name"     => "Vinicius Bassalobre",
-            "email"    => "bassalobre.vinicius@email.com",
+            "email"    => "bassalobre.vinicius@gmail.com",
             "password" => "v1n1c1u5",
             "email_verified_at" => date("Y-m-d H:i:s"),
             "tenant_id" => $tenant->id

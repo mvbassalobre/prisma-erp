@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
         $user = User::create([
             "name"     => "Vinicius Bassalobre",
             "email"    => "bassalobre.vinicius@gmail.com",
-            "password" => "v1n1c1u5",
+            "password" => bcrypt("v1n1c1u5"),
             "email_verified_at" => date("Y-m-d H:i:s"),
             "tenant_id" => $tenant->id
         ]);

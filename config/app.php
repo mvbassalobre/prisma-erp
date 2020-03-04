@@ -175,6 +175,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         marcusvbda\vstack\vStackServiceProvider::class,
         Sichikawa\LaravelSendgridDriver\MailServiceProvider::class,
+        laravel\pagseguro\Platform\Laravel5\ServiceProvider::class
     ],
 
     /*
@@ -225,7 +226,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Hashids' => Vinkla\Hashids\Facades\Hashids::class
+        'Hashids' => Vinkla\Hashids\Facades\Hashids::class,
+        'PagSeguro' => laravel\pagseguro\Platform\Laravel5\PagSeguro::class
     ],
 
 ];

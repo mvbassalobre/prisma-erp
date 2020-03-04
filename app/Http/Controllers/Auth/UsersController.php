@@ -37,7 +37,7 @@ class UsersController extends Controller
 
         $data = $request->except(["_token", "password_confirmation", "roleName", "resource_id", "tenantName"]);
 
-        if (!@$request["tenant_id"]) $data["tenant_id"] = $_user->tenant_id;
+        if (!@$request["tenant_id"]) $data["tenant_id"] = $user->tenant_id;
         else $data["tenant_id"] = $request["tenant_id"];
 
         $data["avatar"] = is_array(@$data["avatar"]) ? @$data["avatar"][0] : "";

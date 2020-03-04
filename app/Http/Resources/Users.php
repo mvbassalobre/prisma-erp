@@ -93,6 +93,7 @@ class Users extends Resource
                 "label" => "Nível de Acesso",
                 "field" => "roleName",
                 "options" =>  ["admin", "user"],
+                "required" => true,
                 "rules" => "required"
             ]);
         }

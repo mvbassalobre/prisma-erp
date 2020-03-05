@@ -21,6 +21,15 @@ class UsersController extends Controller
         return ["success" => true, "route" => route('resource.index', ["resource" => "users"])];
     }
 
+    public function storeField(Request $request)
+    {
+        if (@$request["id"])
+            $this->editUser($request);
+        else
+            $this->createUser($request);
+        return ["success" => true];
+    }
+
     private function createUser($request)
     {
         $user = Auth::user();
@@ -63,7 +72,7 @@ class UsersController extends Controller
 
         $data = $request->except(["id", "_token", "password_confirmation", "roleName", "resource_id", "tenant_id"]);
 
-        if (!$data["password"]) unset($data["password"]);
+        if (!@$data["password"]) unset($data["password"]);
         $user = User::findOrFail($request["id"]);
         $data["avatar"] = is_array($data["avatar"]) ? (@$data["avatar"] ? $data["avatar"][0] : "") : "";
 

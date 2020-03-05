@@ -34,6 +34,7 @@
         "html2canvas": "^1.0.0-rc.5",
         "install": "^0.13.0",
         "jquery": "^3.4.1",
+        "jquery-ui-dist": "^1.12.1",
         "laravel-echo": "^1.6.1",
         "laravel-echo-server": "^1.6.0",
         "lodash": "^4.17.15",

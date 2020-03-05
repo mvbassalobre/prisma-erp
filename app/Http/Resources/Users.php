@@ -71,7 +71,7 @@ class Users extends Resource
             new Upload([
                 "label" => "Avatar",
                 "field" => "avatar",
-                "preview"  => true,
+                "preview"  => false,
                 "multiple" => false,
                 "accept"   => "image/*"
             ]),

@@ -19,7 +19,6 @@ class User extends Authenticatable implements MustVerifyEmail
     use SoftDeletes, Notifiable, hasCode, HasRoles;
     public $guarded = ['id'];
     protected $appends = ['code', 'roleName', 'f_created_at', 'f_active', 'last_update', 'tenantName'];
-    public $relations = [];
     public  $casts = [
         "active" => "boolean",
         "avatar" => "array"

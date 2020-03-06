@@ -48,7 +48,6 @@ class UsersController extends Controller
 
         if (!@$request["tenant_id"]) $data["tenant_id"] = $user->tenant_id;
         else $data["tenant_id"] = $request["tenant_id"];
-
         $data["avatar"] = is_array(@$data["avatar"]) ? @$data["avatar"][0] : "";
         $data["email_verified_at"] = date("Y-m-d H:i:s");
         $user = User::create($data);

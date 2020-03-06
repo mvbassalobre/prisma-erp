@@ -51,12 +51,6 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->attributes["password"] = bcrypt($val);
     }
 
-    public function setNameAttribute($val)
-    {
-        $this->attributes["name"] = $val;
-        if (Auth::check()) $this->attributes["tenant_id"] = Auth::user()->tenant_id;
-    }
-
     public function getRoleNameAttribute()
     {
         $roles = $this->roles;

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e4d7bb91f60540fba6a5c1131dbfe376",
+    "content-hash": "33a6778904392641e53119902667efd1",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -1498,16 +1498,16 @@
         },
         {
             "name": "marcusvbda/vstack",
-            "version": "5.1",
+            "version": "5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcusvbda/vstack.git",
-                "reference": "27259a8125a64e125ff5313a2926977c0a0de35a"
+                "reference": "eac3070530d29870f7bc1bfddc26b09599784e86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marcusvbda/vstack/zipball/27259a8125a64e125ff5313a2926977c0a0de35a",
-                "reference": "27259a8125a64e125ff5313a2926977c0a0de35a",
+                "url": "https://api.github.com/repos/marcusvbda/vstack/zipball/eac3070530d29870f7bc1bfddc26b09599784e86",
+                "reference": "eac3070530d29870f7bc1bfddc26b09599784e86",
                 "shasum": ""
             },
             "require": {
@@ -1534,7 +1534,7 @@
                     "email": "bassalobre.vinicius@gmail.com"
                 }
             ],
-            "time": "2020-03-06T18:02:34+00:00"
+            "time": "2020-03-07T14:06:13+00:00"
         },
         {
             "name": "michael/laravelpagseguro",

@@ -68,7 +68,6 @@ class Customers extends Resource
             new Text([
                 "label" => "Nome Completo",
                 "field" => "name",
-                "required" => true,
                 "placeholder" => "Digite o nome aqui ...",
                 "rules" => "required|max:255"
             ]),
@@ -106,7 +105,8 @@ class Customers extends Resource
                 "label" => "Tenant",
                 "field" => "tenant_id",
                 "model" => \App\Http\Models\Tenant::class,
-                "rules" => "required"
+                "rules" => "required",
+                "required" => true
             ]);
         }
         if (Auth::user()->hasRole(["super-admin", "admin"])) {
@@ -184,7 +184,7 @@ class Customers extends Resource
                 "label" => "CEP",
                 "field" => "zipcode",
                 "placeholder" => "Digite o CEP aqui ...",
-                "rules" => "required|max:255",
+                "rules" => "max:255",
             ]),
             new Text([
                 "label" => "Rua",

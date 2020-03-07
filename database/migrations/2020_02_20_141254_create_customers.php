@@ -40,7 +40,7 @@ class CreateCustomers extends Migration
             $table->string("state")->nullable();
             $table->string("city")->nullable();
             $table->longtext("timeline")->nullable();
-            $table->unsignedBigInteger('bank_id');
+            $table->unsignedBigInteger('bank_id')->nullable();
             $table->foreign('bank_id')
                 ->references('id')
                 ->on('banks')

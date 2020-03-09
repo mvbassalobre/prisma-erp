@@ -8,39 +8,24 @@
                 aria-orientation="vertical"
             >
                 <a
-                    class="nav-link active mb-2 text-center btn-primary"
-                    id="v-pills-info-tab"
-                    data-toggle="pill"
-                    href="#v-pills-info"
-                    role="tab"
-                    aria-controls="v-pills-info"
-                    aria-selected="true"
-                >Cliente</a>
-                <a
+                    v-for="(option,i) in options"
+                    :key="i"
                     class="nav-link mb-2 text-center btn-primary"
-                    id="v-pills-timeline-tab"
+                    v-bind:class="{'active' : option.active}"
+                    :id="`v-pills-${option.name}-tab`"
                     data-toggle="pill"
-                    href="#v-pills-timeline"
+                    :href="`#v-pills-${option.name}`"
                     role="tab"
-                    aria-controls="v-pills-timeline"
-                    aria-selected="true"
-                >Timeline</a>
-                <a
-                    class="nav-link mb-2 text-center btn-primary"
-                    id="v-pills-products-tab"
-                    data-toggle="pill"
-                    href="#v-pills-products"
-                    role="tab"
-                    aria-controls="v-pills-products"
-                    aria-selected="true"
-                >Serviços / Produtos</a>
+                    :aria-controls="`v-pills-${option.name}`"
+                    @click.prevent="setActive(option)"
+                >{{option.label}}</a>
             </div>
         </div>
         <div class="col-md-10 col-sm-12">
             <div class="tab-content" id="v-pills-tabContent">
-                <comp-info :info="data" />
-                <comp-timeline :timeline="customer.timeline" />
-                <comp-products :products="customer.products" :customer="customer" />
+                <comp-info :info="data" :active="active" />
+                <comp-timeline :timeline="customer.timeline" :active="active" />
+                <comp-products :products="customer.products" :customer="customer" :active="active" />
             </div>
         </div>
     </div>
@@ -48,10 +33,41 @@
 <script>
 export default {
     props: ["customer", "data"],
+    data() {
+        return {
+            active: "info",
+            options: [
+                { name: "info", label: "Cliente", active: true },
+                { name: "timeline", label: "Timeline", active: false },
+                { name: "products", label: "Serviços / Produtos", active: false }
+            ]
+        }
+    },
     components: {
         "comp-info": require("./partials/-info").default,
         "comp-timeline": require("./partials/-timeline").default,
         "comp-products": require("./partials/-products").default
+    },
+    created() {
+        this.initHash()
+    },
+    methods: {
+        initHash() {
+            let hash = window.location.hash
+            if (hash) {
+                let option = this.options.find(x => x.name == hash.replace("#", ""))
+                if (option) this.setActive(option)
+            }
+        },
+        setActive(option) {
+            for (let i in this.options) {
+                if (option.name == this.options[i].name) {
+                    this.active = option.name
+                    this.options[i].active = true
+                    window.location.hash = `#${this.active}`
+                } else this.options[i].active = false
+            }
+        }
     }
 }
 </script>

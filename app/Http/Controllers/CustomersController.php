@@ -21,6 +21,7 @@ class CustomersController extends Controller
     {
         $customer = Customer::with("products", "products.user")->findOrFail($code);
         $data = $this->getViewData($code, $customer);
+        // dd($customer->products[0]->product);
         return view("admin.customers.attendance", compact("customer", "data"));
     }
 
@@ -34,12 +35,19 @@ class CustomersController extends Controller
 
     public function postNewProduct(Request $request)
     {
+        $data = $request->all();
         $product = Product::findOrFail($request["product_id"]);
         $customer = Customer::findOrFail($request["customer_id"]);
         $user = Auth::user();
+        $product->setAppends([]);
+        $product_data = [
+            "product" => $product->toArray(),
+            "qty" => intval($request["qty"]),
+            "price" => floatval($request["price"]),
+        ];
         CustomerProduct::create([
             "customer_id" => $customer->id,
-            "product" => $product,
+            "product" => $product_data,
             "user_id" => $user->id
         ]);
         $timeline = $customer->timeline;

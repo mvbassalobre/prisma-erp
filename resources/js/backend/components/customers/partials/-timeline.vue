@@ -1,6 +1,7 @@
 <template>
     <div
         class="tab-pane fade"
+        v-bind:class="{'show active' : active == 'timeline'}"
         id="v-pills-timeline"
         role="tabpanel"
         aria-labelledby="v-pills-timeline-tab"
@@ -41,6 +42,14 @@ export default {
         timeline: {
             type: Array,
             default: () => ([])
+        },
+        activeOption: {
+            type: Object,
+            default: () => ({})
+        },
+        active: {
+            type: String,
+            default: null
         }
     }
 }

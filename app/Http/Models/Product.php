@@ -49,9 +49,9 @@ class Product extends DefaultModel
 
     public function getCircleImageAttribute()
     {
-        $images = is_array($this->images) ? $this->images : [];
-        if (count($images) <= 0) return " - ";
-        foreach ($images as $image) {
+        $_images = is_array($this->images) ? $this->images : [];
+        if (count($_images) <= 0) return " - ";
+        foreach ($_images as $image) {
             @$images .= "<img style='height: 60px;border:1px solid #d0d0d0' class='mr-1' src='" . $image . "' />";
         }
         return "<div class='d-flex flex-row flex-wrap'>" . $images . "</div>";

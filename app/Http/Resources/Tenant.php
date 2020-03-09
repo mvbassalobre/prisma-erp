@@ -39,7 +39,8 @@ class Tenant extends Resource
     {
         return [
             "name" => ["label" => "Nome", "size" => "30%"],
-            "logos" => ["label" => "Logos", "size" => "30%", "sortable" => false],
+            "f_created_at" => ["label" => "Data de Criação", "sortable_index" => "created_at"],
+            "last_update" => ["label" => "Ultima atualização", "sortable" => false]
         ];
     }
 

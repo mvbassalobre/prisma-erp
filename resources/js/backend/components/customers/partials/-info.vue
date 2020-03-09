@@ -1,6 +1,7 @@
 <template>
     <div
-        class="tab-pane fade show active"
+        class="tab-pane fade"
+        v-bind:class="{'show active' : active == 'info'}"
         id="v-pills-info"
         role="tabpanel"
         aria-labelledby="v-pills-info-tab"
@@ -47,12 +48,7 @@
 <script>
 import VRuntimeTemplate from "v-runtime-template"
 export default {
-    props: {
-        info: {
-            type: Object,
-            default: () => ({})
-        }
-    },
+    props: ["info", "active"],
     components: {
         "v-runtime-template": VRuntimeTemplate
     }

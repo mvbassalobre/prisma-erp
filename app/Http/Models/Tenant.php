@@ -7,12 +7,7 @@ use marcusvbda\vstack\Models\DefaultModel;
 class Tenant extends DefaultModel
 {
     protected $table = "tenants";
-    public $cascadeDeletes = ["settings", "users", "customers", "banks", "genders", "teams", "customer_product", "logos"];
-
-    public $casts = [
-        "big_logo" => "Array",
-        "small_logo" => "Array",
-    ];
+    public $cascadeDeletes = ["settings", "users", "customers", "banks", "genders", "teams", "customer_product", 'f_created_at', 'last_update'];
 
     public static function hasTenant()
     {
@@ -54,13 +49,15 @@ class Tenant extends DefaultModel
         return $this->hasMany(CustomerProduct::class);
     }
 
-    public function getLogosAttribute()
+    public function getLastUpdateAttribute()
     {
-        if (@$this->small_logo[0] && @$this->big_logo[0])
-            return "<div class='d-flex flew-row'><img class='avatar-rounded mr-2' src='" . @$this->small_logo[0] . "' /><img class='avatar-rounded' src='" . @$this->big_logo[0] . "' /></div>";
-        if (@$this->small_logo[0])
-            return "<div class='d-flex flew-row'><img class='avatar-rounded mr-2' src='" . @$this->small_logo[0] . "' /></div>";
-        if (@$this->big_logo[0])
-            return "<div class='d-flex flew-row'><img class='avatar-rounded mr-2' src='" . @$this->big_logo[0] . "' /></div>";
+        if (!$this->updated_at) return;
+        return $this->updated_at->diffForHumans();
+    }
+
+    public function getFCreatedAtAttribute()
+    {
+        if (!$this->created_at) return;
+        return @$this->created_at->format("d/m/Y - H:i:s");
     }
 }

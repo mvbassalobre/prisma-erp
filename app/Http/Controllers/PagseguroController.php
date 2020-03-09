@@ -10,7 +10,7 @@ class PagseguroController extends Controller
 {
     public function teste()
     {
-        $this->simpleExample();
+        // $this->simpleExample();
         // $this->planExample();
     }
 

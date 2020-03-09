@@ -10,14 +10,14 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <h5>
-                            <span class="el-icon-s-finance mr-2"></span>Produtos do Cliente
+                            <span class="el-icon-s-finance mr-2"></span>Serviços / produtos do Cliente
                         </h5>
                         <a
                             href="#"
                             class="link"
                             v-if="products.length>0"
                             @click.prevent="addProduct"
-                        >Adicionar Produto</a>
+                        >Adicionar Serviço / Produto</a>
                     </div>
                     <div class="card-body p-0">
                         <div class="row">
@@ -29,12 +29,12 @@
                                         <h1 class="mt-4">
                                             <span class="el-icon-s-finance mr-2"></span>
                                         </h1>
-                                        <h5>Cliente não possui produtos</h5>
-                                        <small>Adicione produto a este cliente</small>
+                                        <h5>Cliente não possui serviços ou produtos</h5>
+                                        <small>Adicione serviço / produto a este cliente</small>
                                         <button
                                             class="btn btn-primary mb-4"
                                             @click="addProduct"
-                                        >Adicionar Produto</button>
+                                        >Adicionar Serviço / Produto</button>
                                     </div>
                                 </template>
                                 <template v-else>
@@ -91,7 +91,7 @@
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <b class="mt-2">
                         <b>
-                            <span class="el-icon-plus mr-2"></span>Adicionar Produto
+                            <span class="el-icon-plus mr-2"></span>Adicionar Serviço / Produto
                         </b>
                     </b>
                     <a @click.prevent="$modal.hide('modal')">
@@ -105,8 +105,7 @@
                                 ref="products"
                                 v-model="form.product_id"
                                 list_model="\App\Http\Models\Product"
-                                label="Produto"
-                                description="Selecione o produto que deseja adicionar a este cliente"
+                                description="Selecione o serviço produto que deseja adicionar a este cliente"
                                 placeholder="Selecione ..."
                                 :route_list="`/admin/inputs/option_list`"
                             />

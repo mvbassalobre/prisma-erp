@@ -33,7 +33,7 @@
                     role="tab"
                     aria-controls="v-pills-products"
                     aria-selected="true"
-                >Produtos</a>
+                >Serviços / Produtos</a>
             </div>
         </div>
         <div class="col-md-10 col-sm-12">

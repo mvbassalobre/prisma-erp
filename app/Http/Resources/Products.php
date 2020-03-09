@@ -6,7 +6,8 @@ use marcusvbda\vstack\Resource;
 use marcusvbda\vstack\Fields\{
     Card,
     Text,
-    BelongsTo
+    BelongsTo,
+    Upload
 };
 use Auth;
 
@@ -53,6 +54,8 @@ class Products extends Resource
     {
         $columns =  [
             "name" => ["label" => "Nome"],
+            "circleImage" => ["label" => "Imagem", "sortable" => false],
+            "type" => ["label" => "Tipo"],
             "fprice" => ["label" => "Preço", "sortable_index" => "price"],
         ];
         if (Auth::user()->hasRole(["super-admin"])) {
@@ -64,6 +67,14 @@ class Products extends Resource
     public function fields()
     {
         $fields =  [
+            new Upload([
+                "label" => "Imagens",
+                "field" => "images",
+                "limit" => 5,
+                "preview"  => true,
+                "multiple" => true,
+                "accept"   => "image/*"
+            ]),
             new Text([
                 "label" => "Nome",
                 "field" => "name",
@@ -81,6 +92,13 @@ class Products extends Resource
                 "placeholder" => "Digite o preço aqui ...",
                 "rules" => "required|min:0"
             ]),
+            new BelongsTo([
+                "label" => "Tipo",
+                "field" => "type",
+                "options" => ["Serviço", "Produto"],
+                "default" => "Serviço",
+                "rules" => "required"
+            ])
         ];
         if (Auth::user()->hasRole(["super-admin"])) {
             $fields[] = new BelongsTo([

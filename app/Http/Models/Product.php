@@ -12,10 +12,18 @@ class Product extends DefaultModel
     protected $table = "products";
     // public $cascadeDeletes = [];
     // public $restrictDeletes = [];
+
+    public $appends = ["fprice", "circleImage"];
+
     public static function hasTenant()
     {
         return false;
     }
+
+    public  $casts = [
+        "images" => "array"
+    ];
+
 
     public static function boot()
     {
@@ -33,10 +41,19 @@ class Product extends DefaultModel
         return $this->belongsTo(Tenant::class);
     }
 
-    public $appends = ["fprice"];
 
     public function getFpriceAttribute()
     {
         return "R$ " . $this->price;
+    }
+
+    public function getCircleImageAttribute()
+    {
+        $images = is_array($this->images) ? $this->images : [];
+        if (count($images) <= 0) return " - ";
+        foreach ($images as $image) {
+            @$images .= "<img style='height: 60px;border:1px solid #d0d0d0' class='mr-1' src='" . $image . "' />";
+        }
+        return "<div class='d-flex flex-row flex-wrap'>" . $images . "</div>";
     }
 }

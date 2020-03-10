@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "43396eb608c76dab47be0646d334535b",
+    "content-hash": "796a6665211b1c9ff7be41f25a2bdb29",
     "packages": [
         {
             "name": "artistas/laravel-pagseguro",
@@ -999,16 +999,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v6.18.0",
+            "version": "v6.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "077b895d935b7fbcfb1d1eb34217fa4f80a130d8"
+                "reference": "367c2c8dfdfe83cb2ddbc029c0222174098d093a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/077b895d935b7fbcfb1d1eb34217fa4f80a130d8",
-                "reference": "077b895d935b7fbcfb1d1eb34217fa4f80a130d8",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/367c2c8dfdfe83cb2ddbc029c0222174098d093a",
+                "reference": "367c2c8dfdfe83cb2ddbc029c0222174098d093a",
                 "shasum": ""
             },
             "require": {
@@ -1141,7 +1141,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2020-03-03T13:14:27+00:00"
+            "time": "2020-03-10T14:11:04+00:00"
         },
         {
             "name": "laravel/socialite",
@@ -1554,16 +1554,16 @@
         },
         {
             "name": "marcusvbda/vstack",
-            "version": "5.7",
+            "version": "5.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcusvbda/vstack.git",
-                "reference": "1c16e82c22d548540c60f5e9a0c393362c663426"
+                "reference": "50351e7123b9a190cdd90440ac317133470ed0e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marcusvbda/vstack/zipball/1c16e82c22d548540c60f5e9a0c393362c663426",
-                "reference": "1c16e82c22d548540c60f5e9a0c393362c663426",
+                "url": "https://api.github.com/repos/marcusvbda/vstack/zipball/50351e7123b9a190cdd90440ac317133470ed0e3",
+                "reference": "50351e7123b9a190cdd90440ac317133470ed0e3",
                 "shasum": ""
             },
             "require": {
@@ -1590,7 +1590,7 @@
                     "email": "bassalobre.vinicius@gmail.com"
                 }
             ],
-            "time": "2020-03-09T21:59:44+00:00"
+            "time": "2020-03-10T14:56:40+00:00"
         },
         {
             "name": "monolog/monolog",

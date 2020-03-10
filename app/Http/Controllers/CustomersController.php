@@ -64,18 +64,18 @@ class CustomersController extends Controller
 
     public function destroyProduct(Request $request)
     {
-        $customer = Customer::findOrFail($request["customer_id"]);
-        $user = Auth::user();
-        CustomerProduct::where("id", $request["product"]["id"])->delete();
-        $timeline = $customer->timeline;
-        array_unshift($timeline, [
-            "title" => "Exclusão de Produto",
-            "description" => "o produto <b>" . $request["product"]["product"]["name"] . "</b> foi excluido pelo usuario <b>" . $user->name . "</b>",
-            "datetime" => Carbon::now()->format('d/m/Y - H:i:s')
-        ]);
-        $customer->timeline = $timeline;
-        $customer->save();
-        Messages::send("success", "Produto excluido com sucesso !!");
-        return ["success" => true];
+        // $customer = Customer::findOrFail($request["customer_id"]);
+        // $user = Auth::user();
+        // CustomerProduct::where("id", $request["product"]["id"])->delete();
+        // $timeline = $customer->timeline;
+        // array_unshift($timeline, [
+        //     "title" => "Exclusão de Produto",
+        //     "description" => "o produto <b>" . $request["product"]["product"]["name"] . "</b> foi excluido pelo usuario <b>" . $user->name . "</b>",
+        //     "datetime" => Carbon::now()->format('d/m/Y - H:i:s')
+        // ]);
+        // $customer->timeline = $timeline;
+        // $customer->save();
+        // Messages::send("success", "Produto excluido com sucesso !!");
+        // return ["success" => true];
     }
 }

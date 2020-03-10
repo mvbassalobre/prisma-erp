@@ -25,7 +25,7 @@
             <div class="tab-content" id="v-pills-tabContent">
                 <comp-info :info="data" :active="active" />
                 <comp-timeline :timeline="customer.timeline" :active="active" />
-                <comp-products :products="customer.products" :customer="customer" :active="active" />
+                <comp-sales :products="customer.products" :customer="customer" :active="active" />
             </div>
         </div>
     </div>
@@ -39,14 +39,14 @@ export default {
             options: [
                 { name: "info", label: "Cliente", active: true },
                 { name: "timeline", label: "Timeline", active: false },
-                { name: "products", label: "Serviços / Produtos", active: false }
+                { name: "sales", label: "Financeiro", active: false }
             ]
         }
     },
     components: {
         "comp-info": require("./partials/-info").default,
         "comp-timeline": require("./partials/-timeline").default,
-        "comp-products": require("./partials/-products").default
+        "comp-sales": require("./partials/-sales").default
     },
     created() {
         this.initHash()

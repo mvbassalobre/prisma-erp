@@ -3,103 +3,81 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Config;
 use PagSeguro;
 
 class PagseguroController extends Controller
 {
+    private $pagseguro = null;
+    private $items = [];
+
     public function teste()
     {
-        // $this->simpleExample();
-        // $this->planExample();
+        dd($this->bankslipExample());
     }
 
-    public function redirect(Request $request)
+    private function bankslipExample()
     {
-        dd("redirect", $request->all);
+        $this->init("9439c0e940786276b7e2c0a0a28463c841d2451e7302f528fb863ff085520f53");
+        $this->setSenderInfo([
+            "name" => "Marcus Vinicius Bassalobre",
+            "phone" => "(14) 99676-6177",
+            "email" => null,
+            "hash" => $this->hash,
+            "cpf" => "406.145.898-19"
+        ]);
+        //pode inserir varios items
+        $this->setItem([
+            'id' => 'ID',
+            'description' => 'Nome do Item',
+            'price' => 12.14,
+            'qty' => '2',
+        ]);
+        return $this->generateBankslip();
     }
 
-    public static function notification($information)
+    private function generateBankslip()
     {
-        \Log::debug(print_r($information->getStatus()->getCode(), 1));
+        $this->pagseguro = $this->pagseguro->setItems($this->items);
+        $this->pagseguro = $this->pagseguro->send([
+            'paymentMethod' => 'boleto'
+        ]);
+        return $this->pagseguro;
     }
 
-    private function simpleExample()
+    private function init($hash)
     {
-        $data = [
-            'items' => [
-                [
-                    'id' => '99999',
-                    'description' => 'Descrição do item',
-                    'quantity' => '1',
-                    'amount' => '500',
-                    'weight' => '0',
-                    'shippingCost' => '0',
-                    'width' => '0',
-                    'height' => '0',
-                    'length' => '0',
-                ]
-            ],
-            // 'shipping' => [
-            //     // 'address' => [
-            //     //     'postalCode' => '06410030',
-            //     //     'street' => 'Rua Leonardo Arruda',
-            //     //     'number' => '12',
-            //     //     'district' => 'Jardim dos Camargos',
-            //     //     'city' => 'Barueri',
-            //     //     'state' => 'SP',
-            //     //     'country' => 'BRA',
-            //     // ],
-            //     // 'type' => 2,
-            //     // 'cost' => 30.4,
-            // ],
-            'sender' => [
-                'email' => 'sender@sandbox.pagseguro.com.br',
-                'name' => 'Isaque de Souza Barbosa',
-                'documents' => [
-                    [
-                        'number' => '01234567890',
-                        'type' => 'CPF'
-                    ]
-                ],
-                'phone' => [
-                    'number' => '985445522',
-                    'areaCode' => '11',
-                ],
-                'bornDate' => '1988-03-21',
-            ]
+        $this->setAuth();
+        $this->pagseguro = PagSeguro::setReference(uniqid());
+        $this->hash = $hash;
+        $this->items = [];
+    }
+
+    public function setAuth()
+    {
+        Config::set("pagseguro.sendbox", true);
+        Config::set("pagseguro.email", "bassalobre.vinicius@gmail.com");
+        Config::set("pagseguro.token", "5F58734FD5784A2691E2692B3BA2AC21");
+    }
+
+    private function setSenderInfo($sender)
+    {
+        $this->pagseguro = $this->pagseguro->setSenderInfo([
+            'senderName' => $sender["name"],
+            'senderPhone' => $sender["phone"],
+            'senderEmail' =>  @$sender["email"],
+            'senderHash' =>  $sender["hash"],
+            'senderCPF' => $sender["cpf"]
+        ]);
+    }
+
+    private function setItem($item)
+    {
+        $this->items[] = [
+            'itemId' => $item["id"],
+            'itemDescription' => @$item["description"],
+            'itemAmount' => $item["price"],
+            'itemQuantity' => $item["qty"]
         ];
-        $checkout = PagSeguro::checkout()->createFromArray($data);
-        $information = $checkout->send($this->makeCredential());
-        printf('<pre>%s</pre>', print_r($information, 1));
-        printf('<a target="_BLANK" href="%s">Clique para pagar</a>', $information->getLink());
-    }
-
-    private function planExample()
-    {
-        $plan = [
-            'body' => [
-                'reference' => 'plano laravel pagseguro',
-            ],
-            'preApproval' => [
-                'name' => 'Plano ouro - mensal',
-                'charge' => 'AUTO', // outro valor pode ser MANUAL
-                'period' => 'MONTHLY', //WEEKLY, BIMONTHLY, TRIMONTHLY, SEMIANNUALLY, YEARLY
-                'amountPerPayment' => '125.00', // obrigatório para o charge AUTO - mais que 1.00, menos que 2000.00
-                // 'membershipFee' => '50.00', //opcional - cobrado com primeira parcela
-                'trialPeriodDuration' => 30, //opcional
-                'details' => 'Decrição do plano', //opcional
-            ]
-        ];
-        $plan = PagSeguro::plan()->createFromArray($plan);
-        $information = $plan->send($this->makeCredential());
-        printf('<pre>%s</pre>', print_r($information, 1));
-        printf('<a target="_BLANK" href="%s">Clique para pagar</a>', $information->getLink());
-    }
-
-    private function makeCredential()
-    {
-        // pegar credencial das configs do tenant
-        return PagSeguro::credentials()->create("5F58734FD5784A2691E2692B3BA2AC21", "bassalobre.vinicius@gmail.com");
     }
 }

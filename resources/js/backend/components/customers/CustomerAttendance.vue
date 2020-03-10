@@ -32,7 +32,7 @@
 </template>
 <script>
 export default {
-    props: ["customer", "data"],
+    props: ["customer", "data", "pagseguro_session"],
     data() {
         return {
             active: "info",
@@ -50,8 +50,18 @@ export default {
     },
     created() {
         this.initHash()
+        this.initPagSeguro()
     },
     methods: {
+        initPagSeguro() {
+            PagSeguroDirectPayment.setSessionId(this.pagseguro_session)
+            // setTimeout(() => {
+            //     console.log(this.getPagSeguroHash())
+            // }, 2000)
+        },
+        getPagSeguroHash() {
+            return PagSeguroDirectPayment.getSenderHash()
+        },
         initHash() {
             let hash = window.location.hash
             if (hash) {

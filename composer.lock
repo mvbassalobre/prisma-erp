@@ -4,8 +4,64 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5e359e9f99b6ced3f673c386f38261e",
+    "content-hash": "43396eb608c76dab47be0646d334535b",
     "packages": [
+        {
+            "name": "artistas/laravel-pagseguro",
+            "version": "v1.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/artistas/laravel-pagseguro.git",
+                "reference": "b77376fc7e1b2e18e1c81f3364b727f29e676b2c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/artistas/laravel-pagseguro/zipball/b77376fc7e1b2e18e1c81f3364b727f29e676b2c",
+                "reference": "b77376fc7e1b2e18e1c81f3364b727f29e676b2c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^5.2|^6.0",
+                "php": ">=5.5.9"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Artistas\\PagSeguro\\PagSeguroServiceProvider"
+                    ],
+                    "aliases": {
+                        "PagSeguro": "Artistas\\PagSeguro\\PagSeguroFacade",
+                        "PagSeguroRecorrente": "Artistas\\PagSeguro\\PagSeguroRecorrenteFacade",
+                        "PagSeguroBoleto": "Artistas\\PagSeguro\\PagSeguroBoletoFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Artistas\\PagSeguro\\": "src/Artistas/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fernando Henrique Bandeira",
+                    "email": "fernando.bandeira94@gmail.com"
+                }
+            ],
+            "description": "PagSeguro Checkout Transparente e Pagamento Recorrente(Assinaturas) no Laravel 5.*",
+            "keywords": [
+                "Pagseguro",
+                "assinaturas",
+                "laravel",
+                "recorrente",
+                "transparente"
+            ],
+            "time": "2019-09-22T23:31:39+00:00"
+        },
         {
             "name": "cocur/slugify",
             "version": "v4.0.0",
@@ -1498,16 +1554,16 @@
         },
         {
             "name": "marcusvbda/vstack",
-            "version": "5.6",
+            "version": "5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcusvbda/vstack.git",
-                "reference": "34e6c4a4ac981d267e189315e641d1166ee40e1c"
+                "reference": "1c16e82c22d548540c60f5e9a0c393362c663426"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marcusvbda/vstack/zipball/34e6c4a4ac981d267e189315e641d1166ee40e1c",
-                "reference": "34e6c4a4ac981d267e189315e641d1166ee40e1c",
+                "url": "https://api.github.com/repos/marcusvbda/vstack/zipball/1c16e82c22d548540c60f5e9a0c393362c663426",
+                "reference": "1c16e82c22d548540c60f5e9a0c393362c663426",
                 "shasum": ""
             },
             "require": {
@@ -1534,71 +1590,7 @@
                     "email": "bassalobre.vinicius@gmail.com"
                 }
             ],
-            "time": "2020-03-09T17:26:35+00:00"
-        },
-        {
-            "name": "michael/laravelpagseguro",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/michaeldouglas/laravel-pagseguro.git",
-                "reference": "3f764877680668ea6d3c66e32c40c7e3f70260f5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/michaeldouglas/laravel-pagseguro/zipball/3f764877680668ea6d3c66e32c40c7e3f70260f5",
-                "reference": "3f764877680668ea6d3c66e32c40c7e3f70260f5",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "illuminate/validation": ">=4.2",
-                "lib-curl": "*",
-                "lib-libxml": "*",
-                "lib-openssl": "*",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8.35"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "laravel\\pagseguro\\Platform\\Laravel5\\ServiceProvider"
-                    ],
-                    "aliases": {
-                        "PagSeguro": "laravel\\pagseguro\\Platform\\Laravel5\\PagSeguro"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "laravel\\pagseguro\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Douglas Barbosa Araujo",
-                    "email": "michaeldouglas010790@gmail.com"
-                },
-                {
-                    "name": "Isaque de Souza Barbosa",
-                    "email": "isaquesb@gmail.com"
-                }
-            ],
-            "description": "Biblioteca de integração com o gateway de pagamento PagSeguro.",
-            "keywords": [
-                "Gateway Pagamento",
-                "Pagseguro",
-                "framework",
-                "laravel"
-            ],
-            "time": "2020-01-15T20:29:18+00:00"
+            "time": "2020-03-09T21:59:44+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -6422,9 +6414,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "michael/laravelpagseguro": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

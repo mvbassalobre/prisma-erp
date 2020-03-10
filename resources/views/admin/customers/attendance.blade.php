@@ -22,6 +22,7 @@
     </div>
 </div>
 @endsection
+<script type="text/javascript" src="/pagseguro/javascript"></script>
 @section('content')
 <div class="row mb-3 mt-2">
     <div class="col-12 d-flex flex-row align-items-center">
@@ -33,5 +34,6 @@
 <customer-attendance 
     :customer="{{json_encode($customer)}}"
     :data="{{json_encode($data)}}"
+    pagseguro_session="{{PagSeguro::startSession()}}"
 ></customer-attendance>
 @endsection

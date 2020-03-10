@@ -21,7 +21,7 @@ class CustomersController extends Controller
     {
         $customer = Customer::with("products", "products.user")->findOrFail($code);
         $data = $this->getViewData($code, $customer);
-        // dd($customer->products[0]->product);
+        (new PagseguroController())->setAuth();
         return view("admin.customers.attendance", compact("customer", "data"));
     }
 

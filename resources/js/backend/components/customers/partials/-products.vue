@@ -44,23 +44,21 @@
                                     >
                                         <thead>
                                             <tr>
-                                                <th>Tipo</th>
                                                 <th>Nome</th>
-                                                <th>Preço</th>
+                                                <th>Preço Unit.</th>
                                                 <th>Total</th>
                                                 <th>Adicionado Por ...</th>
                                                 <th>Adicionado em ..</th>
-                                                <th>Ações</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr v-for="(p,i) in products" :key="i">
-                                                <td>{{p.product.product.type}}</td>
                                                 <td>{{p.product.product.name}}</td>
                                                 <td>
                                                     <div class="d-flex flex-column">
                                                         <div>R$ {{p.product.price.toFixed(2)}}</div>
-                                                        <small>{{p.product.qty}} {{`${p.product.product.type=='Serviço' ? 'mês(es)' : 'unidade(s)'}`}}</small>
+                                                        <small>{{p.product.qty}} {{`unidade${p.product.qty>1 ? 's' : ''}`}}</small>
                                                     </div>
                                                 </td>
                                                 <td>R$ {{(p.product.price*p.product.qty).toFixed(2)}}</td>
@@ -108,9 +106,10 @@
                 </div>
                 <div class="card-body d-flex flex-column">
                     <div class="row">
-                        <div class="col-12">
+                        <div
+                            v-bind:class="{'col-md-7 col-sm-12' : form.product_id, 'col-12':!form.product_id}"
+                        >
                             <v-select
-                                label="Produto / Serviço*"
                                 ref="products"
                                 v-model="form.product_id"
                                 list_model="\App\Http\Models\Product"
@@ -119,58 +118,40 @@
                                 :route_list="`/admin/inputs/option_list`"
                             />
                         </div>
+                        <div class="col-sm-12 col-md-5" v-if="form.product_id">
+                            <v-input
+                                v-model="product.type"
+                                :disabled="true"
+                                description="O tipo pode ser <b>Produto</b> ou <b>Serviço</b>"
+                            />
+                        </div>
                     </div>
                     <template v-if="form.product_id">
                         <div class="row mt-2">
-                            <div class="col-sm-12 col-md-6">
-                                <v-input
-                                    v-model="product.type"
-                                    label="Tipo"
-                                    :disabled="true"
-                                    description="O tipo pode ser <b>Produto</b> ou <b>Serviço</b>"
-                                />
-                            </div>
-                            <div class="col-sm-12 col-md-6">
+                            <div class="col-sm-12 col-md-4">
                                 <v-input
                                     prepend="<b>R$</b>"
                                     v-model="product.price"
-                                    label="Preço"
-                                    :description="`Valor do ${product.type.toLowerCase()} por ${product.type=='Serviço' ? 'parcela' : 'unidade'}`"
+                                    :description="`Valor unitário`"
                                     :disabled="true"
                                 />
                             </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-sm-12 col-md-6">
+                            <div class="col-sm-12 col-md-4">
                                 <v-input
                                     ref="qty"
                                     v-model="form.qty"
                                     type="number"
-                                    :label="`${product.type=='Serviço' ? 'Vigência' : 'Quantidade'}*`"
-                                    :description="`${product.type=='Serviço' ? 'Vigência em meses' : 'Quantidade de produtos'}`"
+                                    :description="`Quantidade do produto`"
                                 />
                             </div>
-                            <div class="col-sm-12 col-md-6">
-                                <v-input
-                                    ref="price"
-                                    type="number"
-                                    prepend="<b>R$</b>"
-                                    v-model="form.price"
-                                    :label="`Valor à Cobrar*`"
-                                    :description="`Valor a ser cobrado por ${product.type=='Serviço' ? 'parcela' : 'unidade'}`"
-                                />
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-sm-12 col-md-6">
+                            <div class="col-sm-12 col-md-4">
                                 <v-input
                                     ref="subtotal"
                                     :disabled="true"
                                     type="number"
                                     prepend="<b>R$</b>"
                                     v-model="form.subtotal"
-                                    label="Subtotal"
-                                    description="Valor total calculado"
+                                    description="Subtotal"
                                 />
                             </div>
                         </div>
@@ -208,6 +189,11 @@ export default {
     },
     data() {
         return {
+            // paymentTypes: [
+            //     { label: "Boleto", name: "bankslip" },
+            //     // { label: "Débito online", name: "debit" },
+            //     // { label: "Cartão de crédito", name: "creditcard" },
+            // ],
             form: {
                 customer_id: this.customer.id,
                 product_id: null,
@@ -222,28 +208,21 @@ export default {
     watch: {
         "form.product_id"(val) {
             this.product = this.$refs.products.options.find(x => x.id == val)
+            if (!this.product) return
             this.form.qty = 1
             this.form.price = this.product.price
             this.form.subtotal = this.product.price
         },
         "form.qty"(qty) {
             if (Number(qty) <= 0) {
-                this.$refs.qty.val, this.form.qty = 1
+                this.$refs.qty.val = "1"
+                this.form.qty = "1"
                 return this.$message({ showClose: true, message: "Quantidade Mínima é 1", type: "warning" })
             }
             if (!this.$refs.subtotal) return
             this.form.subtotal = (Number(this.form.price) * Number(qty)).toFixed(2)
             this.$refs.subtotal.val = this.form.subtotal
         },
-        "form.price"(price) {
-            if (Number(price) < 0) {
-                this.form.price, this.$refs.price.val = 0
-                return this.$message({ showClose: true, message: `Preço não pode ser negativo`, type: "warning" })
-            }
-            if (!this.$refs.price) return
-            this.form.subtotal = (Number(this.form.price) * Number(this.form.qty)).toFixed(2)
-            this.$refs.subtotal.val = this.form.subtotal
-        }
     },
     methods: {
         destroy(p) {

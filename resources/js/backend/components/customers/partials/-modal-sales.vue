@@ -239,16 +239,26 @@ export default {
             this.qty = null
         },
         submit() {
-            alert("submiteu")
-            // if (!this.form.product_id) return this.$message({ showClose: true, message: "Selecione o produto antes de confirmar", type: "error" })
-            // this.loading = this.$loading()
-            // this.$http.post(laravel.general.root_url + "/admin/customers/post_new_product", this.form).then(res => {
-            //     window.location.reload()
-            // }).catch(er => {
-            //     this.loading.close()
-            //     console.log(er)
-            //     this.$message({ showClose: true, message: "Erro ao salvar", type: "error" })
-            // })
+            this.$confirm(`Confirma lançamento ?`, "Confirmação", {
+                confirmButtonText: "Sim",
+                cancelButtonText: "Não",
+                type: 'warning'
+            }).then(() => {
+                let data = {
+                    customer_id: this.customer.id,
+                    items: this.items,
+                    subtotal: this.subtotal
+                }
+                if (this.subtotal <= 0) return this.$message({ showClose: true, message: "Selecione o produto antes de confirmar", type: "error" })
+                this.loading = this.$loading()
+                this.$http.post(laravel.general.root_url + "/admin/customers/post_new_product", data).then(res => {
+                    window.location.reload()
+                }).catch(er => {
+                    this.loading.close()
+                    console.log(er)
+                    this.$message({ showClose: true, message: "Erro ao salvar", type: "error" })
+                })
+            }).catch(() => false)
         },
         getProducts() {
             this.loading = true

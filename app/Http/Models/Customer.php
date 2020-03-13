@@ -13,7 +13,7 @@ use Auth;
 class Customer extends DefaultModel
 {
     protected $table = "customers";
-    public $cascadeDeletes = ["products"];
+    public $cascadeDeletes = ["sales"];
     // public $restrictDeletes = [];
     protected $appends = ['code', 'f_created_at', 'last_update', 'phones', 'actions'];
 
@@ -103,8 +103,8 @@ class Customer extends DefaultModel
         return $this->belongsTo(\App\User::class);
     }
 
-    public function products()
+    public function sales()
     {
-        return $this->hasMany(CustomerProduct::class);
+        return $this->hasMany(Sale::class);
     }
 }

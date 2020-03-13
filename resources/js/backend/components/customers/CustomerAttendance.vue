@@ -25,7 +25,7 @@
             <div class="tab-content" id="v-pills-tabContent">
                 <comp-info :info="data" :active="active" />
                 <comp-timeline :timeline="customer.timeline" :active="active" />
-                <comp-sales :products="customer.products" :customer="customer" :active="active" />
+                <comp-sales :sales="customer.sales" :customer="customer" :active="active" />
             </div>
         </div>
     </div>

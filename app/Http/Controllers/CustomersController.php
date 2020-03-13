@@ -7,9 +7,8 @@ use ResourcesHelpers;
 use marcusvbda\vstack\Controllers\ResourceController;
 use Illuminate\Http\Request;
 use App\Http\Models\{
-    Product,
     Customer,
-    CustomerProduct
+    Sale
 };
 use Auth;
 use marcusvbda\vstack\Services\Messages;
@@ -19,7 +18,7 @@ class CustomersController extends Controller
 {
     public function attendance($code)
     {
-        $customer = Customer::with("products", "products.user")->findOrFail($code);
+        $customer = Customer::with("sales", "sales.user")->findOrFail($code);
         $data = $this->getViewData($code, $customer);
         (new PagseguroController())->setAuth();
         return view("admin.customers.attendance", compact("customer", "data"));
@@ -35,47 +34,41 @@ class CustomersController extends Controller
 
     public function postNewProduct(Request $request)
     {
-        $data = $request->all();
-        $product = Product::findOrFail($request["product_id"]);
         $customer = Customer::findOrFail($request["customer_id"]);
         $user = Auth::user();
-        $product->setAppends([]);
-        $product_data = [
-            "product" => $product->toArray(),
-            "qty" => intval($request["qty"]),
-            "price" => floatval($request["price"]),
-        ];
-        CustomerProduct::create([
+
+        $sale = Sale::create([
             "customer_id" => $customer->id,
-            "product" => $product_data,
+            "items" => $request["items"],
+            "subtotal" => floatval($request["subtotal"]),
             "user_id" => $user->id
         ]);
         $timeline = $customer->timeline;
         array_unshift($timeline, [
-            "title" => "Adição de Produto",
-            "description" => "o produto <b>" . $product->name . "</b> foi adicionado pelo usuario <b>" . $user->name . "</b>",
+            "title" => "Lançamento adicionado",
+            "description" => "O lançamento <b>" . $sale->code . "</b> foi realizada pelo usuario <b>" . $user->name . "</b>",
             "datetime" => Carbon::now()->format('d/m/Y - H:i:s')
         ]);
         $customer->timeline = $timeline;
         $customer->save();
-        Messages::send("success", "Produto adicionado com sucesso !!");
+        Messages::send("success", "Lançamento adicionado com sucesso !!");
         return ["success" => true];
     }
 
     public function destroyProduct(Request $request)
     {
-        // $customer = Customer::findOrFail($request["customer_id"]);
-        // $user = Auth::user();
-        // CustomerProduct::where("id", $request["product"]["id"])->delete();
-        // $timeline = $customer->timeline;
-        // array_unshift($timeline, [
-        //     "title" => "Exclusão de Produto",
-        //     "description" => "o produto <b>" . $request["product"]["product"]["name"] . "</b> foi excluido pelo usuario <b>" . $user->name . "</b>",
-        //     "datetime" => Carbon::now()->format('d/m/Y - H:i:s')
-        // ]);
-        // $customer->timeline = $timeline;
-        // $customer->save();
-        // Messages::send("success", "Produto excluido com sucesso !!");
-        // return ["success" => true];
+        $customer = Customer::findOrFail($request["customer_id"]);
+        $user = Auth::user();
+        Sale::where("id", $request["sale"]["id"])->delete();
+        $timeline = $customer->timeline;
+        array_unshift($timeline, [
+            "title" => "Exclusão de Lançamento",
+            "description" => "O lançamento <b>" . $request["sale"]["f_code"] . "</b> foi excluido pelo usuario <b>" . $user->name . "</b>",
+            "datetime" => Carbon::now()->format('d/m/Y - H:i:s')
+        ]);
+        $customer->timeline = $timeline;
+        $customer->save();
+        Messages::send("success", "Lançamento excluido com sucesso !!");
+        return ["success" => true];
     }
 }

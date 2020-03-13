@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "796a6665211b1c9ff7be41f25a2bdb29",
+    "content-hash": "a5ed4f9006b48c8f293ad926989a5d69",
     "packages": [
         {
             "name": "artistas/laravel-pagseguro",
@@ -1554,16 +1554,16 @@
         },
         {
             "name": "marcusvbda/vstack",
-            "version": "5.8",
+            "version": "6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcusvbda/vstack.git",
-                "reference": "50351e7123b9a190cdd90440ac317133470ed0e3"
+                "reference": "7c8519bc50f130ce2cc46d0ad72ac0af75f37923"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marcusvbda/vstack/zipball/50351e7123b9a190cdd90440ac317133470ed0e3",
-                "reference": "50351e7123b9a190cdd90440ac317133470ed0e3",
+                "url": "https://api.github.com/repos/marcusvbda/vstack/zipball/7c8519bc50f130ce2cc46d0ad72ac0af75f37923",
+                "reference": "7c8519bc50f130ce2cc46d0ad72ac0af75f37923",
                 "shasum": ""
             },
             "require": {
@@ -1590,7 +1590,7 @@
                     "email": "bassalobre.vinicius@gmail.com"
                 }
             ],
-            "time": "2020-03-10T14:56:40+00:00"
+            "time": "2020-03-12T18:07:07+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -4370,16 +4370,16 @@
         },
         {
             "name": "vlucas/phpdotenv",
-            "version": "v3.6.0",
+            "version": "v3.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "1bdf24f065975594f6a117f0f1f6cabf1333b156"
+                "reference": "8f7961f7b9deb3b432452c18093cf16f88205902"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/1bdf24f065975594f6a117f0f1f6cabf1333b156",
-                "reference": "1bdf24f065975594f6a117f0f1f6cabf1333b156",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/8f7961f7b9deb3b432452c18093cf16f88205902",
+                "reference": "8f7961f7b9deb3b432452c18093cf16f88205902",
                 "shasum": ""
             },
             "require": {
@@ -4388,7 +4388,11 @@
                 "symfony/polyfill-ctype": "^1.9"
             },
             "require-dev": {
+                "ext-filter": "*",
                 "phpunit/phpunit": "^4.8.35 || ^5.0 || ^6.0 || ^7.0"
+            },
+            "suggest": {
+                "ext-filter": "Required to use the boolean validator."
             },
             "type": "library",
             "extra": {
@@ -4423,7 +4427,7 @@
                 "env",
                 "environment"
             ],
-            "time": "2019-09-10T21:37:39+00:00"
+            "time": "2020-03-12T13:44:00+00:00"
         }
     ],
     "packages-dev": [

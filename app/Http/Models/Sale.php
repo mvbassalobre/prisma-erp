@@ -44,4 +44,9 @@ class Sale extends DefaultModel
         }
         return $html . "</ul>";
     }
+
+    public function payment()
+    {
+        return $this->hasOne(\App\Http\Models\SalePayment::class);
+    }
 }

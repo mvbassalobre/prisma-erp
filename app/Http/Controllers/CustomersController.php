@@ -8,7 +8,8 @@ use marcusvbda\vstack\Controllers\ResourceController;
 use Illuminate\Http\Request;
 use App\Http\Models\{
     Customer,
-    Sale
+    Sale,
+    SalePayment
 };
 use Auth;
 use marcusvbda\vstack\Services\Messages;
@@ -18,10 +19,16 @@ class CustomersController extends Controller
 {
     public function attendance($code)
     {
-        $customer = Customer::with("sales", "sales.user")->findOrFail($code);
+        $canAddSale = $this->canAddSale();
+        $customer = Customer::with("sales", "sales.user", "sales.payment")->findOrFail($code);
         $data = $this->getViewData($code, $customer);
-        (new PagseguroController())->setAuth();
-        return view("admin.customers.attendance", compact("customer", "data"));
+        return view("admin.customers.attendance", compact("customer", "data", "canAddSale"));
+    }
+
+    private function canAddSale()
+    {
+        $user = Auth::user();
+        return ($user->getSettings("pagseguro-email") || $user->getSettings("pagseguro-email"));
     }
 
     private function getViewData($code, $customer)
@@ -32,17 +39,21 @@ class CustomersController extends Controller
         return $data;
     }
 
-    public function postNewProduct(Request $request)
+    public function postNewSale(Request $request)
     {
-        $customer = Customer::findOrFail($request["customer_id"]);
+        $data = $request->all();
+        $customer = Customer::findOrFail($data["customer_id"]);
         $user = Auth::user();
 
         $sale = Sale::create([
             "customer_id" => $customer->id,
-            "items" => $request["items"],
-            "subtotal" => floatval($request["subtotal"]),
+            "items" => $data["items"],
+            "subtotal" => floatval($data["subtotal"]),
             "user_id" => $user->id
         ]);
+
+        $this->makePayment($sale, $customer);
+
         $timeline = $customer->timeline;
         array_unshift($timeline, [
             "title" => "Lançamento adicionado",
@@ -55,7 +66,20 @@ class CustomersController extends Controller
         return ["success" => true];
     }
 
-    public function destroyProduct(Request $request)
+    private function makePayment($sale, $customer)
+    {
+        $payment = (new PagseguroController());
+        $payment->makePayment($customer, $sale->code);
+        foreach ($sale->items as $item) $payment->setItem($item["id"], $item["name"], $item["price"], $item["qty"]);
+        $url = $payment->generateUrl();
+        SalePayment::create([
+            "sale_id" => $sale->id,
+            "url" => $url,
+            "reference" => $sale->code,
+        ]);
+    }
+
+    public function destroySale(Request $request)
     {
         $customer = Customer::findOrFail($request["customer_id"]);
         $user = Auth::user();

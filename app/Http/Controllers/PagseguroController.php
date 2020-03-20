@@ -4,80 +4,103 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Config;
-use PagSeguro;
+use CWG\PagSeguro\PagSeguroCompras;
+use Request;
+use Illuminate\Support\Facades\Log;
+use Auth;
 
 class PagseguroController extends Controller
 {
-    private $pagseguro = null;
-    private $items = [];
+    // public function teste()
+    // {
+    //     // $this->testePagamento();
+    //     // $this->consultaPagamento("6BF87D51-7FEE-4CF8-A169-6B4B8A6F52ED");
+    //     $this->setAuth();
+    //     $this->init();
+    //     $response = $this->pagseguro->consultarNotificacao("6BF87D51-7FEE-4CF8-A169-6B4B8A6F52ED");
+    //     dd
+    //     // $this->cancelarCompra("0ECE9EB2CDC0488D83C0464385EDD70B");
+    //     // $this->estornoCompraAprovada("0ECE9EB2CDC0488D83C0464385EDD70B");
+    //     // dd("teste");
+    // }
 
-    public function teste()
-    {
-        dd($this->bankslipExample());
-    }
-
-    private function bankslipExample()
-    {
-        $this->init("9439c0e940786276b7e2c0a0a28463c841d2451e7302f528fb863ff085520f53");
-        $this->setSenderInfo([
-            "name" => "Marcus Vinicius Bassalobre",
-            "phone" => "(14) 99676-6177",
-            "email" => null,
-            "hash" => $this->hash,
-            "cpf" => "406.145.898-19"
-        ]);
-        //pode inserir varios items
-        $this->setItem([
-            'id' => 'ID',
-            'description' => 'Nome do Item',
-            'price' => 12.14,
-            'qty' => '2',
-        ]);
-        return $this->generateBankslip();
-    }
-
-    private function generateBankslip()
-    {
-        $this->pagseguro = $this->pagseguro->setItems($this->items);
-        $this->pagseguro = $this->pagseguro->send([
-            'paymentMethod' => 'boleto'
-        ]);
-        return $this->pagseguro;
-    }
-
-    private function init($hash)
+    public function makePayment($customer, $ref)
     {
         $this->setAuth();
-        $this->pagseguro = PagSeguro::setReference(uniqid());
-        $this->hash = $hash;
-        $this->items = [];
+        $this->init();
+        if (@$customer->name) {
+            if (str_word_count($customer->name) > 1) $this->pagseguro->setNomeCliente($customer->name);
+        }
+        if (@$customer->email) $this->pagseguro->setEmailCliente($customer->email);
+        $this->pagseguro->setReferencia($ref);
+    }
+
+    public function setItem($code, $name, $price, $qty)
+    {
+        $this->pagseguro->adicionarItem($code, $name, $price, $qty);
+    }
+
+    public function generateUrl()
+    {
+        $this->pagseguro->setNotificationURL(route("admin.pagseguro.notification"));
+        $url = $this->pagseguro->gerarURLCompra();
+        return $url;
+    }
+
+    public function notification(Request $request)
+    {
+        $this->setAuth();
+        $this->init();
+        if (@$request['notificationType'] == 'transaction') {
+            $cod = $request['notificationCode']; //Recebe o código da notificação e busca as informações de como está a assinatura
+            $response = $this->pagseguro->consultarCompra($cod);
+            return Log::debug("pagseguro", $response);
+        }
+    }
+
+    private function init()
+    {
+        $this->pagseguro = new PagSeguroCompras(Config::get("pagseguro.email"), Config::get("pagseguro.token"), Config::get("pagseguro.sandbox"));
+        $this->pagseguro->setNotificationURL(route("admin.pagseguro.notification"));
     }
 
     public function setAuth()
     {
+        $user = Auth::user();
         Config::set("pagseguro.sendbox", true);
-        Config::set("pagseguro.email", "bassalobre.vinicius@gmail.com");
-        Config::set("pagseguro.token", "5F58734FD5784A2691E2692B3BA2AC21");
+        Config::set("pagseguro.email", $user->getSettings("pagseguro-email"));
+        Config::set("pagseguro.token", $user->getSettings("pagseguro-token"));
     }
 
-    private function setSenderInfo($sender)
-    {
-        $this->pagseguro = $this->pagseguro->setSenderInfo([
-            'senderName' => $sender["name"],
-            'senderPhone' => $sender["phone"],
-            'senderEmail' =>  @$sender["email"],
-            'senderHash' =>  $sender["hash"],
-            'senderCPF' => $sender["cpf"]
-        ]);
-    }
+    // private function estornoCompraAprovada($cod)
+    // {
+    //     $this->setAuth();
+    //     $this->init();
+    //     try {
+    //         $this->pagseguro->estornar($cod);
+    //         //Opcionalmente pode informar a quantia a estornar (Ex: R$ 178,99). Senão informado, estorna todo valor
+    //         //$pagseguro->estornar($codigoTransacao, 178.99);
+    //     } catch (Exception $e) {
+    //         echo $e->getMessage();
+    //     }
+    // }
 
-    private function setItem($item)
-    {
-        $this->items[] = [
-            'itemId' => $item["id"],
-            'itemDescription' => @$item["description"],
-            'itemAmount' => $item["price"],
-            'itemQuantity' => $item["qty"]
-        ];
-    }
+    // private function cancelarCompra($cod)
+    // {
+    //     $this->setAuth();
+    //     $this->init();
+    //     try {
+    //         $this->pagseguro->cancelar($cod);
+    //     } catch (Exception $e) {
+    //         echo $e->getMessage();
+    //     }
+    // }
+
+    // private function consultaPagamento($cod)
+    // {
+    //     $this->setAuth();
+    //     $this->init();
+    //     $response = $this->pagseguro->consultarCompra($cod);
+    //     dd($response);
+    // }
 }

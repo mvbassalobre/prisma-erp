@@ -16,7 +16,7 @@
                         <a
                             href="#"
                             class="link"
-                            v-if="sales.length>0"
+                            v-if="(sales.length>0) && canaddsale"
                             @click.prevent="addSale"
                         >Adicionar</a>
                     </div>
@@ -25,7 +25,7 @@
                             <div class="col-12">
                                 <template v-if="sales.length<=0">
                                     <div
-                                        class="h-100 d-flex align-items-center justify-content-center flex-column"
+                                        class="h-100 d-flex align-items-center justify-content-center flex-column pb-4"
                                     >
                                         <h1 class="mt-4">
                                             <span class="el-icon-s-finance mr-2"></span>
@@ -33,6 +33,7 @@
                                         <h5>Cliente não possui lançamentos</h5>
                                         <small>Adicione um lançamento clicando no botão abaixo</small>
                                         <button
+                                            v-if="canaddsale"
                                             class="btn btn-primary mb-4 mt-3"
                                             @click="addSale"
                                         >Adicionar Lançamento</button>
@@ -54,7 +55,13 @@
                                         </thead>
                                         <tbody>
                                             <tr v-for="(s,i) in sales" :key="i">
-                                                <td>{{s.f_code}}</td>
+                                                <td>
+                                                    <a
+                                                        class="link"
+                                                        href="#"
+                                                        @click.prevent="showDetail(s)"
+                                                    >{{s.f_code}}</a>
+                                                </td>
                                                 <td>
                                                     <div v-html="s.f_items"></div>
                                                 </td>
@@ -85,6 +92,7 @@
             </div>
         </div>
         <modal-sales ref="modal_sales" :customer="customer" />
+        <modal-detail ref="modal_detail" :customer="customer" />
     </div>
 </template>
 <script>
@@ -102,11 +110,19 @@ export default {
             type: String,
             default: () => null
         },
+        canaddsale: {
+            type: Boolean,
+            default: false
+        }
     },
     components: {
-        "modal-sales": require("./-modal-sales.vue").default
+        "modal-sales": require("./-modal-sales.vue").default,
+        "modal-detail": require("./-modal-detail.vue").default,
     },
     methods: {
+        showDetail(s) {
+            this.$refs.modal_detail.showModal(s)
+        },
         destroy(p) {
             this.$confirm(`Confirma exclusão ?`, "Confirmação", {
                 confirmButtonText: "Sim",
@@ -114,7 +130,7 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.loading = this.$loading()
-                this.$http.post(laravel.general.root_url + "/admin/customers/destroy_product", { customer_id: this.customer.id, sale: p }).then(res => {
+                this.$http.post(laravel.general.root_url + "/admin/customers/destroy_sale", { customer_id: this.customer.id, sale: p }).then(res => {
                     window.location.reload()
                 }).catch(er => {
                     this.loading.close()

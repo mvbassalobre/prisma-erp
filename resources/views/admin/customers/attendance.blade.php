@@ -34,6 +34,6 @@
 <customer-attendance 
     :customer="{{json_encode($customer)}}"
     :data="{{json_encode($data)}}"
-    pagseguro_session="{{PagSeguro::startSession()}}"
+    :canaddsale="{{json_encode($canAddSale ? true : false)}}"
 ></customer-attendance>
 @endsection

@@ -33,27 +33,21 @@ class ParametersController extends Controller
     {
         $data = $request->all();
         $tenant = Auth::user()->tenant;
+
         $values = array_map(function ($key) use ($data) {
             $value = $data[$key];
             if (is_bool($value)) $value = $value === true ? "true" : "false";
             return ["setting_id" => $key, "setting_value" =>  $value];
         }, array_keys($data));
+
         $tenant->settings()->detach();
+
         foreach ($values as $key => $value) {
-            $values[$key] = array_map(function ($x) {
-                return json_encode($x);
+            $values[$key] = array_map(function ($x) use ($key) {
+                return ($key <= 1) ? json_encode($x) : $x;
             }, $value);
         }
         $tenant->settings()->attach($values);
-        return ['success' => true];
-    }
-
-    public function tags(Request $request)
-    {
-        $tags = $request->all();
-        $tenant = Auth::user()->tenant;
-        $tenant->whitelist = $tags;
-        $tenant->save();
         return ['success' => true];
     }
 }

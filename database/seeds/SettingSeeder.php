@@ -23,6 +23,22 @@ class SettingSeeder extends Seeder
             "name" => "Logo Grande",
             "type" => "image",
         ]);
+
+        //true
+        Setting::create([
+            "name" => "Pagseguro Sandbox",
+            "type" => "boolean",
+        ]);
+        //bassalobre.vinicius@gmail.com
+        Setting::create([
+            "name" => "Pagseguro Email",
+            "type" => "text",
+        ]);
+        //5F58734FD5784A2691E2692B3BA2AC21
+        Setting::create([
+            "name" => "Pagseguro Token",
+            "type" => "text",
+        ]);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

@@ -25,14 +25,19 @@
             <div class="tab-content" id="v-pills-tabContent">
                 <comp-info :info="data" :active="active" />
                 <comp-timeline :timeline="customer.timeline" :active="active" />
-                <comp-sales :sales="customer.sales" :customer="customer" :active="active" />
+                <comp-sales
+                    :sales="customer.sales"
+                    :customer="customer"
+                    :active="active"
+                    :canaddsale="canaddsale"
+                />
             </div>
         </div>
     </div>
 </template>
 <script>
 export default {
-    props: ["customer", "data", "pagseguro_session"],
+    props: ["customer", "data", "canaddsale"],
     data() {
         return {
             active: "info",
@@ -50,18 +55,8 @@ export default {
     },
     created() {
         this.initHash()
-        this.initPagSeguro()
     },
     methods: {
-        initPagSeguro() {
-            PagSeguroDirectPayment.setSessionId(this.pagseguro_session)
-            // setTimeout(() => {
-            //     console.log(this.getPagSeguroHash())
-            // }, 2000)
-        },
-        getPagSeguroHash() {
-            return PagSeguroDirectPayment.getSenderHash()
-        },
         initHash() {
             let hash = window.location.hash
             if (hash) {

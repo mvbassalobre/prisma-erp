@@ -1,6 +1,6 @@
 <template>
     <modal
-        name="modal"
+        name="modal_sales"
         :clickToClose="false"
         :height="530"
         :width="'80%'"
@@ -14,7 +14,7 @@
                     Adicionar lançamento ao cliente
                     <b>{{customer.name}}</b>
                 </div>
-                <a @click.prevent="$modal.hide('modal')">
+                <a @click.prevent="$modal.hide('modal_sales')">
                     <i class="el-icon-close"></i>
                 </a>
             </div>
@@ -156,7 +156,7 @@
                             <a
                                 class="text-danger mr-4"
                                 href="#"
-                                @click.prevent="$modal.hide('modal')"
+                                @click.prevent="$modal.hide('modal_sales')"
                             >Cancelar</a>
                             <button
                                 class="btn btn-primary"
@@ -212,7 +212,7 @@ export default {
             }).catch(() => false)
         },
         showModal() {
-            this.$modal.show('modal')
+            this.$modal.show('modal_sales')
             this.getProducts()
         },
         push() {
@@ -250,11 +250,11 @@ export default {
                     subtotal: this.subtotal
                 }
                 if (this.subtotal <= 0) return this.$message({ showClose: true, message: "Selecione o produto antes de confirmar", type: "error" })
-                this.loading = this.$loading()
-                this.$http.post(laravel.general.root_url + "/admin/customers/post_new_product", data).then(res => {
+                this._loading = this.$loading()
+                this.$http.post(laravel.general.root_url + "/admin/customers/post_new_sale", data).then(res => {
                     window.location.reload()
                 }).catch(er => {
-                    this.loading.close()
+                    this._loading.close()
                     console.log(er)
                     this.$message({ showClose: true, message: "Erro ao salvar", type: "error" })
                 })

@@ -4,42 +4,29 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "94192feb8d065a97415594e1fff9fdd2",
+    "content-hash": "eb8728a89dea672921b050b34891d344",
     "packages": [
         {
-            "name": "artistas/laravel-pagseguro",
-            "version": "v1.8.0",
+            "name": "carloswgama/php-pagseguro",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/artistas/laravel-pagseguro.git",
-                "reference": "b77376fc7e1b2e18e1c81f3364b727f29e676b2c"
+                "url": "https://github.com/CarlosWGama/php-pagseguro.git",
+                "reference": "b73b296d9340acc44819c393fa91e9ca58a5c99e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artistas/laravel-pagseguro/zipball/b77376fc7e1b2e18e1c81f3364b727f29e676b2c",
-                "reference": "b77376fc7e1b2e18e1c81f3364b727f29e676b2c",
+                "url": "https://api.github.com/repos/CarlosWGama/php-pagseguro/zipball/b73b296d9340acc44819c393fa91e9ca58a5c99e",
+                "reference": "b73b296d9340acc44819c393fa91e9ca58a5c99e",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "^5.2|^6.0",
-                "php": ">=5.5.9"
+                "php": ">=5.3.0"
             },
             "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Artistas\\PagSeguro\\PagSeguroServiceProvider"
-                    ],
-                    "aliases": {
-                        "PagSeguro": "Artistas\\PagSeguro\\PagSeguroFacade",
-                        "PagSeguroRecorrente": "Artistas\\PagSeguro\\PagSeguroRecorrenteFacade",
-                        "PagSeguroBoleto": "Artistas\\PagSeguro\\PagSeguroBoletoFacade"
-                    }
-                }
-            },
             "autoload": {
                 "psr-4": {
-                    "Artistas\\PagSeguro\\": "src/Artistas/"
+                    "CWG\\PagSeguro\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -48,19 +35,12 @@
             ],
             "authors": [
                 {
-                    "name": "Fernando Henrique Bandeira",
-                    "email": "fernando.bandeira94@gmail.com"
+                    "name": "Carlos W. Gama",
+                    "email": "carloswgama@gmail.com"
                 }
             ],
-            "description": "PagSeguro Checkout Transparente e Pagamento Recorrente(Assinaturas) no Laravel 5.*",
-            "keywords": [
-                "Pagseguro",
-                "assinaturas",
-                "laravel",
-                "recorrente",
-                "transparente"
-            ],
-            "time": "2019-09-22T23:31:39+00:00"
+            "description": "Classe para realizar pagamentos comuns e recorrentes no PagSeguro",
+            "time": "2019-10-10T18:41:38+00:00"
         },
         {
             "name": "cocur/slugify",

@@ -8,13 +8,16 @@ use CWG\PagSeguro\PagSeguroCompras;
 use Request;
 use Illuminate\Support\Facades\Log;
 use Auth;
+use App\Http\Models\{
+    SalePayment
+};
 
 class PagseguroController extends Controller
 {
     // public function teste()
     // {
     //     // $this->testePagamento();
-    //     // $this->consultaPagamento("6BF87D51-7FEE-4CF8-A169-6B4B8A6F52ED");
+    // $this->notification(["notificationType" => 'transaction', 'notificationCode' => "6BF87D51-7FEE-4CF8-A169-6B4B8A6F52ED"]);
     //     $this->setAuth();
     //     $this->init();
     //     $response = $this->pagseguro->consultarNotificacao("6BF87D51-7FEE-4CF8-A169-6B4B8A6F52ED");
@@ -47,13 +50,19 @@ class PagseguroController extends Controller
         return $url;
     }
 
-    public function notification(Request $request)
+    public function notification($request)
     {
         $this->setAuth();
         $this->init();
         if (@$request['notificationType'] == 'transaction') {
             $cod = $request['notificationCode']; //Recebe o código da notificação e busca as informações de como está a assinatura
-            $response = $this->pagseguro->consultarCompra($cod);
+            $response = $this->getPayment($cod);
+            $sale = SalePayment::where("reference", $cod)->first();
+            if ($sale) {
+                $sale->status = $response["info"]["estado"];
+                $sale->description = $response["info"]["descricao"];
+                $sale->save();
+            }
             return Log::debug("pagseguro", $response);
         }
     }
@@ -96,11 +105,11 @@ class PagseguroController extends Controller
     //     }
     // }
 
-    // private function consultaPagamento($cod)
-    // {
-    //     $this->setAuth();
-    //     $this->init();
-    //     $response = $this->pagseguro->consultarCompra($cod);
-    //     dd($response);
-    // }
+    private function getPayment($cod)
+    {
+        $this->setAuth();
+        $this->init();
+        $response = $this->pagseguro->consultarCompra($cod);
+        dd($response);
+    }
 }

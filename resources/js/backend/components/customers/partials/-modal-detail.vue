@@ -18,9 +18,103 @@
                 </a>
             </div>
             <div class="card-body d-flex flex-column" v-loading="loading" style="overflow-y: auto;">
-                <a class="link" :href="sale.payment.url" target="_BLANK">{{sale.payment.url}}</a>
-                <div v-loading="qrCodeLoading" style="width: 196px;height: 196px;">
-                    <canvas ref="qrCode" />
+                <div class="row">
+                    <div class="col-12">
+                        <h5>
+                            Cliente
+                            <small class="ml-2">
+                                <a
+                                    :href="customerRoute"
+                                    target="_BLANK"
+                                    class="link"
+                                >Ver Detalhadamente</a>
+                            </small>
+                        </h5>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-6 col-sm-12 d-flex flex-column">
+                        <div>
+                            <b>Nome :</b>
+                            {{this.customer.name}}
+                        </div>
+                        <div>
+                            <b>Email :</b>
+                            {{this.customer.email}}
+                        </div>
+                        <div>
+                            <b>Telefones :</b>
+                            {{this.customer.phone}} - {{this.customer.cellphone}}
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12 d-flex flex-column">
+                        <div>
+                            <b>CPF/CNPJ :</b>
+                            {{this.customer.cpfcnpj}}
+                        </div>
+                        <div>
+                            <b>RG/IE :</b>
+                            {{this.customer.ierg}}
+                        </div>
+                        <div>
+                            <b>Profissão :</b>
+                            {{this.customer.profession}}
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mt-4">
+                    <div class="col-md-7 col-sm-12">
+                        <h5>Itens</h5>
+                        <table class="table table-striped hovered resource-table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Items</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div v-html="sale.f_items"></div>
+                                    </td>
+                                    <td>R$ {{(Number(sale.subtotal)).toFixed(2)}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-5 col-sm-12">
+                        <h5>Pagamento</h5>
+                        <div class="d-flex flex-row">
+                            <template v-if="sale.payment.status=='Aguardando pagamento'">
+                                <div class="d-flex flex-column col-md-6 col-sm-12 pl-0 mt-3">
+                                    <div
+                                        class="d-flex justify-content-center align-content-center"
+                                        v-loading="qrCodeLoading"
+                                        style="width: 100%;height: 100%;border: 1px solid #cecece;"
+                                    >
+                                        <canvas ref="qrCode" />
+                                    </div>
+                                    <a
+                                        class="link text-center"
+                                        @click.prevent="clipboardPayment(sale.payment.url)"
+                                        href="#"
+                                        target="_BLANK"
+                                    >Copiar Link de Pagamento</a>
+                                </div>
+                            </template>
+                            <div class="d-flex flex-column col-md-6 col-sm-12">
+                                <div>
+                                    <b>Status :</b>
+                                    {{this.sale.payment.status}}
+                                </div>
+                                <div v-if="this.sale.payment.description">
+                                    <b>Descrição :</b>
+                                    {{this.sale.payment.description}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -37,11 +131,17 @@ export default {
             qrCodeLoading: true
         }
     },
+    computed: {
+        customerRoute() {
+            return `${laravel.general.root_url}/admin/customers/${this.customer.code}`
+        }
+    },
     methods: {
         showModal(s) {
             this.sale = s
             this.$modal.show('modal_detail')
             this.generateQrCode()
+            console.log(this.sale.payment)
         },
         generateQrCode() {
             setTimeout(() => {
@@ -49,6 +149,11 @@ export default {
                     this.qrCodeLoading = false
                 })
             }, 100)
+        },
+        clipboardPayment(str) {
+            String(str).toClipboard(res => {
+                this.$message({ showClose: true, message: "Url copiado !!!!", type: "info" })
+            })
         }
     }
 }

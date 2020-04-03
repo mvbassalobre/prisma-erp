@@ -150,7 +150,13 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <label>
+                            <input type="checkbox" v-model="generate_payment" /> Gerar URL de Pagamento
+                        </label>
+                    </div>
+                </div>
                 <div class="row mt-auto">
                     <div class="col-12">
                         <div class="d-flex flex-row align-items-center justify-content-end">
@@ -162,7 +168,7 @@
                             <button
                                 class="btn btn-primary"
                                 @click="submit"
-                                :disabled="subtotal<=0"
+                                :disabled="!canCreate"
                             >Criar Lançamento</button>
                         </div>
                     </div>
@@ -182,10 +188,15 @@ export default {
             qty: null,
             obs: null,
             items: [],
-            selected_price: null
+            selected_price: null,
+            generate_payment: true
         }
     },
     computed: {
+        canCreate() {
+            if (this.generate_payment) return (this.subtotal > 0)
+            return true
+        },
         selected_product() {
             if (!this.product_id) return this.cleanForm()
             this.qty = 1
@@ -242,6 +253,7 @@ export default {
             this.obs = null
             this.qty = null
             this.selected_price = null
+            this.generate_payment = true
         },
         submit() {
             this.$confirm(`Confirma lançamento ?`, "Confirmação", {
@@ -252,9 +264,9 @@ export default {
                 let data = {
                     customer_id: this.customer.id,
                     items: this.items,
-                    subtotal: this.subtotal
+                    subtotal: this.subtotal,
+                    payment: this.generate_payment
                 }
-                if (this.subtotal <= 0) return this.$message({ showClose: true, message: "Selecione o produto antes de confirmar", type: "error" })
                 this._loading = this.$loading()
                 this.$http.post(laravel.general.root_url + "/admin/customers/post_new_sale", data).then(res => {
                     window.location.reload()

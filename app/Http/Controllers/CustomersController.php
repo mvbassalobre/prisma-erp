@@ -52,7 +52,7 @@ class CustomersController extends Controller
             "user_id" => $user->id
         ]);
 
-        $this->makePayment($sale, $customer);
+        if ($data["payment"]) $this->makePayment($sale, $customer);
 
         $timeline = $customer->timeline;
         array_unshift($timeline, [

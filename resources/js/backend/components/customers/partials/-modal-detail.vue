@@ -83,7 +83,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-md-5 col-sm-12">
+                    <div class="col-md-5 col-sm-12" v-if="sale.payment">
                         <h5>Pagamento</h5>
                         <div class="d-flex flex-row">
                             <template v-if="sale.payment.status=='Aguardando pagamento'">
@@ -133,6 +133,7 @@ export default {
     },
     computed: {
         customerRoute() {
+            if (!this.sale.payment) return ""
             return `${laravel.general.root_url}/admin/customers/${this.customer.code}`
         }
     },
@@ -140,8 +141,7 @@ export default {
         showModal(s) {
             this.sale = s
             this.$modal.show('modal_detail')
-            this.generateQrCode()
-            console.log(this.sale.payment)
+            if (this.sale.payment) this.generateQrCode()
         },
         generateQrCode() {
             setTimeout(() => {

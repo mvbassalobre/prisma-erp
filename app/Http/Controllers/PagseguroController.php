@@ -14,18 +14,18 @@ use App\Http\Models\{
 
 class PagseguroController extends Controller
 {
-    // public function teste()
-    // {
-    //     // $this->testePagamento();
-    // $this->notification(["notificationType" => 'transaction', 'notificationCode' => "6BF87D51-7FEE-4CF8-A169-6B4B8A6F52ED"]);
-    //     $this->setAuth();
-    //     $this->init();
-    //     $response = $this->pagseguro->consultarNotificacao("6BF87D51-7FEE-4CF8-A169-6B4B8A6F52ED");
-    //     dd
-    //     // $this->cancelarCompra("0ECE9EB2CDC0488D83C0464385EDD70B");
-    //     // $this->estornoCompraAprovada("0ECE9EB2CDC0488D83C0464385EDD70B");
-    //     // dd("teste");
-    // }
+    public function teste()
+    {
+        $this->test_payment();
+    }
+
+    private function test_payment()
+    {
+        $this->makePayment(\App\Http\Models\Customer::orderBy("id", "desc")->first(), uniqid());
+        $this->setItem(uniqid(), "lorem ipsum", 12, 1);
+        $url = $this->generateUrl();
+        dd($url);
+    }
 
     public function makePayment($customer, $ref)
     {
@@ -55,7 +55,7 @@ class PagseguroController extends Controller
         $this->setAuth();
         $this->init();
         if (@$request['notificationType'] == 'transaction') {
-            $cod = $request['notificationCode']; //Recebe o código da notificação e busca as informações de como está a assinatura
+            $cod = $request['notificationCode'];
             $response = $this->getPayment($cod);
             $sale = SalePayment::where("reference", $cod)->first();
             if ($sale) {
@@ -76,7 +76,7 @@ class PagseguroController extends Controller
     public function setAuth()
     {
         $user = Auth::user();
-        Config::set("pagseguro.sendbox", true);
+        Config::set("pagseguro.sandbox", $user->getSettings("pagseguro-sandbox"));
         Config::set("pagseguro.email", $user->getSettings("pagseguro-email"));
         Config::set("pagseguro.token", $user->getSettings("pagseguro-token"));
     }
@@ -94,16 +94,16 @@ class PagseguroController extends Controller
     //     }
     // }
 
-    // private function cancelarCompra($cod)
-    // {
-    //     $this->setAuth();
-    //     $this->init();
-    //     try {
-    //         $this->pagseguro->cancelar($cod);
-    //     } catch (Exception $e) {
-    //         echo $e->getMessage();
-    //     }
-    // }
+    private function cancelPayment($cod)
+    {
+        $this->setAuth();
+        $this->init();
+        try {
+            $this->pagseguro->cancelar($cod);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
 
     private function getPayment($cod)
     {

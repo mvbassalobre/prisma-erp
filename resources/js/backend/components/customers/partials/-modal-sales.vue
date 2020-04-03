@@ -56,8 +56,9 @@
                                     <div class="d-flex flex-column">
                                         <input
                                             class="form-control"
-                                            disabled
-                                            :value="`${selected_product ? selected_product.price : ''}`"
+                                            :disabled="!selected_product ||( selected_product.price != 0)"
+                                            v-model="selected_price"
+                                            type="number"
                                         />
                                         <small>Valor Unitário</small>
                                     </div>
@@ -69,7 +70,7 @@
                                             disabled
                                             :value="`${selected_product ? total : ''}`"
                                         />
-                                        <small>Valor Unitário</small>
+                                        <small>Total</small>
                                     </div>
                                 </div>
                             </div>
@@ -180,20 +181,23 @@ export default {
             product_id: null,
             qty: null,
             obs: null,
-            items: []
+            items: [],
+            selected_price: null
         }
     },
     computed: {
         selected_product() {
             if (!this.product_id) return this.cleanForm()
             this.qty = 1
-            return this.products.find(x => x.id === this.product_id)
+            let p = this.products.find(x => x.id === this.product_id)
+            this.selected_price = p.price
+            return p
         },
         total() {
             if (!this.product_id) return 0
             let product = this.products.find(x => x.id === this.product_id)
             if (this.qty < 1) return (0).toFixed(2)
-            return (Number(this.qty) * Number(product.price)).toFixed(2)
+            return (Number(this.qty) * Number(this.selected_price)).toFixed(2)
         },
         subtotal() {
             let value = 0
@@ -217,17 +221,17 @@ export default {
         },
         push() {
             if (this.qty <= 0) return this.$message({ showClose: true, message: "Quantidade do item deve ser maior que 0", type: "warning" })
-            let founded_item = this.items.find(x => x.id == this.product_id)
+            let founded_item = this.items.find(x => (x.id == this.product_id && x.price == this.selected_price))
             if (founded_item) {
                 founded_item.qty += Number(this.qty)
-                founded_item.total = Number(founded_item.price) * Number(founded_item.qty)
+                founded_item.total = Number(this.selected_price) * Number(founded_item.qty)
             } else {
                 this.items.push({
                     id: this.product_id,
                     qty: Number(this.qty),
-                    price: Number(this.selected_product.price),
+                    price: Number(this.selected_price),
                     name: this.selected_product.name,
-                    total: Number(this.qty) * Number(this.selected_product.price),
+                    total: Number(this.qty) * Number(this.selected_price),
                     obs: this.obs,
                 })
             }
@@ -237,6 +241,7 @@ export default {
             this.product_id = null
             this.obs = null
             this.qty = null
+            this.selected_price = null
         },
         submit() {
             this.$confirm(`Confirma lançamento ?`, "Confirmação", {

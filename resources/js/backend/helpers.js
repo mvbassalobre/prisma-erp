@@ -56,7 +56,6 @@ Vue.prototype.$goTo = (url) => window.location.href = url
 
 
 String.prototype.toClipboard = function (callback = () => { }) {
-    console.log(this)
     let el = document.createElement('textarea')
     el.value = this
     el.setAttribute('readonly', '')

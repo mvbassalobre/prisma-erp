@@ -15,13 +15,13 @@
         "laravel/framework": "^6.2",
         "laravel/socialite": "^4.3",
         "laravel/tinker": "^1.0",
-        "marcusvbda/vstack": "^6.2",
         "nesbot/carbon": "^2.27",
         "pusher/pusher-php-server": "^4.1",
         "s-ichikawa/laravel-sendgrid-driver": "^2.1",
         "spatie/browsershot": "^3.34",
         "spatie/laravel-permission": "^3.3",
-        "vinkla/hashids": "^7.0"
+        "vinkla/hashids": "^7.0",
+        "marcusvbda/vstack": "dev-master"
     },
     "require-dev": {
         "facade/ignition": "^1.4",
@@ -30,6 +30,12 @@
         "nunomaduro/collision": "^3.0",
         "phpunit/phpunit": "^8.0"
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/marcusvbda/vstack.git"
+        }
+    ],
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",

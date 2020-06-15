@@ -44,7 +44,8 @@ export default {
             options: [
                 { name: "info", label: "Cliente", active: true },
                 { name: "timeline", label: "Timeline", active: false },
-                { name: "sales", label: "Financeiro", active: false }
+                { name: "sales", label: "Financeiro", active: false },
+                // { name: "flux", label: "Fluxo de Caixa", active: false },
             ]
         }
     },

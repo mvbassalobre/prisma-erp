@@ -23,7 +23,7 @@
         </div>
         <div class="col-md-10 col-sm-12">
             <div class="tab-content" id="v-pills-tabContent">
-                <comp-info :info="data" :active="active" />
+                <comp-info :info="data" :active="active" :customer="customer" />
                 <comp-timeline :timeline="customer.timeline" :active="active" />
                 <comp-sales
                     :sales="customer.sales"

@@ -18,7 +18,8 @@ class Customer extends DefaultModel
     protected $appends = ['code', 'f_created_at', 'last_update', 'phones', 'actions'];
 
     public $casts = [
-        "timeline" => "Array"
+        "timeline" => "Array",
+        "data" => "Array",
     ];
 
     public static function hasTenant()

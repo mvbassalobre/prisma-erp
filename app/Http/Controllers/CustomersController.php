@@ -95,4 +95,15 @@ class CustomersController extends Controller
         Messages::send("success", "Lançamento excluido com sucesso !!");
         return ["success" => true];
     }
+
+    public function addGoal($id, Request $request)
+    {
+        $customer = Customer::findOrFail($id);
+        $data = @$customer->data ? $customer->data : [];
+        $goals = $request->all();
+        $data["goals"] = $goals;
+        $customer->data = $data;
+        $customer->save();
+        return ["success" => true];
+    }
 }

@@ -41,7 +41,6 @@
                         </div>
                     </div>
                 </div>
-                <comp-goals :customer="customer" />
             </div>
         </div>
     </div>
@@ -52,7 +51,6 @@ export default {
     props: ["info", "active", "customer"],
     components: {
         "v-runtime-template": VRuntimeTemplate,
-        'comp-goals': require("./-comp-goals.vue").default
     }
 }
 </script>

@@ -13,22 +13,24 @@
                 <h6 class="font-weight-light">Fico Feliz em ve-lo novamente!</h6>
                 <slot name="alerts"></slot>
                 <form class="needs-validation mt-4" novalidate v-on:submit.prevent="submit">
-                    <v-input
-                        class="mb-3"
-                        :prepend="`<i class='text-secondary'>@</i>`"
-                        type="email"
-                        v-model="frm.email"
-                        placeholder="Digite aqui seu email ..."
-                        :errors="errors.email ? errors.email : false"
-                    />
-                    <v-input
-                        class="mb-3"
-                        :prepend="`<i class='el-icon-lock text-secondary'></i>`"
-                        type="password"
-                        v-model="frm.password"
-                        placeholder="Digite aqui sua senha ..."
-                        :errors="errors.password ? errors.password : false"
-                    />
+                    <table class="w-100 my-3">
+                        <v-input
+                            class="mb-3"
+                            :prepend="`<i class='text-secondary'>@</i>`"
+                            type="email"
+                            v-model="frm.email"
+                            placeholder="Digite aqui seu email ..."
+                            :errors="errors.email ? errors.email : false"
+                        />
+                        <v-input
+                            class="mb-3"
+                            :prepend="`<i class='el-icon-lock text-secondary'></i>`"
+                            type="password"
+                            v-model="frm.password"
+                            placeholder="Digite aqui sua senha ..."
+                            :errors="errors.password ? errors.password : false"
+                        />
+                    </table>
                     <div
                         class="d-flex flex-row flex-wrap justify-content-between align-items-center"
                     >

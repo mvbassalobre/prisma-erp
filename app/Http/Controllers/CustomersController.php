@@ -106,4 +106,15 @@ class CustomersController extends Controller
         $customer->save();
         return ["success" => true];
     }
+
+    public function saveFlux($id, Request $request)
+    {
+        $customer = Customer::findOrFail($id);
+        $data = @$customer->data ? $customer->data : [];
+        $entries = $request->all();
+        $data["entries"] = (object) @$entries;
+        $customer->data = $data;
+        $customer->save();
+        return ["success" => true];
+    }
 }

@@ -13,7 +13,7 @@
                         <comp-goals :customer="customer" />
                     </el-tab-pane>
                     <el-tab-pane label="Fluxo de Caixa">
-                        <comp-entries v-model="entries" :months="months" />
+                        <comp-entries v-model="entries" :months="months" v-loading="loading" />
                     </el-tab-pane>
                 </el-tabs>
             </div>
@@ -25,14 +25,31 @@ export default {
     props: ["active", "customer"],
     data() {
         return {
+            loading: false,
             months: this.$getMoths(),
-            entries: ['teste'],
-            flux: []
+            entries: this.customer.data.entries ? this.customer.data.entries : {},
+        }
+    },
+    watch: {
+        entries(val) {
+            this.save()
         }
     },
     components: {
         'comp-goals': require("./-goals.vue").default,
         'comp-entries': require("./partials/-entries.vue").default,
+    },
+    methods: {
+        save(val) {
+            this.loading = true
+            this.$http.post(`/admin/customers/${this.customer.code}/attendance/save-flux`, this.entries).then(resp => {
+                resp = resp.data
+                this.loading = false
+            }).catch(er => {
+                console.log(er)
+                this.loading = false
+            })
+        }
     }
 }
 </script>

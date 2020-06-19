@@ -81,3 +81,14 @@ Vue.prototype.$getMoths = () => [
     { name: "Novembro", number: 11 },
     { name: "Dezembro", number: 12 },
 ]
+
+String.prototype.currency = function () {
+    let decimal = Number(this).toFixed(2)
+    return Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    }).format(decimal)
+}
+Number.prototype.currency = function () {
+    return this.toString().currency()
+}

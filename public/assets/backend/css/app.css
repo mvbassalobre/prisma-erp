@@ -11747,3 +11747,12 @@ h5 {
   font-size: 10px !important;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
+.clickable td.hoverable:hover {
+  transition: .8s;
+  background-color: #cae8f6;
+}
+

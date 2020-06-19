@@ -1,146 +1,135 @@
 <template>
-    <div class="row goals">
-        <div class="col-12">
-            <div class="table-responsive">
-                <table class="table table-striped table-sm sheet mb-0 f-12 table-hover">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Objetivo</th>
-                            <th>Valor</th>
-                            <th>Prazo</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template v-for="(g,i) in goals">
-                            <tr v-if="!goals[i].editing" :key="i">
-                                <td class="text-center">
-                                    <span class="el-icon-coin pt-1"></span>
-                                </td>
-                                <td>{{g.description}}</td>
-                                <td>{{g.value}}</td>
-                                <td>
-                                    <div class="d-flex flex-row">
-                                        <div class="col-6">{{g.term}}</div>
-                                        <div class="col-6">{{g.term_type}}</div>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <button
-                                        class="append-btn"
-                                        type="button"
-                                        @click.prevent="startEdit(i)"
-                                    >
-                                        <span class="el-icon-edit text-info"></span>
-                                    </button>
-                                </td>
+    <div>
+        <!-- <div class="row mb-2">
+            <div class="col-12 text-right">
+                <span class="el-icon-circle-plus mr-2"></span>
+                <a href="#" class="link" @click.prevent="startAdding">Adicionar Objetivo</a>
+            </div>
+        </div>-->
+        <div class="row goals">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm sheet mb-0 f-12 table-hover">
+                        <thead>
+                            <tr>
+                                <th>Objetivo</th>
+                                <th>Valor</th>
+                                <th>Prazo</th>
+                                <th></th>
+                                <th></th>
                             </tr>
-
-                            <tr v-else :key="i">
-                                <td class="text-center">
-                                    <button
-                                        class="append-btn"
-                                        type="button"
-                                        @click.prevent="deleteGoal(i)"
-                                    >
-                                        <span class="el-icon-error text-danger"></span>
-                                    </button>
-                                </td>
-                                <td>
-                                    <input
-                                        class="form-control form-control-sm"
-                                        v-model="editing_form.description"
-                                    />
-                                </td>
-                                <td>
-                                    <input
-                                        class="form-control form-control-sm"
-                                        v-model="editing_form.value"
-                                        type="number"
-                                        step="0.01"
-                                    />
-                                </td>
-                                <td>
-                                    <div class="d-flex flex-row">
-                                        <input
-                                            class="form-control form-control-sm mr-1"
-                                            v-model="editing_form.term"
-                                            type="number"
-                                            step="1"
-                                        />
-                                        <select
-                                            class="form-control form-control-sm"
-                                            v-model="editing_form.term_type"
+                        </thead>
+                        <tbody>
+                            <template v-for="(g,i) in goals">
+                                <tr :key="i" class="clickable">
+                                    <td class="hoverable" @dblclick="editField(i,'description')">
+                                        <template
+                                            v-if="(editing.index == i && editing.field =='description')"
                                         >
-                                            <option value="Dia(s)">Dia(s)</option>
-                                            <option value="Mes(es)">Mes(es)</option>
-                                            <option value="Ano(s)">Ano(s)</option>
-                                        </select>
-                                    </div>
+                                            <input
+                                                :ref="`${i}_description`"
+                                                class="w-100"
+                                                :value="g.description"
+                                                @keyup.enter="(e) => changeInput(e.target.value,i,'description')"
+                                                @blur="(e) => changeInput(e.target.value,i,'description')"
+                                            />
+                                        </template>
+                                        <template v-else>{{g.description}}</template>
+                                    </td>
+                                    <td class="hoverable" @dblclick="editField(i,'value',true)">
+                                        <template
+                                            v-if="(editing.index == i && editing.field =='value')"
+                                        >
+                                            <input
+                                                :ref="`${i}_value`"
+                                                class="w-100"
+                                                :value="g.value"
+                                                type="number"
+                                                step="0.01"
+                                                @keyup.enter="(e) => changeInput(e.target.value,i,'value')"
+                                                @blur="(e) => changeInput(e.target.value,i,'value')"
+                                            />
+                                        </template>
+                                        <template v-else>{{Number(g.value).currency()}}</template>
+                                    </td>
+                                    <td class="hoverable" @dblclick="editField(i,'term')">
+                                        <template
+                                            v-if="(editing.index == i && editing.field =='term')"
+                                        >
+                                            <input
+                                                :ref="`${i}_term`"
+                                                class="w-100"
+                                                :value="g.term"
+                                                type="number"
+                                                step="1"
+                                                @keyup.enter="(e) => changeInput(e.target.value,i,'term')"
+                                                @blur="(e) => changeInput(e.target.value,i,'term')"
+                                            />
+                                        </template>
+                                        <template v-else>{{g.term}}</template>
+                                    </td>
+                                    <td class="hoverable" @dblclick="editField(i,'term_type')">
+                                        <template
+                                            v-if="(editing.index == i && editing.field =='term_type')"
+                                        >
+                                            <select
+                                                class="w-100"
+                                                :ref="`${i}_term_type`"
+                                                :value="g.term_type"
+                                                @blur="(e) => changeInput(e.target.value,i,'term_type')"
+                                            >
+                                                <option value="Dia(s)">Dia(s)</option>
+                                                <option value="Mes(es)">Mes(es)</option>
+                                                <option value="Ano(s)">Ano(s)</option>
+                                            </select>
+                                        </template>
+                                        <template v-else>{{g.term_type}}</template>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </template>
+
+                            <tr>
+                                <td>
+                                    <input class="w-100" v-model="form.description" />
+                                </td>
+                                <td>
+                                    <currency-input
+                                        class="w-100"
+                                        currency="BRL"
+                                        :auto-decimal-mode="true"
+                                        v-model="form.value"
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        class="w-100 mr-1"
+                                        v-model="form.term"
+                                        type="number"
+                                        step="1"
+                                    />
+                                </td>
+                                <td>
+                                    <select class="w-100" v-model="form.term_type">
+                                        <option value="Dia(s)">Dia(s)</option>
+                                        <option value="Mes(es)">Mes(es)</option>
+                                        <option value="Ano(s)">Ano(s)</option>
+                                    </select>
                                 </td>
                                 <td class="text-center">
                                     <button
                                         v-loading="loading_goals"
                                         class="append-btn"
                                         type="button"
-                                        @click.prevent="saveEditing(i)"
+                                        @click.prevent="appendGoal"
                                     >
                                         <span class="el-icon-success text-success"></span>
                                     </button>
                                 </td>
                             </tr>
-                        </template>
-
-                        <tr>
-                            <td class="text-center">
-                                <span class="el-icon-coin pt-1"></span>
-                            </td>
-                            <td>
-                                <input
-                                    class="form-control form-control-sm"
-                                    v-model="form.description"
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    class="form-control form-control-sm"
-                                    v-model="form.value"
-                                    type="number"
-                                    step="0.01"
-                                />
-                            </td>
-                            <td>
-                                <div class="d-flex flex-row">
-                                    <input
-                                        class="form-control form-control-sm mr-1"
-                                        v-model="form.term"
-                                        type="number"
-                                        step="1"
-                                    />
-                                    <select
-                                        class="form-control form-control-sm"
-                                        v-model="form.term_type"
-                                    >
-                                        <option value="Dia(s)">Dia(s)</option>
-                                        <option value="Mes(es)">Mes(es)</option>
-                                        <option value="Ano(s)">Ano(s)</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td class="text-center">
-                                <button
-                                    v-loading="loading_goals"
-                                    class="append-btn"
-                                    type="button"
-                                    @click.prevent="appendGoal"
-                                >
-                                    <span class="el-icon-circle-plus"></span>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -150,6 +139,7 @@ export default {
     props: ["customer"],
     data() {
         return {
+            // adding: false,
             loading_goals: false,
             goals: this.customer.data ? (this.customer.data.goals ? this.customer.data.goals : []) : [],
             default_form: {
@@ -157,16 +147,18 @@ export default {
                 value: null,
                 term_type: "Ano(s)",
                 term: 1,
-                editing: false
             },
             form: {},
-            editing_form: {},
+            editing: {
+                index: undefined,
+                field: undefined,
+            }
         }
     },
     watch: {
         goals: {
             handler(val) {
-                if (!this.isEditing) this.saveGoals(val)
+                this.saveGoals(val)
             },
             deep: true
         }
@@ -174,43 +166,27 @@ export default {
     created() {
         this.refreshForm()
     },
-    computed: {
-        isEditing() {
-            let res = this.goals.filter(g => g.editing)
-            return (res.length > 0)
-        }
-    },
     methods: {
-        deleteGoal(i) {
-            this.$confirm("Você deseja mesmo excluir este objetivo ?", "Confirmação", {
-                confirmButtonText: "Sim",
-                cancelButtonText: "Não",
-                type: 'warning'
-            }).then(() => {
-                this.goals.splice(i, 1)
-            }).catch(er => {
-                console.log(er)
+        changeInput(v, i, field) {
+            this.goals[i][field] = v
+            this.editing.index = undefined
+            this.editing.field = undefined
+            if (field == "description" && !v.trim()) this.deleteGoal(i)
+        },
+        editField(index, field) {
+            this.editing.index = index
+            this.editing.field = field
+            this.$nextTick(() => {
+                this.$refs[`${index}_${field}`][0].focus()
             })
+        },
+        deleteGoal(i) {
+            this.goals.splice(i, 1)
         },
         refreshForm() {
             (Object.keys(this.default_form)).map(k => this.$set(this.form, k, this.default_form[k]))
         },
-        checkValidation(values) {
-            if (!values.description) {
-                this.$message.error('Descrição é obrigatorio')
-                throw ("invalid form")
-            }
-            if (!values.value || values.value < 0) {
-                this.$message.error('Valor inválido')
-                throw ("invalid form")
-            }
-            if (!values.term) {
-                this.$message.error('Prazo obrigatório')
-                throw ("invalid form")
-            }
-        },
         saveEditing(i) {
-            this.checkValidation(this.editing_form)
             this.$confirm("Você deseja editar este objetivo ?", "Confirmação", {
                 confirmButtonText: "Sim",
                 cancelButtonText: "Não",
@@ -224,21 +200,16 @@ export default {
             })
         },
         appendGoal() {
-            this.checkValidation(this.form)
-            this.$confirm("Você deseja adicionar este objetivo ?", "Confirmação", {
-                confirmButtonText: "Sim",
-                cancelButtonText: "Não",
-                type: 'warning'
-            }).then(() => {
-                if (this.isEditing) return this.$message.error('Confirme a edição para editar outra linha')
-                this.goals.push(Object.assign({}, this.form))
-                this.refreshForm()
-            })
+            if (!this.form.description) return this.$message.error('Defina ao menos uma descrição')
+            this.goals.push(Object.assign({}, this.form))
+            this.refreshForm()
+            this.adding = false
         },
         startEdit(i) {
-            if (this.isEditing) return this.$message.error('Confirme a edição para editar outra linha')
+            return this.$message.error('Confirme a edição para editar outra linha')
             this.goals[i].editing = true
             this.editing_form = Object.assign({}, this.goals[i])
+            this.adding = false
         },
         saveGoals(values) {
             this.loading_goals = true

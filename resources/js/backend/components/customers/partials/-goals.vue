@@ -9,30 +9,30 @@
                     >
                         <thead>
                             <tr>
-                                <th>Objetivo</th>
-                                <th>Valor</th>
-                                <th>Prazo</th>
-                                <th></th>
-                                <th></th>
+                                <th class="purple">Objetivo</th>
+                                <th class="purple">Valor</th>
+                                <th class="purple">Prazo</th>
+                                <th class="purple"></th>
+                                <th class="purple"></th>
                             </tr>
                         </thead>
                         <tbody>
                             <template v-for="(g,i) in goals">
                                 <tr :key="i" class="clickable">
-                                    <td class="hoverable">
+                                    <td>
                                         <edit-input v-model="g.description" />
                                     </td>
-                                    <td class="hoverable">
+                                    <td>
                                         <edit-input
                                             type="number"
                                             v-model="g.value"
                                             :currency="true"
                                         />
                                     </td>
-                                    <td class="hoverable">
+                                    <td>
                                         <edit-input v-model="g.term" />
                                     </td>
-                                    <td class="hoverable">
+                                    <td>
                                         <edit-input
                                             v-model="g.term_type"
                                             type="select"

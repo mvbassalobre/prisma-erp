@@ -32,36 +32,40 @@
                                     >
                                         <thead>
                                             <tr>
-                                                <th style="width:350px" class="bordered">
+                                                <th style="width:350px">
                                                     Conta
                                                     <small>Mês</small>
                                                 </th>
                                                 <template v-for="(m,i) in months">
-                                                    <th style="width:100px" :key="`${i}_head`">
+                                                    <th
+                                                        style="width:100px"
+                                                        :key="`${i}_head`"
+                                                        class="purple"
+                                                    >
                                                         {{ m.value }} /
                                                         <small>{{year}}</small>
                                                     </th>
                                                 </template>
-                                                <th></th>
+                                                <th class="purple"></th>
                                             </tr>
                                             <tr>
-                                                <th style="width:350px" class="bordered">
+                                                <th style="width:350px">
                                                     Entradas
                                                     <small>Receitas</small>
                                                 </th>
                                                 <template v-for="(m,i) in months">
                                                     <th
                                                         style="width:150px"
-                                                        class="f-10"
+                                                        class="f-10 purple2"
                                                         :key="`${i}_head_2`"
                                                     >{{total(year,m.value).currency()}}</th>
                                                 </template>
-                                                <th></th>
+                                                <th class="purple2"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr v-for="(q,y) in years[year]" :key="y">
-                                                <td class="bordered">
+                                                <td>
                                                     <edit-input v-model="q.name" />
                                                 </td>
                                                 <template v-for="(m,i) in months">
@@ -85,7 +89,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="bordered">
+                                                <td>
                                                     <input class="w-100 mr-1" v-model="form.name" />
                                                 </td>
                                                 <template v-for="(m,i) in months">
@@ -127,7 +131,7 @@ export default {
     data() {
         return {
             loading_entries: false,
-            years: this.customer.data.entries ? this.customer.data.entries : {},
+            years: this.customer.data ? (this.customer.data.entries ? this.customer.data.entries : {}) : {},
             form: {
                 name: null
             }
@@ -139,6 +143,7 @@ export default {
     watch: {
         years: {
             handler(val) {
+                console.log(val)
                 this.saveEntries()
             },
             deep: true

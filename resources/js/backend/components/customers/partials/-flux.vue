@@ -35,10 +35,3 @@ export default {
     }
 }
 </script>
-<style lang="scss">
-.table {
-    .bordered {
-        border-right: 2px solid #23282d;
-    }
-}
-</style>

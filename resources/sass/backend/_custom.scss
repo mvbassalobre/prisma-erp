@@ -94,12 +94,6 @@ h5 {
 
 .clickable {
     cursor :pointer;
-    td.hoverable {
-        &:hover {
-            transition: .8s;
-            background-color: #cae8f6;
-        }
-    }
 }
 
 
@@ -108,5 +102,17 @@ h5 {
     border: unset;
     padding: 5px;
     margin: 0;
-    padding-top: 7px;
+    padding : 0 ;
+    font-size: 20px;
+}
+
+.purple2 {
+    background-color: #9e6de0;
+    color: white;
+    border-bottom-color: #9e6de0;
+}
+.purple {
+    background-color: #7d6997;
+    color: white;
+    border-bottom-color: black;
 }

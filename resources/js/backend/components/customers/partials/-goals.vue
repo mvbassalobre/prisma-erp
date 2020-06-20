@@ -3,7 +3,10 @@
         <div class="row">
             <div class="col-12">
                 <div class="table-responsive">
-                    <table class="table table-striped table-sm sheet mb-0 f-12 table-hover">
+                    <table
+                        class="table table-striped table-sm sheet mb-0 f-12 table-hover"
+                        v-if="!loading_goals"
+                    >
                         <thead>
                             <tr>
                                 <th>Objetivo</th>
@@ -17,10 +20,7 @@
                             <template v-for="(g,i) in goals">
                                 <tr :key="i" class="clickable">
                                     <td class="hoverable">
-                                        <edit-input
-                                            v-model="g.description"
-                                            @change="deleteGoal(i)"
-                                        />
+                                        <edit-input v-model="g.description" />
                                     </td>
                                     <td class="hoverable">
                                         <edit-input
@@ -39,7 +39,16 @@
                                             :options="term_type_options"
                                         />
                                     </td>
-                                    <td></td>
+                                    <td class="text-center">
+                                        <button
+                                            v-loading="loading_goals"
+                                            class="append-btn"
+                                            type="button"
+                                            @click.prevent="deleteGoal(i)"
+                                        >
+                                            <span class="el-icon-error text-danger"></span>
+                                        </button>
+                                    </td>
                                 </tr>
                             </template>
 
@@ -115,6 +124,7 @@ export default {
     watch: {
         goals: {
             handler(val) {
+                this.hide = true
                 this.saveGoals(val)
             },
             deep: true
@@ -125,12 +135,14 @@ export default {
     },
     methods: {
         deleteGoal(i) {
-            if (this.goals[i]) {
-                if (!String(this.goals[i].description).trim()) {
-                    this.goals.splice(i, 1)
-                    this.$message.success('Objetivo excluido !!!')
-                }
-            }
+            this.$confirm("Deseja excluir ?", "Confirmação", {
+                confirmButtonText: "Sim",
+                cancelButtonText: "Não",
+                type: 'warning'
+            }).then(() => {
+                this.goals.splice(i, 1)
+                this.$message.success('Objetivo excluido !!!')
+            })
         },
         refreshForm() {
             (Object.keys(this.default_form)).map(k => this.$set(this.form, k, this.default_form[k]))

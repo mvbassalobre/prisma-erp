@@ -28,6 +28,7 @@
                                 <div class="table-responsive">
                                     <table
                                         class="table table-striped table-sm mb-0 f-12 table-hover"
+                                        v-if="!loading_entries"
                                     >
                                         <thead>
                                             <tr>
@@ -53,20 +54,35 @@
                                                         style="width:150px"
                                                         class="f-10"
                                                         :key="`${i}_head_2`"
-                                                    >R$ 0,00</th>
+                                                    >{{total(year,m.value).currency()}}</th>
                                                 </template>
                                                 <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr v-for="(q,y) in years[year]" :key="y">
-                                                <td class="bordered">{{q.name}}</td>
+                                                <td class="bordered">
+                                                    <edit-input v-model="q.name" />
+                                                </td>
                                                 <template v-for="(m,i) in months">
-                                                    <td
-                                                        :key="`${i}_${y}_body`"
-                                                    >{{(Number(q[m.value])).currency()}}</td>
+                                                    <td :key="`${i}_${y}_body`">
+                                                        <edit-input
+                                                            type="number"
+                                                            v-model="q[m.value]"
+                                                            :currency="true"
+                                                        />
+                                                    </td>
                                                 </template>
-                                                <td></td>
+                                                <td class="text-center">
+                                                    <button
+                                                        v-loading="loading_entries"
+                                                        class="append-btn"
+                                                        type="button"
+                                                        @click.prevent="deleteEntry(year,y)"
+                                                    >
+                                                        <span class="el-icon-error text-danger"></span>
+                                                    </button>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td class="bordered">
@@ -76,7 +92,7 @@
                                                     <td :key="`${i}_form`">
                                                         <input
                                                             class="w-100 mr-1"
-                                                            v-model="form[m.value]"
+                                                            v-model.number="form[m.value]"
                                                             type="number"
                                                             step="0.01"
                                                             @change="setAllValues(m.value)"
@@ -107,30 +123,56 @@
 </template>
 <script>
 export default {
-    props: ['months'],
+    props: ['customer', 'months'],
     data() {
         return {
             loading_entries: false,
-            years: Object.assign({}, this.$attrs.value),
+            years: this.customer.data.entries ? this.customer.data.entries : {},
             form: {
                 name: null
             }
         }
     },
     created() {
-        this.months.map(({ value }) => this.$set(this.form, value, "0"))
+        this.months.map(({ value }) => this.$set(this.form, value, 0))
     },
     watch: {
-        years(val) {
-            this.$emit("input", val)
+        years: {
+            handler(val) {
+                this.saveEntries()
+            },
+            deep: true
         }
     },
     methods: {
+        saveEntries(val) {
+            this.loading_entries = true
+            this.$http.post(`/admin/customers/${this.customer.code}/attendance/save-flux`, this.years).then(resp => {
+                resp = resp.data
+                this.loading_entries = false
+            }).catch(er => {
+                console.log(er)
+                this.loading_entries = false
+            })
+        },
+        deleteEntry(year, i) {
+            this.$confirm("Deseja excluir ?", "Confirmação", {
+                confirmButtonText: "Sim",
+                cancelButtonText: "Não",
+                type: 'warning'
+            }).then(() => {
+                this.years[year].splice(i, 1)
+                this.$message.success('Entrada excluido !!!')
+            })
+        },
+        total(year, month) {
+            return this.years[year].reduce((a, b) => a + b[month], 0)
+        },
         setAllValues(month) {
             if (month == "jan") {
                 let other_months = this.months.filter(({ value }) => value != "jan").map(({ value }) => value)
                 let emptys = Object.keys(this.form).filter(k => {
-                    if ((other_months.includes(k)) && (!Number(this.form[k]))) return true
+                    if ((other_months.includes(k)) && (!this.form[k])) return true
                     return false
                 })
                 if (emptys.length == 11) return other_months.map(m => this.form[m] = this.form.jan)
@@ -160,11 +202,11 @@ export default {
         },
         addEntry(year) {
             if (!this.form.name) return this.$message.warning("De um nome a esta entrada !!")
-            this.years[year].push(Object.assign({}, this.form))
+            this.$set(this.years[year], this.years[year].length, Object.assign({}, this.form))
             let months_values = this.months.map(({ value }) => value)
             Object.keys(this.form).map(k => {
-                if (months_values.includes(k)) return this.form[k] = 0
-                return this.form[k] = null
+                if (months_values.includes(k)) return this.$set(this.form, k, 0)
+                return this.$set(this.form, k, null)
             })
             this.$message.success("Entrada adicionado com sucesso !!")
         },

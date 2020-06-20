@@ -63,9 +63,9 @@ export default {
     methods: {
         changeInput(value) {
             this.editing = false
+            if (this.type == "number") value = Number(value)
             this.value = value
             this.$emit('input', value)
-            this.$emit('change', value)
         },
         editField(index, field) {
             this.editing = true

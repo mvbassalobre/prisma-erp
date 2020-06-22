@@ -1,53 +1,72 @@
 <?php
+
 namespace App\Http\Resources;
 
 use marcusvbda\vstack\Fields\Card;
 use marcusvbda\vstack\Fields\Text;
 use marcusvbda\vstack\Fields\TextArea;
 use marcusvbda\vstack\Resource;
+
 class MeetingRooms extends Resource
 {
     public $model = \App\Http\Models\MeetingRoom::class;
 
-    public function label(){
+    public function menu()
+    {
+        return "Tabelas";
+    }
+
+    public function menuIcon()
+    {
+        return "el-icon-star-on";
+    }
+
+    public function icon()
+    {
+        return "el-icon-s-flag";
+    }
+
+    public function label()
+    {
         return "Salas de Reunião";
     }
 
-    public function fields(){
-        return [new Card("Informações",[
+    public function fields()
+    {
+        return [new Card("Informações", [
             new Text([
-                "label" => "Nome", 
-                "field" => "name", 
+                "label" => "Nome",
+                "field" => "name",
                 "required" => true,
-                "placeholder" => "Nome da sala...", 
+                "placeholder" => "Nome da sala...",
                 "rules" => "required|max:255"
             ]),
             new Text([
                 "prepend" => "Número de Pessoas",
                 "type" => "number",
-                "label" => "Tamanho da sala", 
-                "field" => "size", 
+                "label" => "Tamanho da sala",
+                "field" => "size",
                 "required" => true,
-                "placeholder" => "valor numérico", 
+                "placeholder" => "valor numérico",
                 "rules" => "required|min:1"
             ]),
             new Text([
-                "label" => "CEP", 
-                "field" => "zipcode", 
+                "label" => "CEP",
+                "field" => "zipcode",
                 "required" => true,
                 "mask" => "#####-###",
-                "placeholder" => "CEP do local da sala de reunião", 
+                "placeholder" => "CEP do local da sala de reunião",
                 "rules" => "required|max:255"
             ]),
             new Text([
-                "label" => "Número do Endereço", 
-                "field" => "number", 
+                "label" => "Número do Endereço",
+                "field" => "number",
                 "required" => true,
-                "placeholder" => "Número", 
+                "placeholder" => "Número",
                 "rules" => "required|max:255"
             ]),
             new TextArea([
-                "label" => "Referência", 
+                "label" => "Referência",
                 "field" => "reference",
                 "placeholder" => "Referência para o local",
             ])

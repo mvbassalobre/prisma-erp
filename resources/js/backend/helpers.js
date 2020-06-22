@@ -68,18 +68,18 @@ String.prototype.toClipboard = function (callback = () => { }) {
 }
 
 Vue.prototype.$getMoths = () => [
-    { name: "Janeiro", number: 1 },
-    { name: "Fevereiro", number: 2 },
-    { name: "Março", number: 3 },
-    { name: "Abril", number: 4 },
-    { name: "Maio", number: 5 },
-    { name: "Junho", number: 6 },
-    { name: "Julho", number: 7 },
-    { name: "Agosto", number: 8 },
-    { name: "Setembro", number: 9 },
-    { name: "Outubro", number: 10 },
-    { name: "Novembro", number: 11 },
-    { name: "Dezembro", number: 12 },
+    { name: "Janeiro", value: "jan", number: 1 },
+    { name: "Fevereiro", value: "fev", number: 2 },
+    { name: "Março", value: "mar", number: 3 },
+    { name: "Abril", value: "abr", number: 4 },
+    { name: "Maio", value: "mai", number: 5 },
+    { name: "Junho", value: "jun", number: 6 },
+    { name: "Julho", value: "jul", number: 7 },
+    { name: "Agosto", value: "ago", number: 8 },
+    { name: "Setembro", value: "set", number: 9 },
+    { name: "Outubro", value: "out", number: 10 },
+    { name: "Novembro", value: "nov", number: 11 },
+    { name: "Dezembro", value: "dez", number: 12 },
 ]
 
 String.prototype.currency = function () {

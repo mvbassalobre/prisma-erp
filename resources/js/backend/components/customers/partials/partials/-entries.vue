@@ -20,15 +20,6 @@
                 :key="i"
                 closable
             >
-                <div class="row mb-2">
-                    <div class="col-12 text-right">
-                        <span class="el-icon-circle-plus mr-2"></span>
-                        <a href="#" class="link" @click.prevent="addEntry(year)">
-                            Adicionar Entrada para
-                            <b>{{year}}</b>
-                        </a>
-                    </div>
-                </div>
                 <div class="row f-12">
                     <div class="col-12">
                         <div class="card f-12">
@@ -37,51 +28,92 @@
                                 <div class="table-responsive">
                                     <table
                                         class="table table-striped table-sm mb-0 f-12 table-hover"
+                                        v-if="!loading_entries"
                                     >
                                         <thead>
                                             <tr>
-                                                <th style="width:350px" class="bordered">
+                                                <th style="width:350px">
                                                     Conta
                                                     <small>Mês</small>
                                                 </th>
                                                 <template v-for="(m,i) in months">
-                                                    <th style="width:100px" :key="`${i}_head`">
-                                                        {{ m.name.substring(0,3) }} /
+                                                    <th
+                                                        style="width:100px"
+                                                        :key="`${i}_head`"
+                                                        class="purple"
+                                                    >
+                                                        {{ m.value }} /
                                                         <small>{{year}}</small>
                                                     </th>
                                                 </template>
+                                                <th class="purple"></th>
                                             </tr>
                                             <tr>
-                                                <th style="width:350px" class="bordered">
+                                                <th style="width:350px">
                                                     Entradas
                                                     <small>Receitas</small>
                                                 </th>
                                                 <template v-for="(m,i) in months">
                                                     <th
-                                                        style="width:100px"
-                                                        class="f-10"
+                                                        style="width:150px"
+                                                        class="f-10 purple2"
                                                         :key="`${i}_head_2`"
-                                                    >R$ 0,00</th>
+                                                    >{{total(year,m.value).currency()}}</th>
                                                 </template>
+                                                <th class="purple2"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr v-for="(q,y) in years[year]" :key="y">
-                                                <td class="bordered">{{q[y]}}</td>
-                                                <template v-for="(m,i) in months">
-                                                    <td
-                                                        :key="`${i}_${y}_body`"
-                                                    >{{(Number(q[i+1])).currency()}}</td>
-                                                </template>
-                                            </tr>
-                                            <!-- <tr>
                                                 <td>
-                                                    <input
-                                                        class="form-control form-control-sm"
-                                                        v-model="years[year][]"
-                                                    />
+                                                    <edit-input v-model="q.name" />
                                                 </td>
-                                            </tr>-->
+                                                <template v-for="(m,i) in months">
+                                                    <td :key="`${i}_${y}_body`">
+                                                        <edit-input
+                                                            type="number"
+                                                            v-model="q[m.value]"
+                                                            :currency="true"
+                                                        />
+                                                    </td>
+                                                </template>
+                                                <td class="text-center">
+                                                    <button
+                                                        v-loading="loading_entries"
+                                                        class="append-btn"
+                                                        type="button"
+                                                        @click.prevent="deleteEntry(year,y)"
+                                                    >
+                                                        <span class="el-icon-error text-danger"></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input class="w-100 mr-1" v-model="form.name" />
+                                                </td>
+                                                <template v-for="(m,i) in months">
+                                                    <td :key="`${i}_form`">
+                                                        <input
+                                                            class="w-100 mr-1"
+                                                            v-model.number="form[m.value]"
+                                                            type="number"
+                                                            step="0.01"
+                                                            @change="setAllValues(m.value)"
+                                                        />
+                                                    </td>
+                                                </template>
+                                                <td class="text-center">
+                                                    <button
+                                                        v-loading="loading_entries"
+                                                        class="append-btn"
+                                                        type="button"
+                                                        @click.prevent="addEntry(year)"
+                                                    >
+                                                        <span class="el-icon-success text-success"></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -95,18 +127,62 @@
 </template>
 <script>
 export default {
-    props: ['months'],
+    props: ['customer', 'months'],
     data() {
         return {
-            years: Object.assign({}, this.$attrs.value)
+            loading_entries: false,
+            years: this.customer.data ? (this.customer.data.entries ? this.customer.data.entries : {}) : {},
+            form: {
+                name: null
+            }
         }
     },
+    created() {
+        this.months.map(({ value }) => this.$set(this.form, value, 0))
+    },
     watch: {
-        years(val) {
-            this.$emit("input", val)
+        years: {
+            handler(val) {
+                console.log(val)
+                this.saveEntries()
+            },
+            deep: true
         }
     },
     methods: {
+        saveEntries(val) {
+            this.loading_entries = true
+            this.$http.post(`/admin/customers/${this.customer.code}/attendance/save-flux`, this.years).then(resp => {
+                resp = resp.data
+                this.loading_entries = false
+            }).catch(er => {
+                console.log(er)
+                this.loading_entries = false
+            })
+        },
+        deleteEntry(year, i) {
+            this.$confirm("Deseja excluir ?", "Confirmação", {
+                confirmButtonText: "Sim",
+                cancelButtonText: "Não",
+                type: 'warning'
+            }).then(() => {
+                this.years[year].splice(i, 1)
+                this.$message.success('Entrada excluido !!!')
+            })
+        },
+        total(year, month) {
+            return this.years[year].reduce((a, b) => a + b[month], 0)
+        },
+        setAllValues(month) {
+            if (month == "jan") {
+                let other_months = this.months.filter(({ value }) => value != "jan").map(({ value }) => value)
+                let emptys = Object.keys(this.form).filter(k => {
+                    if ((other_months.includes(k)) && (!this.form[k])) return true
+                    return false
+                })
+                if (emptys.length == 11) return other_months.map(m => this.form[m] = this.form.jan)
+            }
+        },
         addYear() {
             this.$prompt('Digite o ano que deseja adicionar', 'Adicionar Ano', {
                 confirmButtonText: 'Adicionar',
@@ -130,7 +206,14 @@ export default {
             this.$refs.tabs.currentName = String(Object.keys(this.years).indexOf(`${String(year)}`))
         },
         addEntry(year) {
-            console.log(`add entrada ${year}`)
+            if (!this.form.name) return this.$message.warning("De um nome a esta entrada !!")
+            this.$set(this.years[year], this.years[year].length, Object.assign({}, this.form))
+            let months_values = this.months.map(({ value }) => value)
+            Object.keys(this.form).map(k => {
+                if (months_values.includes(k)) return this.$set(this.form, k, 0)
+                return this.$set(this.form, k, null)
+            })
+            this.$message.success("Entrada adicionado com sucesso !!")
         },
         removeYear(name) {
             this.$confirm("Você deseja remover este mês ?", "Confirmação", {

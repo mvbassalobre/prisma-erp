@@ -1,6 +1,6 @@
 <template>
     <div
-        class="tab-pane fade"
+        class="tab-pane fade f-12"
         v-bind:class="{'show active' : active == 'timeline'}"
         id="v-pills-timeline"
         role="tabpanel"

@@ -16,6 +16,43 @@
         </div>
         <div class="row">
             <div class="col-12">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row f-12">
+                            <div class="col-12">
+                                <div class="card mb-3" :id="`${infoData.label}`">
+                                    <div class="card-body p-0">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table class="table table-striped mb-0">
+                                                    <tbody>
+                                                        <tr
+                                                            v-for="(field, i) in infoData.inputs"
+                                                            :key="i"
+                                                        >
+                                                            <td
+                                                                style="width:25%;"
+                                                                v-if="i.indexOf('IGNORE__')<0"
+                                                            >
+                                                                <span v-html="`<b>${i}</b>`"></span>
+                                                            </td>
+                                                            <td>
+                                                                <v-runtime-template
+                                                                    :key="i"
+                                                                    :template="`<span>${field===null ? '' : field}</span>`"
+                                                                />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="tab-content" id="v-pills-tabContent">
                     <comp-info :info="data" :active="active" :customer="customer" />
                     <comp-timeline :timeline="customer.timeline" :active="active" />
@@ -32,6 +69,7 @@
     </div>
 </template>
 <script>
+import VRuntimeTemplate from "v-runtime-template"
 export default {
     props: ["customer", "data", "canaddsale"],
     data() {
@@ -51,6 +89,13 @@ export default {
         "comp-timeline": require("./partials/-timeline").default,
         "comp-sales": require("./partials/-sales").default,
         "comp-flux": require("./partials/-flux").default,
+        "v-runtime-template": VRuntimeTemplate,
+    },
+    computed: {
+        infoData() {
+            let info = this.data.fields.filter(({ label }) => label == "Informações")[0]
+            return info
+        }
     },
     created() {
         this.$root.sidebarCollapse = true

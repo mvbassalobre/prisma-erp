@@ -6,9 +6,13 @@
         role="tabpanel"
         aria-labelledby="v-pills-info-tab"
     >
-        <div class="row">
+        <div class="row f-12">
             <div class="col-12">
-                <div class="row" v-for="(card, i) in info.fields" :key="i">
+                <div
+                    class="row"
+                    v-for="(card, i) in info.fields.filter( ({label}) => label!='Informações')"
+                    :key="i"
+                >
                     <div class="col-12">
                         <div class="card mb-3" :id="`${card.label}`">
                             <div v-if="card.label" class="card-header">
@@ -24,7 +28,7 @@
                                                         style="width:25%;"
                                                         v-if="i.indexOf('IGNORE__')<0"
                                                     >
-                                                        <span v-html="i"></span>
+                                                        <span v-html="`<b>${i}</b>`"></span>
                                                     </td>
                                                     <td>
                                                         <v-runtime-template

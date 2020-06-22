@@ -57,7 +57,7 @@ export default {
     data() {
         return {
             editing: false,
-            value: this.$attrs.value
+            value: this.$attrs.value ? this.$attrs.value : this.$props.value
         }
     },
     methods: {
@@ -66,6 +66,7 @@ export default {
             if (this.type == "number") value = Number(value)
             this.value = value
             this.$emit('input', value)
+            this.$emit('change', value)
         },
         editField(index, field) {
             this.editing = true
@@ -74,7 +75,7 @@ export default {
             })
         },
         val() {
-            if (this.currency) return Number(this.value).currency()
+            if (this.currency) return Number(this.value ? this.value : 0).currency()
             return this.value
         }
     }

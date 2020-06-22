@@ -1,11 +1,15 @@
 <template>
     <div class="row mb-2">
         <div class="col-12">
-            <div class="left-card f-12">
-                <div class="left-card-header p-1">
-                    <div class="title">{{s}}</div>
+            <div class="card f-12">
+                <div class="card-header p-1 d-flex flex-row align-items-center">
+                    <span class="el-icon-remove mr-2"></span>
+                    <div>{{s}}</div>
+                    <a href="#" @click.prevent="deleteSection" class="text-danger f-12 ml-auto">
+                        <span class="el-icon-error text-danger mr-2"></span>Excluir Sessão
+                    </a>
                 </div>
-                <div class="left-card-body p-0">
+                <div class="card-body p-0">
                     <div class="row">
                         <div class="col-12">
                             <div class="table-responsive" v-if="!loading_expenses">
@@ -20,13 +24,13 @@
                                                 <th
                                                     style="width:100px"
                                                     :key="`${i}_head`"
-                                                    class="purple"
+                                                    class="blue"
                                                 >
                                                     {{ m.value }} /
                                                     <small>{{year}}</small>
                                                 </th>
                                             </template>
-                                            <th class="purple"></th>
+                                            <th class="blue"></th>
                                         </tr>
                                         <tr>
                                             <th style="width:350px">
@@ -36,11 +40,11 @@
                                             <template v-for="(m,i) in months">
                                                 <th
                                                     style="width:150px"
-                                                    class="f-10 purple2"
+                                                    class="f-10 blue2"
                                                     :key="`${i}_head_2`"
                                                 >{{total(s,m.value).currency()}}</th>
                                             </template>
-                                            <th class="purple2"></th>
+                                            <th class="blue2"></th>
                                         </tr>
                                         <tr>
                                             <th style="width:350px">
@@ -50,11 +54,11 @@
                                             <template v-for="(m,i) in months">
                                                 <th
                                                     style="width:150px"
-                                                    class="f-10 purple3"
+                                                    class="f-10 blue3"
                                                     :key="`${i}_head_3`"
                                                 >{{percentage(s,m.value)}} %</th>
                                             </template>
-                                            <th class="purple3"></th>
+                                            <th class="blue3"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -129,18 +133,26 @@ export default {
             }
         }
     },
-    watch: {
-        sections: {
-            handler(val) {
-                this.saveSections()
-            },
-            deep: true
-        }
-    },
     created() {
         this.months.map(({ value }) => this.$set(this.form, value, 0))
     },
     methods: {
+        change(v) {
+            // 
+        },
+        deleteSection() {
+            this.$confirm("Deseja excluir ?", "Confirmação", {
+                confirmButtonText: "Sim",
+                cancelButtonText: "Não",
+                type: 'warning'
+            }).then(() => {
+                setTimeout(() => {
+                    delete this.sections[this.s]
+                    this.$parent.saveSections()
+                    this.$message.success('Sessão excluida !!!')
+                }, 500)
+            })
+        },
         percentage(label, month) {
             let total_entry = this.entries.reduce((a, b) => a + b[month], 0)
             let total_expense = this.sections[label].reduce((a, b) => a + b[month], 0)
@@ -185,16 +197,7 @@ export default {
                 }, 500)
             })
         },
-        saveSections() {
-            this.loading_entries = true
-            this.$http.post(`/admin/customers/${this.customer.code}/attendance/save-sections`, { section: this.sections, year: this.year }).then(resp => {
-                resp = resp.data
-                this.loading_entries = false
-            }).catch(er => {
-                console.log(er)
-                this.loading_entries = false
-            })
-        }
+
     }
 }
 </script>

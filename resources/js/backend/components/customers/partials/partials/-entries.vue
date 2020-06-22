@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="row mb-2">
+        <div class="row mb-2" v-loading="loading_entries">
             <div class="col-12 text-right">
                 <span class="el-icon-circle-plus mr-2"></span>
                 <a href="#" class="link" @click.prevent="addYear">Adicionar Ano</a>
@@ -23,7 +23,9 @@
                 <div class="row f-12">
                     <div class="col-12">
                         <div class="card f-12">
-                            <div class="card-header p-1">Entradas</div>
+                            <div class="card-header p-1">
+                                <span class="el-icon-circle-plus mr-2"></span>Entradas
+                            </div>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
                                     <table
@@ -40,13 +42,13 @@
                                                     <th
                                                         style="width:100px"
                                                         :key="`${i}_head`"
-                                                        class="purple"
+                                                        class="green"
                                                     >
                                                         {{ m.value }} /
                                                         <small>{{year}}</small>
                                                     </th>
                                                 </template>
-                                                <th class="purple"></th>
+                                                <th class="green"></th>
                                             </tr>
                                             <tr>
                                                 <th style="width:350px">
@@ -56,11 +58,11 @@
                                                 <template v-for="(m,i) in months">
                                                     <th
                                                         style="width:150px"
-                                                        class="f-10 purple2"
+                                                        class="f-10 green2"
                                                         :key="`${i}_head_2`"
                                                     >{{total(year,m.value).currency()}}</th>
                                                 </template>
-                                                <th class="purple2"></th>
+                                                <th class="green2"></th>
                                             </tr>
                                         </thead>
                                         <tbody>

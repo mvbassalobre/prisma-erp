@@ -30,7 +30,7 @@
             </template>
         </template>
         <template v-else>
-            <div v-html="val()"></div>
+            <div style="cursor:pointer;" v-html="val()"></div>
         </template>
     </div>
 </template>

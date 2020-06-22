@@ -125,7 +125,7 @@
                     :year="year"
                     :months="months"
                     :customer="customer"
-                    :_sections="sections[year]"
+                    :_sections="sections[year] ? sections[year] : {}"
                     :entries="years[year]"
                 />
             </el-tab-pane>

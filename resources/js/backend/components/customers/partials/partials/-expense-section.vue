@@ -1,0 +1,200 @@
+<template>
+    <div class="row mb-2">
+        <div class="col-12">
+            <div class="left-card f-12">
+                <div class="left-card-header p-1">
+                    <div class="title">{{s}}</div>
+                </div>
+                <div class="left-card-body p-0">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive" v-if="!loading_expenses">
+                                <table class="table table-striped table-sm mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:350px">
+                                                Conta
+                                                <small>Mês</small>
+                                            </th>
+                                            <template v-for="(m,i) in months">
+                                                <th
+                                                    style="width:100px"
+                                                    :key="`${i}_head`"
+                                                    class="purple"
+                                                >
+                                                    {{ m.value }} /
+                                                    <small>{{year}}</small>
+                                                </th>
+                                            </template>
+                                            <th class="purple"></th>
+                                        </tr>
+                                        <tr>
+                                            <th style="width:350px">
+                                                Entradas
+                                                <small>Receitas</small>
+                                            </th>
+                                            <template v-for="(m,i) in months">
+                                                <th
+                                                    style="width:150px"
+                                                    class="f-10 purple2"
+                                                    :key="`${i}_head_2`"
+                                                >{{total(s,m.value).currency()}}</th>
+                                            </template>
+                                            <th class="purple2"></th>
+                                        </tr>
+                                        <tr>
+                                            <th style="width:350px">
+                                                <b>%</b>
+                                                <small>Sobre a Receita</small>
+                                            </th>
+                                            <template v-for="(m,i) in months">
+                                                <th
+                                                    style="width:150px"
+                                                    class="f-10 purple3"
+                                                    :key="`${i}_head_3`"
+                                                >{{percentage(s,m.value)}} %</th>
+                                            </template>
+                                            <th class="purple3"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(q,y) in sections[s]" :key="y">
+                                            <td>
+                                                <edit-input v-model="q.name" />
+                                            </td>
+                                            <template v-for="(m,i) in months">
+                                                <td :key="`${i}_${y}_body`">
+                                                    <edit-input
+                                                        type="number"
+                                                        v-model="q[m.value]"
+                                                        :currency="true"
+                                                    />
+                                                </td>
+                                            </template>
+                                            <td class="text-center">
+                                                <button
+                                                    v-loading="loading_expenses"
+                                                    class="append-btn"
+                                                    type="button"
+                                                    @click="deleteExpense(s,y)"
+                                                >
+                                                    <span class="el-icon-error text-danger"></span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input class="w-100 mr-1" v-model="form.name" />
+                                            </td>
+                                            <template v-for="(m,i) in months">
+                                                <td :key="`${i}_form`">
+                                                    <input
+                                                        class="w-100 mr-1"
+                                                        v-model.number="form[m.value]"
+                                                        type="number"
+                                                        step="0.01"
+                                                        @change="setAllValues(m.value)"
+                                                    />
+                                                </td>
+                                            </template>
+                                            <td class="text-center">
+                                                <button
+                                                    v-loading="loading_expenses"
+                                                    class="append-btn"
+                                                    type="button"
+                                                    @click.prevent="addExpense(s)"
+                                                >
+                                                    <span class="el-icon-success text-success"></span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+export default {
+    props: ["sections", "s", "months", "entries", "year", "customer"],
+    data() {
+        return {
+            loading_expenses: false,
+            form: {
+                name: ""
+            }
+        }
+    },
+    watch: {
+        sections: {
+            handler(val) {
+                this.saveSections()
+            },
+            deep: true
+        }
+    },
+    created() {
+        this.months.map(({ value }) => this.$set(this.form, value, 0))
+    },
+    methods: {
+        percentage(label, month) {
+            let total_entry = this.entries.reduce((a, b) => a + b[month], 0)
+            let total_expense = this.sections[label].reduce((a, b) => a + b[month], 0)
+            if (!total_entry || !total_expense) return 0
+            return ((total_expense * 100) / total_entry).toFixed(2)
+            return 0
+        },
+        total(label, month) {
+            return this.sections[label].reduce((a, b) => a + b[month], 0)
+        },
+        addExpense(section) {
+            if (!this.form.name) return this.$message.warning("De um nome a esta despesa !!")
+            this.$set(this.sections[section], this.sections[section].length, Object.assign({}, this.form))
+            let months_values = this.months.map(({ value }) => value)
+            Object.keys(this.form).map(k => {
+                if (months_values.includes(k)) return this.$set(this.form, k, 0)
+                return this.$set(this.form, k, null)
+            })
+            this.$message.success("Despesa adicionado com sucesso !!")
+        },
+        setAllValues(month) {
+            if (month == "jan") {
+                let other_months = this.months.filter(({ value }) => value != "jan").map(({ value }) => value)
+                let emptys = Object.keys(this.form).filter(k => {
+                    if ((other_months.includes(k)) && (!this.form[k])) return true
+                    return false
+                })
+                if (emptys.length == 11) return other_months.map(m => this.form[m] = this.form.jan)
+            }
+        },
+        deleteExpense(section, y) {
+            this.$confirm("Deseja excluir ?", "Confirmação", {
+                confirmButtonText: "Sim",
+                cancelButtonText: "Não",
+                type: 'warning'
+            }).then(() => {
+                this.loading_expenses = true
+                setTimeout(() => {
+                    this.sections[section].splice(y, 1)
+                    this.$message.success('Despesa excluido !!!')
+                    this.loading_expenses = false
+                }, 500)
+            })
+        },
+        saveSections() {
+            this.loading_entries = true
+            this.$http.post(`/admin/customers/${this.customer.code}/attendance/save-sections`, { section: this.sections, year: this.year }).then(resp => {
+                resp = resp.data
+                this.loading_entries = false
+            }).catch(er => {
+                console.log(er)
+                this.loading_entries = false
+            })
+        }
+    }
+}
+</script>

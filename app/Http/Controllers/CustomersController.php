@@ -117,4 +117,14 @@ class CustomersController extends Controller
         $customer->save();
         return ["success" => true];
     }
+
+    public function saveSections($id, Request $request)
+    {
+        $customer = Customer::findOrFail($id);
+        $data = @$customer->data ? $customer->data : [];
+        $data["sections"][$request["year"]] = (object) @$request["section"] ? $request["section"] : [];
+        $customer->data = $data;
+        $customer->save();
+        return ["success" => true];
+    }
 }

@@ -125,3 +125,32 @@ h5 {
     color: white;
     border-bottom-color: black;
 }
+.purple3 {
+    background-color: #c2a6e7;
+    color: white;
+    border-bottom-color: #c2a6e7;
+}
+
+
+.left-card {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 5px;
+    .left-card-header {
+        background-color: rgba(0, 0, 0, 0.03);
+        display: flex;
+        align-items: center;
+        border-right: 1px solid rgba(0, 0, 0, 0.125);
+        .title {
+            white-space: nowrap;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+        }
+    }
+    .left-card-body {
+        flex: auto;
+    }
+}

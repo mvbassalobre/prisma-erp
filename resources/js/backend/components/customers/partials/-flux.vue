@@ -30,7 +30,7 @@ export default {
         }
     },
     components: {
-        'comp-goals': require("./-goals.vue").default,
+        'comp-goals': require("./partials/-goals.vue").default,
         'comp-entries': require("./partials/-entries.vue").default,
     }
 }

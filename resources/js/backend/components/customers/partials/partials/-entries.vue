@@ -121,6 +121,13 @@
                         </div>
                     </div>
                 </div>
+                <comp-expenses
+                    :year="year"
+                    :months="months"
+                    :customer="customer"
+                    :_sections="sections[year]"
+                    :entries="years[year]"
+                />
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -132,10 +139,14 @@ export default {
         return {
             loading_entries: false,
             years: this.customer.data ? (this.customer.data.entries ? this.customer.data.entries : {}) : {},
+            sections: this.customer.data ? (this.customer.data.sections ? this.customer.data.sections : {}) : {},
             form: {
                 name: null
             }
         }
+    },
+    components: {
+        'comp-expenses': require("./-expenses.vue").default,
     },
     created() {
         this.months.map(({ value }) => this.$set(this.form, value, 0))
@@ -160,14 +171,19 @@ export default {
                 this.loading_entries = false
             })
         },
-        deleteEntry(year, i) {
+        deleteEntry(year, y) {
+
             this.$confirm("Deseja excluir ?", "Confirmação", {
                 confirmButtonText: "Sim",
                 cancelButtonText: "Não",
                 type: 'warning'
             }).then(() => {
-                this.years[year].splice(i, 1)
-                this.$message.success('Entrada excluido !!!')
+                this.loading_entries = true
+                setTimeout(() => {
+                    this.years[year].splice(y, 1)
+                    this.$message.success('Entrada excluido !!!')
+                    this.loading_entries = false
+                }, 500)
             })
         },
         total(year, month) {

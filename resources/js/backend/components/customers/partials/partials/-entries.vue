@@ -156,7 +156,6 @@ export default {
     watch: {
         years: {
             handler(val) {
-                console.log(val)
                 this.saveEntries()
             },
             deep: true

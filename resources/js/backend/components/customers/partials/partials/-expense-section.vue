@@ -34,8 +34,8 @@
                                         </tr>
                                         <tr>
                                             <th style="width:350px">
-                                                Entradas
-                                                <small>Receitas</small>
+                                                Despesa
+                                                <small>Consumo</small>
                                             </th>
                                             <template v-for="(m,i) in months">
                                                 <th
@@ -137,9 +137,6 @@ export default {
         this.months.map(({ value }) => this.$set(this.form, value, 0))
     },
     methods: {
-        change(v) {
-            // 
-        },
         deleteSection() {
             this.$confirm("Deseja excluir ?", "Confirmação", {
                 confirmButtonText: "Sim",

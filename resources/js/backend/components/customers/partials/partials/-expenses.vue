@@ -22,6 +22,13 @@
                 >Adicionar Nova Sessão de despesa em {{year}}</a>
             </div>
         </div>
+        <cash-flow
+            :months="months"
+            :year="year"
+            :sections="sections"
+            v-if="!loading_expenses"
+            :entries="entries"
+        />
     </div>
 </template>
 <script>
@@ -34,7 +41,8 @@ export default {
         }
     },
     components: {
-        "expense-section": require("./-expense-section.vue").default
+        "expense-section": require("./-expense-section.vue").default,
+        "cash-flow": require("./-cash-flow.vue").default,
     },
     watch: {
         sections: {

@@ -9,11 +9,13 @@ use Illuminate\Http\Request;
 use App\Http\Models\{
     Customer,
     Sale,
-    SalePayment
+    SalePayment,
+    Tenant
 };
 use Auth;
 use marcusvbda\vstack\Services\Messages;
 use Carbon\Carbon;
+use marcusvbda\vstack\Services\SendMail;
 
 class CustomersController extends Controller
 {
@@ -98,22 +100,43 @@ class CustomersController extends Controller
 
     public function addGoal($id, Request $request)
     {
+        $user = Auth::user();
         $customer = Customer::findOrFail($id);
         $data = @$customer->data ? $customer->data : [];
         $goals = $request->all();
         $data["goals"] = $goals;
         $customer->data = $data;
+        $timeline = @$customer->timeline ? $customer->timeline : [];
+        $timeline[] = [
+            "title" => "Metas e Objetivos",
+            "description" => "Adição de Entrada nas metas e objetivos por <b>$user->name</b>",
+            "datetime" => Carbon::now()->format('d/m/Y - H:i:s')
+        ];
+        $customer->timeline = $timeline;
         $customer->save();
         return ["success" => true];
     }
 
     public function saveFlux($id, Request $request)
     {
+        $user = Auth::user();
         $customer = Customer::findOrFail($id);
         $data = @$customer->data ? $customer->data : [];
         $entries = $request->all();
         $data["entries"] = (object) @$entries;
+        $sections = [];
+        foreach ($data["entries"] as $key => $value) {
+            $sections[(string) $key] =  @$data["sections"][(string) $key] ?  $data["sections"][(string) $key] : [];
+        }
+        $data["sections"] = $sections;
         $customer->data = $data;
+        $timeline = @$customer->timeline ? $customer->timeline : [];
+        $timeline[] = [
+            "title" => "Fluxo de Caixa",
+            "description" => "Adição de Entrada no Fluxo de Caixa por <b>$user->name</b>",
+            "datetime" => Carbon::now()->format('d/m/Y - H:i:s')
+        ];
+        $customer->timeline = $timeline;
         $customer->save();
         return ["success" => true];
     }
@@ -126,5 +149,59 @@ class CustomersController extends Controller
         $customer->data = $data;
         $customer->save();
         return ["success" => true];
+    }
+
+    public function createAreaAccess($id)
+    {
+        $customer = Customer::findOrFail($id);
+        $customer->username =  $this->generateAreaCustomerUsername($customer);
+        $pass = $this->generateAreaCustomerPassword($customer);
+        $customer->password = md5($pass);
+        $this->sendAccessEmail($customer->name, @$customer->email, $customer->username, $pass);
+        $customer->save();
+        Messages::send("success", "Usuário criado com sucesso e um email com os dados foram enviados para o cliente !!");
+        return ["success" => true];
+    }
+
+    private function sendAccessEmail($name, $email, $username, $password)
+    {
+        $link = route('customer_area.index', ['code' => Auth::user()->tenant->code]);
+        $appName = Config("app.name");
+        $html = "
+                <p>Olá {$name},</p>
+                <p>Geramos um accesso para seus usuário em nossa area de cliente </p>
+                <p>Clique no link abaixo acessar utilizando as credenciais :</p>
+                <a href='{$link}' target='_BLANK'>{$link}</a>
+                <p><b>Usuário : </b>{$username}</p>
+                <p><b>Senha : </b>{$password}</p>
+                <p style='margin-top:30px'>Obrigado, {$appName}";
+        SendMail::to($email, "Seu Acesso a area do cliente", $html);
+    }
+
+    public function removeAreaAccess($id)
+    {
+        $customer = Customer::findOrFail($id);
+        $customer->username =  null;
+        $customer->password = null;
+        $customer->save();
+        Messages::send("success", "Usuário removido com sucesso !!");
+        return ["success" => true];
+    }
+
+    private function generateAreaCustomerUsername($customer)
+    {
+        if (Customer::where("id", "!=", $customer->id)->where("data->customer_area->username", $customer->email)->count() <= 0) return $customer->email;
+        if (Customer::where("id", "!=", $customer->id)->where("data->customer_area->username", $customer->cpfcnpj)->count() <= 0) return preg_replace('/[^0-9]/', '', $customer->cpfcnpj);
+        if (Customer::where("id", "!=", $customer->id)->where("data->customer_area->username", $customer->date_exp_rg)->count() <= 0) return preg_replace('/[^0-9]/', '', $customer->date_exp_rg);
+        if (Customer::where("id", "!=", $customer->id)->where("data->customer_area->phone", $customer->phone)->count() <= 0) return preg_replace('/[^0-9]/', '', $customer->phone);
+        return uniqid();
+    }
+
+    private function generateAreaCustomerPassword($customer)
+    {
+        if (@$customer->phone) return preg_replace('/[^0-9]/', '', $customer->phone);
+        if (@$customer->cpfcnpj) return preg_replace('/[^0-9]/', '', $customer->cpfcnpj);
+        if (@$customer->date_exp_rg) return preg_replace('/[^0-9]/', '', $customer->date_exp_rg);
+        return uniqid();
     }
 }

@@ -31,7 +31,9 @@
                                             <span class="el-icon-s-finance mr-2"></span>
                                         </h1>
                                         <h5>Cliente não possui lançamentos</h5>
-                                        <small>Adicione um lançamento clicando no botão abaixo</small>
+                                        <small
+                                            v-if="canaddsale"
+                                        >Adicione um lançamento clicando no botão abaixo</small>
                                         <button
                                             v-if="canaddsale"
                                             class="btn btn-primary mb-4 mt-3"
@@ -50,7 +52,7 @@
                                                 <th>Total</th>
                                                 <!-- <th>Adicionado Por ...</th>
                                                 <th>Adicionado em ..</th>-->
-                                                <th></th>
+                                                <th v-if="!customer_area"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -68,7 +70,7 @@
                                                 <td>R$ {{(Number(s.subtotal)).toFixed(2)}}</td>
                                                 <!-- <td>{{s.user.name}}</td>
                                                 <td>{{s.f_created_at}}</td>-->
-                                                <td>
+                                                <td v-if="!customer_area">
                                                     <div
                                                         class="d-fle flex-row justify-content-center align-items-center"
                                                     >
@@ -92,12 +94,16 @@
             </div>
         </div>
         <modal-sales ref="modal_sales" :customer="customer" />
-        <modal-detail ref="modal_detail" :customer="customer" />
+        <modal-detail ref="modal_detail" :customer="customer" :customer_area="customer_area" />
     </div>
 </template>
 <script>
 export default {
     props: {
+        customer_area: {
+            type: Boolean,
+            default: false
+        },
         sales: {
             type: Array,
             default: () => ([])

@@ -18,7 +18,7 @@
                         <div class="block">
                             <el-timeline>
                                 <el-timeline-item
-                                    v-for="(t,i) in timeline"
+                                    v-for="(t,i) in _timeline"
                                     :timestamp="t.datetime"
                                     placement="top"
                                     :key="i"
@@ -51,6 +51,14 @@ export default {
             type: String,
             default: null
         }
+    },
+    data() {
+        return {
+            _timeline: []
+        }
+    },
+    created() {
+        this._timeline = Object.assign([], this.timeline).reverse()
     }
 }
 </script>

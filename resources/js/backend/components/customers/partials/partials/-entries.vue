@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="row mb-2" v-loading="loading_entries">
-            <div class="col-12 text-right">
+            <div class="col-12 text-right" v-if="!customer_area">
                 <span class="el-icon-circle-plus mr-2"></span>
                 <a href="#" class="link" @click.prevent="addYear">Adicionar Ano</a>
             </div>
@@ -10,7 +10,7 @@
             type="border-card"
             ref="tabs"
             v-if="Object.keys(years).length>0"
-            closable
+            :closable="!customer_area"
             @tab-remove="removeYear"
         >
             <el-tab-pane
@@ -18,7 +18,7 @@
                 :label="`${year}`"
                 :name="`${i}`"
                 :key="i"
-                closable
+                :closable="!customer_area"
             >
                 <div class="row f-12">
                     <div class="col-12">
@@ -48,7 +48,7 @@
                                                         <small>{{year}}</small>
                                                     </th>
                                                 </template>
-                                                <th class="green"></th>
+                                                <th class="green" v-if="!customer_area"></th>
                                             </tr>
                                             <tr>
                                                 <th style="width:350px">
@@ -62,13 +62,16 @@
                                                         :key="`${i}_head_2`"
                                                     >{{total(year,m.value).currency()}}</th>
                                                 </template>
-                                                <th class="green2"></th>
+                                                <th class="green2" v-if="!customer_area"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr v-for="(q,y) in years[year]" :key="y">
                                                 <td>
-                                                    <edit-input v-model="q.name" />
+                                                    <edit-input
+                                                        v-model="q.name"
+                                                        :can_edit="!customer_area"
+                                                    />
                                                 </td>
                                                 <template v-for="(m,i) in months">
                                                     <td :key="`${i}_${y}_body`">
@@ -76,10 +79,11 @@
                                                             type="number"
                                                             v-model="q[m.value]"
                                                             :currency="true"
+                                                            :can_edit="!customer_area"
                                                         />
                                                     </td>
                                                 </template>
-                                                <td class="text-center">
+                                                <td class="text-center" v-if="!customer_area">
                                                     <button
                                                         v-loading="loading_entries"
                                                         class="append-btn"
@@ -90,7 +94,7 @@
                                                     </button>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr v-if="!customer_area">
                                                 <td>
                                                     <input class="w-100 mr-1" v-model="form.name" />
                                                 </td>
@@ -129,14 +133,16 @@
                     :customer="customer"
                     :_sections="sections[year] ? sections[year] : {}"
                     :entries="years[year]"
+                    :customer_area="customer_area"
                 />
             </el-tab-pane>
         </el-tabs>
+        <template v-else>Nenhum lançamento realizado</template>
     </div>
 </template>
 <script>
 export default {
-    props: ['customer', 'months'],
+    props: ['customer', 'months', 'customer_area'],
     data() {
         return {
             loading_entries: false,

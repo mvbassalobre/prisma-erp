@@ -13,20 +13,24 @@
                                 <th class="purple">Valor</th>
                                 <th class="purple">Prazo</th>
                                 <th class="purple"></th>
-                                <th class="purple"></th>
+                                <th class="purple" v-if="!customer_area"></th>
                             </tr>
                         </thead>
                         <tbody>
                             <template v-for="(g,i) in goals">
                                 <tr :key="i" class="clickable">
                                     <td>
-                                        <edit-input v-model="g.description" />
+                                        <edit-input
+                                            v-model="g.description"
+                                            :can_edit="!customer_area"
+                                        />
                                     </td>
                                     <td>
                                         <edit-input
                                             type="number"
                                             v-model="g.value"
                                             :currency="true"
+                                            :can_edit="!customer_area"
                                         />
                                     </td>
                                     <td>
@@ -37,9 +41,10 @@
                                             v-model="g.term_type"
                                             type="select"
                                             :options="term_type_options"
+                                            :can_edit="!customer_area"
                                         />
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-center" v-if="!customer_area">
                                         <button
                                             v-loading="loading_goals"
                                             class="append-btn"
@@ -52,7 +57,7 @@
                                 </tr>
                             </template>
 
-                            <tr>
+                            <tr v-if="!customer_area">
                                 <td>
                                     <input class="w-100" v-model="form.description" />
                                 </td>
@@ -102,7 +107,7 @@
 </template>
 <script>
 export default {
-    props: ["customer"],
+    props: ["customer", "customer_area"],
     data() {
         return {
             loading_goals: false,

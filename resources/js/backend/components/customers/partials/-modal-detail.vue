@@ -20,7 +20,7 @@
             <div class="card-body d-flex flex-column" v-loading="loading" style="overflow-y: auto;">
                 <div class="row">
                     <div class="col-12">
-                        <h5>
+                        <h5 v-if="!customer_area">
                             Cliente
                             <small class="ml-2">
                                 <a
@@ -123,7 +123,7 @@
 <script>
 import QRCode from 'qrcode'
 export default {
-    props: ["customer"],
+    props: ["customer", "customer_area"],
     data() {
         return {
             loading: null,

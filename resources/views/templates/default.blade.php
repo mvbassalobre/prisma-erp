@@ -13,7 +13,7 @@
 			$image = $small_logo ? $small_logo : URL::asset('/assets/images/logo.png');
 		}
 		?>
-		<link rel="icon" type="image/png" href="{{ $image }}" />
+		<link rel="icon" type="image/png" href="@yield('favicon',$image)" />
 		<title>{{config("app.name")}} - @yield("title")</title>
 	</head>
 	<body>

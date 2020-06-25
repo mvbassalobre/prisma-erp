@@ -5,7 +5,12 @@
                 <div class="card-header p-1 d-flex flex-row align-items-center">
                     <span class="el-icon-remove mr-2"></span>
                     <div>{{s}}</div>
-                    <a href="#" @click.prevent="deleteSection" class="text-danger f-12 ml-auto">
+                    <a
+                        href="#"
+                        @click.prevent="deleteSection"
+                        class="text-danger f-12 ml-auto"
+                        v-if="!customer_area"
+                    >
                         <span class="el-icon-error text-danger mr-2"></span>Excluir Sessão
                     </a>
                 </div>
@@ -30,7 +35,7 @@
                                                     <small>{{year}}</small>
                                                 </th>
                                             </template>
-                                            <th class="blue"></th>
+                                            <th class="blue" v-if="!customer_area"></th>
                                         </tr>
                                         <tr>
                                             <th style="width:350px">
@@ -44,7 +49,7 @@
                                                     :key="`${i}_head_2`"
                                                 >{{total(s,m.value).currency()}}</th>
                                             </template>
-                                            <th class="blue2"></th>
+                                            <th class="blue2" v-if="!customer_area"></th>
                                         </tr>
                                         <tr>
                                             <th style="width:350px">
@@ -58,13 +63,16 @@
                                                     :key="`${i}_head_3`"
                                                 >{{percentage(s,m.value)}} %</th>
                                             </template>
-                                            <th class="blue3"></th>
+                                            <th class="blue3" v-if="!customer_area"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="(q,y) in sections[s]" :key="y">
                                             <td>
-                                                <edit-input v-model="q.name" />
+                                                <edit-input
+                                                    v-model="q.name"
+                                                    :can_edit="!customer_area"
+                                                />
                                             </td>
                                             <template v-for="(m,i) in months">
                                                 <td :key="`${i}_${y}_body`">
@@ -72,10 +80,11 @@
                                                         type="number"
                                                         v-model="q[m.value]"
                                                         :currency="true"
+                                                        :can_edit="!customer_area"
                                                     />
                                                 </td>
                                             </template>
-                                            <td class="text-center">
+                                            <td class="text-center" v-if="!customer_area">
                                                 <button
                                                     v-loading="loading_expenses"
                                                     class="append-btn"
@@ -86,7 +95,7 @@
                                                 </button>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr v-if="!customer_area">
                                             <td>
                                                 <input class="w-100 mr-1" v-model="form.name" />
                                             </td>
@@ -124,7 +133,7 @@
 </template>
 <script>
 export default {
-    props: ["sections", "s", "months", "entries", "year", "customer"],
+    props: ["sections", "s", "months", "entries", "year", "customer", "customer_area"],
     data() {
         return {
             loading_expenses: false,

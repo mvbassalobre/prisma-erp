@@ -100,22 +100,24 @@ class Customers extends Resource
                 "description" => "Apenas para o caso de pessoa física"
             ]),
         ];
-        if (Auth::user()->hasRole(["super-admin"])) {
-            $fields[] = new BelongsTo([
-                "label" => "Tenant",
-                "field" => "tenant_id",
-                "model" => \App\Http\Models\Tenant::class,
-                "rules" => "required",
-                "required" => true
-            ]);
-        }
-        if (Auth::user()->hasRole(["super-admin", "admin"])) {
-            $fields[] = new BelongsTo([
-                "label" => "Responsável",
-                "field" => "user_id",
-                "model" => \App\User::class,
-                "rules" => "required"
-            ]);
+        if (Auth::check()) {
+            if (Auth::user()->hasRole(["super-admin"])) {
+                $fields[] = new BelongsTo([
+                    "label" => "Tenant",
+                    "field" => "tenant_id",
+                    "model" => \App\Http\Models\Tenant::class,
+                    "rules" => "required",
+                    "required" => true
+                ]);
+            }
+            if (Auth::user()->hasRole(["super-admin", "admin"])) {
+                $fields[] = new BelongsTo([
+                    "label" => "Responsável",
+                    "field" => "user_id",
+                    "model" => \App\User::class,
+                    "rules" => "required"
+                ]);
+            }
         }
         $cards =  [new Card("Informações", $fields)];
         $cards[] =  new Card("Documentos", [
@@ -242,7 +244,10 @@ class Customers extends Resource
 
     public function canDelete()
     {
-        return Auth::user()->hasRole(["super-admin", "admin"]);
+        if (Auth::check()) {
+            return Auth::user()->hasRole(["super-admin", "admin"]);
+        }
+        return false;
     }
 
     public function canCustomizeMetrics()

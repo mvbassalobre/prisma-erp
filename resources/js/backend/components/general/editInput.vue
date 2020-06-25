@@ -37,6 +37,10 @@
 <script>
 export default {
     props: {
+        can_edit: {
+            type: Boolean,
+            default: true
+        },
         type: {
             type: String,
             default: "text"
@@ -69,6 +73,7 @@ export default {
             this.$emit('change', value)
         },
         editField(index, field) {
+            if (!this.can_edit) return
             this.editing = true
             this.$nextTick(() => {
                 this.$refs.input.focus()

@@ -179,7 +179,7 @@
 </template>
 <script>
 export default {
-    props: ["customer"],
+    props: ["customer", "customer_area"],
     data() {
         return {
             loading: false,

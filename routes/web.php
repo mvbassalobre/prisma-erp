@@ -5,7 +5,6 @@ Route::get('/', function () {
 Route::group(['prefix' => "admin"], function () {
     require "partials/auth.php";
     Route::group(['middleware' => 'auth'], function () {
-        Route::get('debug', 'DebugController@index')->name("debug.index");
         require "partials/home.php";
         require "partials/account.php";
         require "partials/users.php";
@@ -14,3 +13,4 @@ Route::group(['prefix' => "admin"], function () {
         require "partials/pagseguro.php";
     });
 });
+require "partials/areaDoCliente.php";

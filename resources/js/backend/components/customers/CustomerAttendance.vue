@@ -47,6 +47,63 @@
                                                 </table>
                                             </div>
                                         </div>
+                                        <div class="row" v-if="!customer_area">
+                                            <div class="col-12">
+                                                <table class="table table-striped mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th></th>
+                                                            <th></th>
+                                                            <th></th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-if="!has_customer_area">
+                                                            <td>
+                                                                <b>Acesso a Area do Usuário</b>
+                                                            </td>
+                                                            <td colspan="4">
+                                                                <a
+                                                                    href="#"
+                                                                    class="link"
+                                                                    @click.prevent="generateUser"
+                                                                >Gerar Acesso a Area do Cliente</a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr v-else>
+                                                            <td>
+                                                                <b>
+                                                                    Acesso a
+                                                                    <a
+                                                                        class="link"
+                                                                        target="_BLANK"
+                                                                        :href="customer_area_url"
+                                                                    >Area do Usuário</a>
+                                                                </b>
+                                                            </td>
+                                                            <td>{{customer.username}}</td>
+                                                            <td>
+                                                                <b>Senha</b>
+                                                            </td>
+                                                            <td>****************</td>
+                                                            <td class="width:1%">
+                                                                <button
+                                                                    class="append-btn"
+                                                                    type="button"
+                                                                    @click.prevent="deleteAccess"
+                                                                >
+                                                                    <span
+                                                                        class="el-icon-error text-danger"
+                                                                    ></span>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -61,8 +118,13 @@
                         :customer="customer"
                         :active="active"
                         :canaddsale="canaddsale"
+                        :customer_area="customer_area"
                     />
-                    <comp-flux :customer="customer" :active="active" />
+                    <comp-flux
+                        :customer="customer"
+                        :active="active"
+                        :customer_area="customer_area"
+                    />
                 </div>
             </div>
         </div>
@@ -71,7 +133,7 @@
 <script>
 import VRuntimeTemplate from "v-runtime-template"
 export default {
-    props: ["customer", "data", "canaddsale"],
+    props: ["customer", "data", "canaddsale", "customer_area_url", "customer_area"],
     data() {
         return {
             backup_collapse: null,
@@ -92,12 +154,17 @@ export default {
         "v-runtime-template": VRuntimeTemplate,
     },
     computed: {
+        has_customer_area() {
+            if ((!this.customer.username) || (!this.customer.password)) return false
+            return true
+        },
         infoData() {
             let info = this.data.fields.filter(({ label }) => label == "Informações")[0]
             return info
         }
     },
     created() {
+        if (this.customer_area) this.options.splice(2, 1)
         this.$root.sidebarCollapse = true
         this.initHash()
     },
@@ -117,6 +184,30 @@ export default {
                     window.location.hash = `#${this.active}`
                 } else this.options[i].active = false
             }
+        },
+        generateUser() {
+            this.$confirm("Criar acesso a area do cliente ?", "Confirmação", {
+                confirmButtonText: "Sim",
+                cancelButtonText: "Não",
+                type: 'warning'
+            }).then(() => {
+                let loading = this.$loading()
+                this.$http.post(`/admin/customers/${this.customer.code}/create-area-access`, {}).then(resp => {
+                    window.location.reload()
+                })
+            })
+        },
+        deleteAccess() {
+            this.$confirm("Remove acesso a area do cliente ?", "Confirmação", {
+                confirmButtonText: "Sim",
+                cancelButtonText: "Não",
+                type: 'warning'
+            }).then(() => {
+                let loading = this.$loading()
+                this.$http.post(`/admin/customers/${this.customer.code}/remove-area-access`, {}).then(resp => {
+                    window.location.reload()
+                })
+            })
         }
     }
 }

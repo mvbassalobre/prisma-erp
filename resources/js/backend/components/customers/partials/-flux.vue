@@ -10,10 +10,15 @@
             <div class="col-12">
                 <el-tabs type="border-card">
                     <el-tab-pane label="Objetivos">
-                        <comp-goals :customer="customer" />
+                        <comp-goals :customer="customer" :customer_area="customer_area" />
                     </el-tab-pane>
                     <el-tab-pane label="Fluxo de Caixa">
-                        <comp-entries :customer="customer" :months="months" v-loading="loading" />
+                        <comp-entries
+                            :customer="customer"
+                            :months="months"
+                            v-loading="loading"
+                            :customer_area="customer_area"
+                        />
                     </el-tab-pane>
                 </el-tabs>
             </div>
@@ -22,7 +27,7 @@
 </template>
 <script>
 export default {
-    props: ["active", "customer"],
+    props: ["active", "customer", "customer_area"],
     data() {
         return {
             loading: false,

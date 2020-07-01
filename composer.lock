@@ -1552,7 +1552,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcusvbda/vstack.git",
-                "reference": "7feb205f34ffe2714fa739dbf12c09811e1ddb4a"
+                "reference": "9fb1ef6cdafdacbf6e84b5c6464cc7f8d46cc4c0"
             },
             "require": {
                 "spatie/laravel-permission": "^3.3",
@@ -1577,7 +1577,7 @@
                     "email": "bassalobre.vinicius@gmail.com"
                 }
             ],
-            "time": "2020-06-30T19:24:19+00:00"
+            "time": "2020-07-01T18:28:43+00:00"
         },
         {
             "name": "monolog/monolog",

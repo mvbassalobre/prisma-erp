@@ -26,4 +26,23 @@ class HomeController extends Controller
         if (Auth::user()->hasRole(["admin"])) return ["qty" => DB::table("customers")->where("tenant_id", $user->tenant_id)->count()];
         return ["qty" => Customer::count()];
     }
+
+    public function qtyProducts($user)
+    {
+        if (Auth::user()->hasRole(["admin"])) return ["qty" => DB::table("products")->where("tenant_id", $user->tenant_id)->count()];
+        return ["qty" => Customer::count()];
+    }
+
+    public function qtyTeams($user)
+    {
+        if (Auth::user()->hasRole(["admin"])) return ["qty" => DB::table("teams")->where("tenant_id", $user->tenant_id)->count()];
+        return ["qty" => Customer::count()];
+    }
+
+    public function qtyUsers($user)
+    {
+        if (Auth::user()->hasRole(["admin"])) return ["qty" => DB::table("users")->where("tenant_id", $user->tenant_id)->count()];
+        return ["qty" => Customer::count()];
+    }
+    
 }

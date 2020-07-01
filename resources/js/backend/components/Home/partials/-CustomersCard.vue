@@ -1,16 +1,18 @@
 <template>
     <div
-        class="col-md-3 col-sm-12 dashcard d-flex flex-row justify-content-between align-items-center"
+        class="col-md-3 col-sm-12"
         @click="$goTo('/admin/customers')"
     >
-        <div class="title d-flex flex-column">
-            <div class="mb-2">Clientes</div>
-            <loading-container :height="22" :loaded="loaded">
-                <h3 class="mb-0 number">{{qty}}</h3>
-            </loading-container>
-        </div>
-        <div>
-            <i class="el-icon-s-custom icon"></i>
+        <div class="dashcard d-flex flex-row justify-content-between align-items-center p-3">
+            <div class="title d-flex flex-column">
+                <div class="mb-2">Clientes</div>
+                <loading-container :height="22" :loaded="loaded">
+                    <h3 class="mb-0 number">{{qty}}</h3>
+                </loading-container>
+            </div>
+            <div>
+                <i class="el-icon-s-custom icon"></i>
+            </div>
         </div>
     </div>
 </template>
@@ -20,7 +22,8 @@ export default {
     data() {
         return {
             loaded: null,
-            qty: null
+            qty: null,
+            attempts : 0
         }
     },
     components: {
@@ -31,6 +34,7 @@ export default {
     },
     methods: {
         initialize() {
+            this.attempts++
             this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info`, { type: "qtyCustomers" }).then(res => {
                 setTimeout(() => {
                     res = res.data
@@ -38,10 +42,16 @@ export default {
                     this.loaded = true
                 }, 500)
             }).catch(er => {
+                if(this.attempts <=3 ) return this.initialize()
                 console.log(er)
-                this.initialize()
             })
         }
     }
 }
 </script>
+
+<style lang="scss" scoped>
+.dashcard {
+    background-color : #0fceab;
+}
+</style>

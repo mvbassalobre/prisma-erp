@@ -14,11 +14,10 @@
 </div>
 @endsection
 @section("content")
-<h3>Dashboard</h3>
-<small>Olá, aqui no dashboard você verá um informativo resumido a respeito de sua empresa</small>
 <?php $user = Auth::user(); ?>
 <home-dashboard
     :roles="{{json_encode($user->roles)}}"
     :user="{{json_encode($user)}}"
+    :params="{{json_encode($_GET)}}"
 ></home-dashboard>
 @endsection

@@ -2,52 +2,54 @@
     <div class="row d-flex flex-wrap flex-row">
         <div class="col-12">
             <div class="card">
-                <div class="card-body">
-                    <div class="row d-flex justify-content-center mb-3">
-                        <div class="col-md-10 col-sm-12">
+                <div class="card-body p-0">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-12">
                             <slot></slot>
-                            <template v-for="(setting,s) in settings">
-                                <v-input
-                                    :key="s"
-                                    v-if="['text','integer','float'].includes(setting.type)"
-                                    class="mb-3"
-                                    :label="setting.name"
-                                    :type="(['integer','float'].includes(setting.type) ? 'number' : 'text')"
-                                    :description="setting.description"
-                                    v-model="form[setting.id]"
-                                />
-                                <v-upload
-                                    :key="s"
-                                    v-if="['image'].includes(setting.type)"
-                                    class="mb-3"
-                                    :label="setting.name"
-                                    :uploadroute="uploadRoute"
-                                    v-model="form[setting.id]"
-                                    :multiple="false"
-                                    :preview="true"
-                                    :limit="1"
-                                    listtype="picture-card"
-                                    accept="image/*"
-                                />
-                                <div
-                                    :key="s"
-                                    class="form-group d-flex align-items-center row mb-3 justify-content-center"
-                                    v-if="['boolean'].includes(setting.type)"
-                                >
-                                    <label class="col-sm-2 col-form-label" v-html="setting.name"></label>
-                                    <div class="col-sm-10">
-                                        <el-switch v-model="form[setting.id]" />
-                                        <template v-if="setting.description">
-                                            <br />
-                                            <small
-                                                style="color:gray;"
-                                                class="mt-1"
-                                                v-html="setting.description"
-                                            ></small>
+                            <div class="table-responsive">
+                                <table class="table table-striped m-0">
+                                    <tbody>
+                                        <template v-for="(setting,s) in settings">
+                                            <v-input
+                                                :key="s"
+                                                v-if="['text','integer','float'].includes(setting.type)"
+                                                class="mb-3"
+                                                :label="setting.name"
+                                                :type="(['integer','float'].includes(setting.type) ? 'number' : 'text')"
+                                                :description="setting.description"
+                                                v-model="form[setting.id]"
+                                            />
+                                            <v-upload
+                                                :key="s"
+                                                v-if="['image'].includes(setting.type)"
+                                                class="mb-3"
+                                                :label="setting.name"
+                                                :uploadroute="uploadRoute"
+                                                v-model="form[setting.id]"
+                                                :multiple="false"
+                                                :preview="true"
+                                                :limit="1"
+                                                listtype="picture-card"
+                                                accept="image/*"
+                                            />
+                                            <tr v-if="['boolean'].includes(setting.type)" :key="s">
+                                                <td v-html="setting.name" />
+                                                <td>
+                                                    <el-switch v-model="form[setting.id]" />
+                                                    <template v-if="setting.description">
+                                                        <br />
+                                                        <small
+                                                            style="color:gray;"
+                                                            class="mt-1"
+                                                            v-html="setting.description"
+                                                        ></small>
+                                                    </template>
+                                                </td>
+                                            </tr>
                                         </template>
-                                    </div>
-                                </div>
-                            </template>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

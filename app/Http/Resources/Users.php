@@ -43,7 +43,7 @@ class Users extends Resource
 
     public function icon()
     {
-        return "el-icon-user-solid";
+        return "el-icon-s-cooperation";
     }
 
     public function search()

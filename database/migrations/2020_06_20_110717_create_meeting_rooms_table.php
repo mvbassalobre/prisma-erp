@@ -18,6 +18,7 @@ class CreateMeetingRoomsTable extends Migration
             $table->unsignedBigInteger('tenant_id');
             $table->string("name");
             $table->string("size");
+            $table->string("phones")->nullable();
             $table->string("zipcode")->nullable();
             $table->string("state")->nullable();
             $table->string("city")->nullable();

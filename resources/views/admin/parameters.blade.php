@@ -5,7 +5,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="http://local.otimize.webtoprint/admin" class="link">Dashboard</a>
+                <a href="/admin" class="link">Dashboard</a>
             </li> 
             <li class="breadcrumb-item">
                 <a href="{{route('admin.parameters')}}" class="link">Parâmetros</a>

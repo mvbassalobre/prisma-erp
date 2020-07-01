@@ -27,6 +27,9 @@
                 <teams-card :user="user" :roles="roles" :filter="filter" />
                 <users-card :user="user" :roles="roles" :filter="filter" />
             </div>
+            <div class="row mt-3 d-flex flex-row flex-wrap">
+                <top-users :user="user" :roles="roles" :filter="filter" />
+            </div>
         </div>
     </div>
 </template>
@@ -45,6 +48,7 @@ export default {
         "products-card": require("./partials/-ProductsCard").default,
         "customers-card": require("./partials/-CustomersCard").default,
         "users-card": require("./partials/-UsersCard").default,
+        "top-users": require("./partials/-TopUsers").default,
     },
     created() {
         if (this.params.daterange) this.filter.daterange = this.params.daterange.split(",")

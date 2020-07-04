@@ -16,6 +16,7 @@ class CreateMeetingsTable extends Migration
         Schema::create('meetings', function (Blueprint $table) {
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
+            $table->engine = 'InnoDB';
             $table->bigIncrements('id');
             $table->string('subject');
             $table->string('type');

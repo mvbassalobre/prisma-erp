@@ -93,4 +93,14 @@ class MeetingStatuses extends Resource
             new Card("Informações", $fields)
         ];
     }
+
+    public function canImport()
+    {
+        return false;
+    }
+
+    public function canExport()
+    {
+        return false;
+    }
 }

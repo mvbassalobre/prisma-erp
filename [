@@ -1,0 +1,520 @@
+[33mcommit b5fefaaa38b947b6b514270a39a9717a2b6075a5[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: Vinicius Bassalobre <=>
+Date:   Sat Jul 4 13:40:37 2020 -0300
+
+    tira relacionamentos
+
+[33mcommit 0bc70d555e79ce6e5f02ef9b84d2da275c48b345[m
+Author: Vinicius Bassalobre <=>
+Date:   Sat Jul 4 13:35:43 2020 -0300
+
+    engine
+
+[33mcommit 9287c54123853f408dab8df759f3a37e8b1f6d6f[m
+Author: Vinicius Bassalobre <=>
+Date:   Sat Jul 4 13:33:37 2020 -0300
+
+    inodb
+
+[33mcommit 3d82148eb4cfa2d633b823e993d18b8eced22143[m
+Author: Vinicius Bassalobre <=>
+Date:   Sat Jul 4 13:30:18 2020 -0300
+
+    dashboard
+
+[33mcommit 026bb9c649200ee72ce819ea0b6aa1bfcf463f30[m
+Author: Vinicius Bassalobre <=>
+Date:   Sat Jul 4 13:28:47 2020 -0300
+
+    dashboard
+
+[33mcommit 19b52de61c6c5ecf751b0cb23ee5f6ce067b4926[m
+Author: Vinicius Bassalobre <=>
+Date:   Wed Jul 1 19:09:15 2020 -0300
+
+    filtro dashboard top usuarios
+
+[33mcommit b8bf409e21d631f08595920a963014864795461e[m
+Author: Vinicius Bassalobre <=>
+Date:   Wed Jul 1 18:15:27 2020 -0300
+
+    dashboard cards counter
+
+[33mcommit 91e957f65358df0d2abc53596d940f937619c3e4[m
+Author: Vinicius Bassalobre <=>
+Date:   Wed Jul 1 15:30:44 2020 -0300
+
+    atualiza vstack
+
+[33mcommit 6c1b8e102c83e97104c1a1d2a0fc89fd86f21f7f[m
+Author: Vinicius Bassalobre <=>
+Date:   Tue Jun 30 18:53:10 2020 -0300
+
+    merge luiz - vinicius
+
+[33mcommit c0e5f58e3d5f05090364f06c495435508e47c83f[m
+Merge: d392977 62130ee
+Author: Vinicius Bassalobre <=>
+Date:   Tue Jun 30 18:45:19 2020 -0300
+
+    Merge branch 'dev.luiz' of https://github.com/marcusvbda/erp
+
+[33mcommit 62130ee4888b9d446b2ca6a5b3f6118610c7976c[m
+Author: Luiz Pontes <luizpontes@otimize.me>
+Date:   Tue Jun 30 21:12:31 2020 -0300
+
+    insere módulo de agendamento de reunião
+    está incompleto o metodo de agendamento
+    quero já mexer logo no histórico para relacionar isso melhor
+
+[33mcommit d3929772a4aeb333a8539e955e0cc61873aaf5a6[m
+Author: Vinicius Bassalobre <=>
+Date:   Thu Jun 25 13:24:17 2020 -0300
+
+    adiciona area de cliente
+
+[33mcommit 32ef05883b4454fc15e979f0f0f8457c30fca606[m
+Author: Vinicius Bassalobre <=>
+Date:   Tue Jun 23 11:01:07 2020 -0300
+
+    fluxo de caixa patrimonio
+
+[33mcommit 5cc0a2312032f679132aadd11d62811763bff111[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Jun 22 19:42:07 2020 -0300
+
+    merge
+
+[33mcommit a4779c4470ed5d7490a10d69ef1191ea27432560[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Jun 22 16:25:10 2020 -0300
+
+    fluxo de caixa sessoes
+
+[33mcommit 77e43cffcb5dbe98d66928551062771119d11c90[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Jun 22 16:23:11 2020 -0300
+
+    fluxo de caixa
+
+[33mcommit 2c17af7b5a4e105ccab09cabe6a483a62c235838[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Jun 22 15:16:25 2020 -0300
+
+    corrige fluxo
+
+[33mcommit 71595a38bade56682bdaa948c898573ef9228863[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Jun 22 15:00:10 2020 -0300
+
+    fluxo de caixa
+
+[33mcommit 53a50a20da6d503a9d4bf75fc0df1ab9fe302c9e[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Jun 22 10:57:01 2020 -0300
+
+    f-12 no forms do atendimento
+
+[33mcommit bd88fc6f05d95e9da52a39a0b801bce90424245d[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Jun 22 10:55:11 2020 -0300
+
+    f-12 no forms do atendimento
+
+[33mcommit f9ad024a2fc3ab4c1eccca2d957e9e5e9b43a1c5[m
+Merge: 88b2b22 634855a
+Author: Vinicius Bassalobre <=>
+Date:   Mon Jun 22 09:51:26 2020 -0300
+
+    Merge branch 'dev.luiz' of https://github.com/marcusvbda/erp
+
+[33mcommit 88b2b223b7b909f392385fa766a9579f46dd15e4[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Jun 22 09:51:18 2020 -0300
+
+    merge
+
+[33mcommit 634855a5f4d279e709d3e3a4bf22a9320e3670c8[m
+Author: Luiz Pontes <luizpontes@otimize.me>
+Date:   Mon Jun 22 09:41:37 2020 -0300
+
+    instala debugbar laravel
+
+[33mcommit cbb4c3a394eca97a9233e2dcde417d5476e18674[m
+Merge: 4af7b79 e4a3461
+Author: Vinicius Bassalobre <=>
+Date:   Mon Jun 22 09:39:10 2020 -0300
+
+    Merge branch 'dev.vinicius' of https://github.com/marcusvbda/erp
+
+[33mcommit e4a34612777c6581a8186b7fe0e15019bb0a6e7b[m
+Author: Vinicius Bassalobre <=>
+Date:   Sat Jun 20 15:44:21 2020 -0300
+
+    corrige btn do fluxo
+
+[33mcommit d32529adeceefc63656c085a3ec1357f81904ddc[m
+Author: Vinicius Bassalobre <=>
+Date:   Sat Jun 20 15:15:53 2020 -0300
+
+    entradas na planilha de fluxo de caixa
+
+[33mcommit 4af7b7943bb9e1c7795052350d67b28408ed73fa[m
+Author: Luiz Pontes <luizpontes@otimize.me>
+Date:   Sat Jun 20 12:47:46 2020 -0300
+
+    cria crud básico das salas
+
+[33mcommit 19c4372c5d77f0c90eb8dd408c4a6c320b2d0b72[m
+Author: Vinicius Bassalobre <=>
+Date:   Sat Jun 20 11:52:06 2020 -0300
+
+    ajustes na planilha
+
+[33mcommit 43e9b037267ade4b8ee58c55d8755aaea465b816[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Jun 19 16:56:28 2020 -0300
+
+    cadastro de anos no fluxo
+
+[33mcommit f0bb96053290b0c2804b47b349a2ffc76d39ac26[m
+Author: Vinicius Bassalobre <=>
+Date:   Thu Jun 18 14:37:19 2020 -0300
+
+    flux tab
+
+[33mcommit 6f249f4e0a341424e694f5c75fbff778f615b1e5[m
+Author: Vinicius Bassalobre <=>
+Date:   Tue Jun 16 10:56:45 2020 -0300
+
+    adiciona listagem de objetivos
+
+[33mcommit 050b671eeafc12158bcd0500ff1cfe1ed81ba006[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Jun 15 20:01:02 2020 -0300
+
+    Planilha de objetivos
+
+[33mcommit 788cd44cba00659a516c58f683f9358133f4d6db[m
+Author: Vinicius Bassalobre <=>
+Date:   Thu Jun 11 11:25:34 2020 -0300
+
+    atualiza versão do vstack
+
+[33mcommit d77246823e929ce5dddfddded571e5e4bf4a9406[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Apr 3 11:45:42 2020 -0300
+
+    lançamento sem pagamento
+
+[33mcommit 63f8dbb2775d3892c2716fb1da45b173702ed8c7[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Apr 3 10:34:55 2020 -0300
+
+    pagseguro funcionando
+
+[33mcommit 365467dff0a2f904da628774428c22cb5ac78081[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Mar 23 12:01:28 2020 -0300
+
+    tela de paument detail
+
+[33mcommit 5020cbe04a08f7808e1b740a0f0c6acfdfd4b274[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Mar 20 18:35:25 2020 -0300
+
+    mercadopago
+
+[33mcommit 5a2917c72794231cb599dd0819cafebdc4de85b4[m
+Author: Vinicius Bassalobre <=>
+Date:   Thu Mar 19 18:54:57 2020 -0300
+
+    atualização vstack
+
+[33mcommit 9796096986e078ae66aac167b02493d9364ddb5b[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Mar 13 10:30:23 2020 -0300
+
+    merge vinicius-ismael
+
+[33mcommit 45906e951a807d8aaaf01e5ccef90b05648d6548[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Mar 13 10:23:48 2020 -0300
+
+    tela de vendas
+
+[33mcommit f886d1a09a9246d63611933eadf21130f1da82cb[m
+Author: Vinicius Bassalobre <=>
+Date:   Wed Mar 11 11:19:07 2020 -0300
+
+    tela lançamento
+
+[33mcommit 9d3a11c2c2692b46e36fef7e06c29e545b756313[m
+Author: Vinicius Bassalobre <=>
+Date:   Tue Mar 10 12:50:38 2020 -0300
+
+    corrige lançamentos de produtos
+
+[33mcommit 1ee397e02d5cf695dbaca8e50736aeeae3c6af75[m
+Author: Vinicius Bassalobre <=>
+Date:   Tue Mar 10 00:40:07 2020 -0300
+
+    pagseguro boleto
+
+[33mcommit 0dc33e2647f829bdbf6151df279e4ba558b782d2[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Mar 9 17:13:24 2020 -0300
+
+    form de produtos
+
+[33mcommit ca4ce5cb4bae8609eaed53cf0688026409b8fda2[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Mar 9 14:42:35 2020 -0300
+
+    correçcoes
+
+[33mcommit 399ee59bb89385cf5dc9bd4c64956eb1304a7fda[m
+Author: Vinicius Bassalobre <=>
+Date:   Sat Mar 7 11:27:09 2020 -0300
+
+    corrige cadastro de clientes
+
+[33mcommit ccf3c8f73fa10571027149376d7b6f088f77230a[m
+Author: Vinicius Bassalobre <=>
+Date:   Sat Mar 7 11:17:06 2020 -0300
+
+    gitignore
+
+[33mcommit f80d1f5dbabfa8af886996824e35d68a615ba0d8[m
+Author: Vinicius Bassalobre <=>
+Date:   Sat Mar 7 11:16:00 2020 -0300
+
+    corrige cadastro de cliente
+
+[33mcommit f28cffc29cb19a4079346038e1a47e9f3e77210d[m
+Author: Vinicius Bassalobre <=>
+Date:   Sat Mar 7 11:05:53 2020 -0300
+
+    corrige cadastro de cliente
+
+[33mcommit e8685d1303d196e2cbec2b0bc7fa76a8967ba958[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Mar 6 15:17:50 2020 -0300
+
+    versao estavel
+
+[33mcommit d0524ef6c492bb9eb906f6536325045148a40d0a[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Mar 6 14:37:21 2020 -0300
+
+    corrige vstack
+
+[33mcommit 8d9bd61ae48ce7f68855609c4d794d00432ecc7f[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Mar 6 12:41:05 2020 -0300
+
+    corrige cadastro de usuarios
+
+[33mcommit b5d59352579a95b2b0e1bdd615846d88c1cb57a9[m
+Author: Vinicius Bassalobre <=>
+Date:   Thu Mar 5 19:03:28 2020 -0300
+
+    atualiza vstack
+
+[33mcommit 1606c6cb50357176a9040e8ff547674c6b56fde6[m
+Author: Vinicius Bassalobre <=>
+Date:   Wed Mar 4 10:49:45 2020 -0300
+
+    correção cadastro usuarios
+
+[33mcommit 3ad8f211d8b6f09fd30a3eaf1b242ac437537790[m[33m ([m[1;33mtag: 1.1[m[33m)[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Mar 2 12:35:03 2020 -0300
+
+    correção
+
+[33mcommit b36a91d7c1dcefa19dfed38f92eb1ed456fe0629[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Mar 2 12:21:55 2020 -0300
+
+    cript seeder user
+
+[33mcommit ab56704a5dcee2307b9615faa1f8e7029da7a838[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Mar 2 12:20:05 2020 -0300
+
+    corrige seed
+
+[33mcommit 3cc7df73b4190ba33d6582a213a4ef3f24353e61[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Mar 2 12:18:03 2020 -0300
+
+    1.0
+
+[33mcommit 6bbc4ed339b6f6d711375530de155ae70603d338[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Mar 2 12:09:57 2020 -0300
+
+    1.0
+
+[33mcommit 1091cb6655e3d99adce17829133b36c7f1fb2d70[m[33m ([m[1;33mtag: 1.0[m[33m)[m
+Author: Vinicius Bassalobre <=>
+Date:   Thu Feb 27 16:38:02 2020 -0300
+
+    corrige favicon configuravel
+
+[33mcommit ea57d7fd9bbdd1db1cf2b1def2270845e4232ae0[m
+Author: Vinicius Bassalobre <=>
+Date:   Thu Feb 27 16:34:31 2020 -0300
+
+    logo nos parametros
+
+[33mcommit 992b528effaaf186c063d01675a5a43373fb39b7[m
+Author: Vinicius Bassalobre <=>
+Date:   Wed Feb 26 14:13:13 2020 -0300
+
+    logos
+
+[33mcommit 27df25272dbe8e21d16d9b2f9543bbfaf305781b[m
+Author: Vinicius Bassalobre <=>
+Date:   Wed Feb 26 13:40:54 2020 -0300
+
+    acesso aos tenants
+
+[33mcommit 95d30325283d1bf2a98ea61bb190d0a59f36a06f[m
+Author: Vinicius Bassalobre <=>
+Date:   Wed Feb 26 13:18:18 2020 -0300
+
+    seed app
+
+[33mcommit 67b928c65f2de2a22e29bf61a37eb8738dc7b606[m
+Author: Vinicius Bassalobre <=>
+Date:   Wed Feb 26 13:11:45 2020 -0300
+
+    corrige cadastro de usuario
+
+[33mcommit 57e703cac005a21778a33e58e2de3e550e2cd723[m
+Author: Vinicius Bassalobre <=>
+Date:   Wed Feb 26 12:46:52 2020 -0300
+
+    preços
+
+[33mcommit 1210df5c5266f5256c056a84d403c00dea178117[m
+Author: Vinicius Bassalobre <=>
+Date:   Wed Feb 26 11:45:52 2020 -0300
+
+    preco de produto e logo customizado
+
+[33mcommit 187d03c593795d6c0368c056d6e8c674cdc0d1ec[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Feb 24 18:25:45 2020 -0300
+
+    cadastro maiusculo
+
+[33mcommit 40d2a88f76e702448ab5c15d608e04f28b35e533[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Feb 24 18:18:50 2020 -0300
+
+    correção times
+
+[33mcommit 7e2a932e2d00116a5b19901d44ef089a5f666bb9[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Feb 24 17:46:23 2020 -0300
+
+    melhorias e correções basicas
+
+[33mcommit ea8de8746b9642096f395f7d54c6b665d13b3f25[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Feb 24 17:07:37 2020 -0300
+
+    corrige erro criar usuarios
+
+[33mcommit 8111dc0c5ccba351168956dc43c7d39de88c847f[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Feb 24 14:15:02 2020 -0300
+
+    1.0
+
+[33mcommit 24c7fa3d5fc6dc1f1c3382183eae52d58d2860f6[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Feb 21 22:57:16 2020 -0300
+
+    cadastro de clientes concluido
+
+[33mcommit 8976aa2f84fd68b27cb9a9a1c21f281616c6424f[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Feb 21 18:27:30 2020 -0300
+
+    cadastro de clientes
+
+[33mcommit 1efff59ea22c544a56821a421458af40018edf1e[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Feb 21 12:55:29 2020 -0300
+
+    descrições para belongs to
+
+[33mcommit 5664316d05170d8e7a600e0475c485d040bc8e54[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Feb 21 12:32:42 2020 -0300
+
+    pill updated
+
+[33mcommit a7398f2d2409cd51d5115b7d26f0fb856cbe57bb[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Feb 21 09:24:55 2020 -0300
+
+    clientes
+
+[33mcommit 186d0ba184d679b13fb93577e0e9dd5efadfd948[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Feb 21 00:48:30 2020 -0300
+
+    organização menu
+
+[33mcommit 3905b46ed202fe7400645370cc1d76c201fa6ca0[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Feb 21 00:35:18 2020 -0300
+
+    começo do cadastro de clientes
+
+[33mcommit 7dead969e17e641bef64f1e68f44b22dfa805c7b[m
+Author: Vinicius Bassalobre <=>
+Date:   Fri Feb 21 00:02:07 2020 -0300
+
+    loading value opacity
+
+[33mcommit d8e47cd9d26032408ae0e6cef5677e84441c96e4[m
+Author: Vinicius Bassalobre <=>
+Date:   Thu Feb 20 18:57:23 2020 -0300
+
+    dashboard e tableas auxiliares prontos
+
+[33mcommit 63a79deea16c008f8962795f40b050ae5c7f12be[m
+Author: Vinicius Bassalobre <=>
+Date:   Thu Feb 20 15:32:07 2020 -0300
+
+    tabelas auxiliares e seeders
+
+[33mcommit 40eee6728463687e4fb0044600d8da474d544e41[m
+Author: Vinicius Bassalobre <=>
+Date:   Thu Feb 20 13:00:18 2020 -0300
+
+    cria tabelas de clientes
+
+[33mcommit 4c15da8c62c9f14817fe5fc037f79c869c7c0038[m
+Author: Vinicius Bassalobre <=>
+Date:   Wed Feb 19 00:55:04 2020 -0300
+
+    prisma
+
+[33mcommit aeffd2e47de0ba176a0012ca8d20455d3aa9a7c3[m
+Author: Vinicius Bassalobre <=>
+Date:   Wed Feb 19 00:22:39 2020 -0300
+
+    times
+
+[33mcommit 9096148f0c9d512dac0e2c4d2ae8bdee80fbb30a[m
+Author: Vinicius Bassalobre <=>
+Date:   Mon Feb 17 22:45:51 2020 -0300
+
+    first commit

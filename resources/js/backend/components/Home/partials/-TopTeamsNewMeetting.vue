@@ -3,11 +3,11 @@
         <div class="card h-100">
             <div class="card-body d-flex flex-column">
                 <span class="f-12 mb-3">
-                    <b>TOP OPERADORES 5</b> / novas reuniões agendadas filtro
+                    <b>TOP 5 OPERADORES</b> / novas reuniões agendadas filtro
                 </span>
                 <loading-shimmer :loading="loading" :h="50">
                     <template v-if="!loading">
-                        <table class="table table-striped table-sm f-12">
+                        <table class="table table-striped table-sm f-12 my-0">
                             <tbody>
                                 <template v-if="Object.keys(data).length>0">
                                     <template v-for="(p,i,y) in data">

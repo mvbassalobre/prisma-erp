@@ -19,11 +19,23 @@ class CreateMeetingsTable extends Migration
             $table->engine = 'InnoDB';
             $table->bigIncrements('id');
             $table->unsignedBigInteger('tenant_id');
+            $table->foreign('tenant_id')
+                ->references('id')
+                ->on('tenants')
+                ->onDelete('restrict');
             $table->string('subject');
             $table->string('type');
-            $table->boolean('status');
+            $table->unsignedBigInteger('status_id');
+            $table->foreign('status_id')
+                ->references('id')
+                ->on('meeting_statuses')
+                ->onDelete('restrict');
             $table->unsignedBigInteger('meeting_room_id');
             $table->unsignedBigInteger('customer_id');
+            $table->foreign('customer_id')
+                ->references('id')
+                ->on('customers')
+                ->onDelete('restrict');
             $table->datetime('starts_at');
             $table->timestamp('ends_at');
             $table->string('feedback_url')->nullable();

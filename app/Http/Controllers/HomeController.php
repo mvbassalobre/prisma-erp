@@ -93,10 +93,9 @@ class HomeController extends Controller
 
     public function topTeamNewMeeting($user, $filter)
     {
-        $data = DB::table("customers")
-            ->leftJoin("user_team", "user_team.user_id", "=", "users.id")
-            ->leftJoin("teams", "teams.id", "=", "user_team.team_id")
-            ->leftJoin("meetings", "meetings.customer_id", "=", "customers.id")
+        $data = DB::table("meetings")
+            ->leftJoin("customers", "customers.id", "=", "meetings.customer_id")
+            ->leftJoin("users", "users.id", "=", "customers.user_id")
             ->where("users.tenant_id", $user->tenant_id);
 
         if (@$filter["daterange"]) {
@@ -105,10 +104,10 @@ class HomeController extends Controller
             }, $filter["daterange"]);
             $data = $data->whereRaw("DATE(sales.created_at) >='{$dates[0]}'" . " and " . "DATE(sales.created_at) <='{$dates[1]}'");
         }
-        $data = $data->selectRaw("count(*) as qty, teams.name as team ")
+        $data = $data->selectRaw("count(*) as qty, users.name as name ")
             ->orderBy("qty", "desc")
             ->limit(5)
-            ->pluck('qty', 'team')
+            ->pluck('qty', 'name')
             ->all();
 
         return $data;

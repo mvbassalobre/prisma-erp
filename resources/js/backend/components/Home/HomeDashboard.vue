@@ -32,6 +32,9 @@
                 <top-users-new-customers :user="user" :roles="roles" :filter="filter" />
                 <top-teams-new-metting :user="user" :roles="roles" :filter="filter" />
             </div>
+            <div class="row mt-3 d-flex flex-row flex-wrap">
+                <top-users-new-metting :user="user" :roles="roles" :filter="filter" />
+            </div>
         </div>
     </div>
 </template>
@@ -53,6 +56,7 @@ export default {
         "top-users-new-customers": require("./partials/-TopUsersNewsCustomer.vue").default,
         "top-teams-new-customers": require("./partials/-TopTeamsNewsCustomer.vue").default,
         "top-teams-new-metting": require("./partials/-TopTeamsNewMeetting.vue").default,
+        "top-users-new-metting": require("./partials/-TopUsersNewMeetting.vue").default,
     },
     created() {
         if (this.params.daterange) this.filter.daterange = this.params.daterange.split(",")

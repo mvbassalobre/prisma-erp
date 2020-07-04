@@ -7,7 +7,7 @@
                 </span>
                 <loading-shimmer :loading="loading" :h="50">
                     <template v-if="!loading">
-                        <table class="table table-striped table-sm f-12">
+                        <table class="table table-striped table-sm f-12 my-0">
                             <tbody>
                                 <template v-if="Object.keys(data).length>0">
                                     <template v-for="(p,i,y) in data">

@@ -74,7 +74,11 @@ export default {
             this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info`, { type: "topTeamNewMeeting", ...this.filter }).then(resp => {
                 setTimeout(() => {
                     resp = resp.data
-                    this.data = resp
+                    let data = {}
+                    Object.keys(resp).forEach(k => {
+                        if (resp[k] > 0) return data[k] = resp[k]
+                    })
+                    this.data = data
                     this.loading = false
                 }, 500)
             }).catch(er => {

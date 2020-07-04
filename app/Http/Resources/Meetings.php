@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use marcusvbda\vstack\Fields\{Card, Text, BelongsTo, Url};
 use marcusvbda\vstack\Resource;
+use Auth;
 
 class Meetings extends Resource
 {
@@ -70,5 +71,23 @@ class Meetings extends Resource
                 "rules" => "required|min:1"
             ])
         ])];
+    }
+
+    public function canImport()
+    {
+        return false;
+    }
+
+    public function canExport()
+    {
+        return false;
+    }
+
+    public function canDelete()
+    {
+        if (Auth::check()) {
+            return Auth::user()->hasRole(["super-admin", "admin"]);
+        }
+        return false;
     }
 }

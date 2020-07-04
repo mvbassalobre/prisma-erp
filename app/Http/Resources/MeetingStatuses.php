@@ -103,4 +103,12 @@ class MeetingStatuses extends Resource
     {
         return false;
     }
+
+    public function canDelete()
+    {
+        if (Auth::check()) {
+            return Auth::user()->hasRole(["super-admin", "admin"]);
+        }
+        return false;
+    }
 }

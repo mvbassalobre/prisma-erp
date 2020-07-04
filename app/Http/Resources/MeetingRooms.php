@@ -145,4 +145,12 @@ class MeetingRooms extends Resource
     {
         return ["name"];
     }
+
+    public function canDelete()
+    {
+        if (Auth::check()) {
+            return Auth::user()->hasRole(["super-admin", "admin"]);
+        }
+        return false;
+    }
 }

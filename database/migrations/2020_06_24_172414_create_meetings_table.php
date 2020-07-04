@@ -32,10 +32,7 @@ class CreateMeetingsTable extends Migration
                 ->onDelete('restrict');
             $table->unsignedBigInteger('meeting_room_id');
             $table->unsignedBigInteger('customer_id');
-            $table->foreign('customer_id')
-                ->references('id')
-                ->on('customers')
-                ->onDelete('restrict');
+            $table->string('google_event_id');
             $table->datetime('starts_at');
             $table->timestamp('ends_at');
             $table->string('feedback_url')->nullable();

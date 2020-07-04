@@ -18,10 +18,23 @@ class CreateMeetingsTable extends Migration
             $table->collation = 'utf8_unicode_ci';
             $table->engine = 'InnoDB';
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('restrict');
             $table->unsignedBigInteger('tenant_id');
+            $table->foreign('tenant_id')
+                ->references('id')
+                ->on('tenants')
+                ->onDelete('restrict');
             $table->string('subject');
             $table->string('type');
-            $table->boolean('status');
+            $table->unsignedBigInteger('status_id');
+            $table->foreign('status_id')
+                ->references('id')
+                ->on('meeting_statuses')
+                ->onDelete('restrict');
             $table->unsignedBigInteger('meeting_room_id');
             $table->unsignedBigInteger('customer_id');
             $table->string('google_event_id');

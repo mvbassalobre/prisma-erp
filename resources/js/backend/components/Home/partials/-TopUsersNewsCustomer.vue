@@ -7,7 +7,7 @@
                 </span>
                 <loading-shimmer :loading="loading" :h="50">
                     <template v-if="!loading">
-                        <table class="table table-striped table-sm f-12">
+                        <table class="table table-striped table-sm f-12 my-0">
                             <tbody>
                                 <template v-if="Object.keys(data).length>0">
                                     <template v-for="(p,i,y) in data">
@@ -71,7 +71,7 @@ export default {
     methods: {
         init() {
             this.attempts++
-            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info`, { type: "topUsers", ...this.filter }).then(resp => {
+            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info/topUsers`, { ...this.filter }).then(resp => {
                 setTimeout(() => {
                     resp = resp.data
                     this.data = resp

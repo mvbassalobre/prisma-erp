@@ -7,7 +7,7 @@
                 </span>
                 <loading-shimmer :loading="loading" :h="50">
                     <template v-if="!loading">
-                        <table class="table table-striped table-sm f-12">
+                        <table class="table table-striped table-sm f-12 my-0">
                             <tbody>
                                 <template v-if="Object.keys(data).length>0">
                                     <template v-for="(p,i,y) in data">
@@ -72,12 +72,12 @@ export default {
     methods: {
         init() {
             this.attempts++
-            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info`, { type: "topTeams", ...this.filter }).then(resp => {
+            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info/topTeams`, { ...this.filter }).then(resp => {
                 setTimeout(() => {
                     resp = resp.data
                     let data = {}
                     Object.keys(resp).forEach(k => {
-                        if (!resp[k]) {
+                        if (resp[k] > 0) {
                             if (!k) return data["Sem Time"] = resp[k]
                             return data[k] = resp[k]
                         }

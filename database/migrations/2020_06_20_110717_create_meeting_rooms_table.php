@@ -28,6 +28,7 @@ class CreateMeetingRoomsTable extends Migration
             $table->string("complement")->nullable();
             $table->string("reference")->nullable();
             $table->text('data')->nullable();
+            // 
             $table->softDeletes();
             $table->timestamps();
         });

@@ -16,10 +16,10 @@ class HomeController extends Controller
         return view("admin.home");
     }
 
-    public function getInfo(Request $request)
+    public function getInfo($type, Request $request)
     {
         $user = Auth::user();
-        return $this->{$request["type"]}($user, $request->except(["type"]));
+        return $this->{$type}($user, $request->all());
     }
 
     public function qtyCustomers($user)
@@ -70,22 +70,88 @@ class HomeController extends Controller
 
     public function topTeams($user, $filter)
     {
-        $data = DB::table("users")
+        $data = DB::table("customers")->join("users", "users.id", "=", "customers.user_id")
             ->leftJoin("user_team", "user_team.user_id", "=", "users.id")
             ->leftJoin("teams", "teams.id", "=", "user_team.team_id")
-            ->leftJoin("sales", "sales.user_id", "=", "users.id")
+            ->where("customers.tenant_id", $user->tenant_id)
             ->where("users.tenant_id", $user->tenant_id);
 
         if (@$filter["daterange"]) {
             $dates = array_map(function ($date) {
                 return Carbon::create($date)->format("Y-m-d 00:00:00");
             }, $filter["daterange"]);
-            $data = $data->whereRaw("DATE(sales.created_at) >='{$dates[0]}'" . " and " . "DATE(sales.created_at) <='{$dates[1]}'");
+            $data = $data->whereRaw("DATE(customers.created_at) >='{$dates[0]}'" . " and " . "DATE(customers.created_at) <='{$dates[1]}'");
+        }
+
+        $data = $data->selectRaw("count(*) as qty, teams.name as name")
+            ->groupByRaw("users.id")
+            ->orderBy("qty", "desc")
+            ->limit(5)
+            ->pluck('qty', 'name')
+            ->all();
+        return $data;
+    }
+
+    public function topUsersNewMeeting($user, $filter)
+    {
+        $data = DB::table("meetings")
+            ->leftJoin("users", "users.id", "=", "meetings.user_id")
+            ->where("meetings.tenant_id", $user->tenant_id);
+
+        if (@$filter["daterange"]) {
+            $dates = array_map(function ($date) {
+                return Carbon::create($date)->format("Y-m-d 00:00:00");
+            }, $filter["daterange"]);
+            $data = $data->whereRaw("DATE(meetings.created_at) >='{$dates[0]}'" . " and " . "DATE(meetings.created_at) <='{$dates[1]}'");
+        }
+        $data = $data->selectRaw("count(*) as qty, users.name as name ")
+            ->orderBy("qty", "desc")
+            ->limit(5)
+            ->pluck('qty', 'name')
+            ->all();
+
+        return $data;
+    }
+
+    public function topTeamNewMeeting($user, $filter)
+    {
+        $data = DB::table("meetings")
+            ->leftJoin("users", "users.id", "=", "meetings.user_id")
+            ->leftJoin("user_team", "user_team.user_id", "=", "users.id")
+            ->leftJoin("teams", "teams.id", "=", "user_team.team_id")
+            ->where("meetings.tenant_id", $user->tenant_id);
+
+        if (@$filter["daterange"]) {
+            $dates = array_map(function ($date) {
+                return Carbon::create($date)->format("Y-m-d 00:00:00");
+            }, $filter["daterange"]);
+            $data = $data->whereRaw("DATE(meetings.created_at) >='{$dates[0]}'" . " and " . "DATE(meetings.created_at) <='{$dates[1]}'");
         }
         $data = $data->selectRaw("count(*) as qty, teams.name as team ")
             ->orderBy("qty", "desc")
             ->limit(5)
             ->pluck('qty', 'team')
+            ->all();
+
+        return $data;
+    }
+
+    public function meetingPerStatus($user, $filter)
+    {
+        $data = DB::table("meetings")
+            ->join("meeting_statuses", "meeting_statuses.id", "=", "meetings.status_id")
+            ->where("meetings.tenant_id", $user->tenant_id);
+
+        if (@$filter["daterange"]) {
+            $dates = array_map(function ($date) {
+                return Carbon::create($date)->format("Y-m-d 00:00:00");
+            }, $filter["daterange"]);
+            $data = $data->whereRaw("DATE(meetings.created_at) >='{$dates[0]}'" . " and " . "DATE(meetings.created_at) <='{$dates[1]}'");
+        }
+        $data = $data->selectRaw("count(*) as qty, meeting_statuses.name as status ")
+            ->orderBy("qty", "desc")
+            ->limit(5)
+            ->pluck('qty', 'status')
             ->all();
 
         return $data;

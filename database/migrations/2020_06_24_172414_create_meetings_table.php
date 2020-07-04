@@ -24,6 +24,7 @@ class CreateMeetingsTable extends Migration
             $table->boolean('status');
             $table->unsignedBigInteger('meeting_room_id');
             $table->unsignedBigInteger('customer_id');
+            $table->string('google_event_id');
             $table->datetime('starts_at');
             $table->timestamp('ends_at');
             $table->string('feedback_url')->nullable();

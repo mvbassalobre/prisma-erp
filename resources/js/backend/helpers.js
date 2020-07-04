@@ -103,3 +103,18 @@ window.insertParam = (key, value) => {
         window.history.pushState({ path: newurl }, '', newurl)
     }
 }
+
+
+window.addToCsv = function (csv, value, finished = false) {
+    return `${csv}${value}${finished ? '\n' : ','}`
+}
+
+window.makeTextFile = function (text, title) {
+    let element = document.createElement('a')
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
+    element.setAttribute('download', title)
+    element.style.display = 'none'
+    document.body.appendChild(element)
+    element.click()
+    document.body.removeChild(element)
+}

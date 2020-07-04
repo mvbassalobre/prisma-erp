@@ -12,13 +12,13 @@
             >
                 <template v-for="(m,i) in menu">
                     <template v-if="m.items">
-                        <el-submenu :index="String(i)">
+                        <el-submenu :index="String(i)" :key="i">
                             <template slot="title">
                                 <i :class="`${m.icon}`"></i>
                                 <span v-html="m.label"></span>
                             </template>
                             <template v-for="(item,y) in m.items">
-                                <el-menu-item-group>
+                                <el-menu-item-group :key="`${i}_${y}`">
                                     <a
                                         @click="goTo(item.url)"
                                         style="text-decoration:unset!important;"
@@ -41,6 +41,7 @@
                         :index="`${m.label}_${String(i)}`"
                         :active="setActive(`${m.label}_${String(i)}`,m.active)"
                         @click="goTo(m.url)"
+                        :key="i"
                     >
                         <a @click="goTo(m.url)" style="text-decoration:unset!important;">
                             <i :class="`${m.icon}`"></i>

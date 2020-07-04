@@ -5,7 +5,7 @@
                 <span class="f-12 mb-3">
                     <b>REUNIÕES</b> / novas reuniões por status
                 </span>
-                <loading-shimmer :loading="loading" :h="50">
+                <loading-shimmer :loading="loading" :h="200">
                     <template v-if="!loading">
                         <table class="table table-striped table-sm f-12 my-0">
                             <tbody>

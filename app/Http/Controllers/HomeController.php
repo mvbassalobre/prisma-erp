@@ -48,7 +48,6 @@ class HomeController extends Controller
 
     public function topUsers($user, $filter)
     {
-        // whereRaw('DATE(created_at) >= DATE(CURRENT_DATE() - INTERVAL 30 DAY)')->where("payment_method", "credit_card")
         $data = DB::table("customers")->join("users", "users.id", "=", "customers.user_id")
             ->where("customers.tenant_id", $user->tenant_id)
             ->where("users.tenant_id", $user->tenant_id);
@@ -63,8 +62,32 @@ class HomeController extends Controller
         $data = $data->selectRaw("count(*) as qty, users.name as name")
             ->groupByRaw("users.id")
             ->orderBy("qty", "desc")
+            ->limit(5)
             ->pluck('qty', 'name')
             ->all();
+        return $data;
+    }
+
+    public function topTeams($user, $filter)
+    {
+        $data = DB::table("users")
+            ->leftJoin("user_team", "user_team.user_id", "=", "users.id")
+            ->leftJoin("teams", "teams.id", "=", "user_team.team_id")
+            ->leftJoin("sales", "sales.user_id", "=", "users.id")
+            ->where("users.tenant_id", $user->tenant_id);
+
+        if (@$filter["daterange"]) {
+            $dates = array_map(function ($date) {
+                return Carbon::create($date)->format("Y-m-d 00:00:00");
+            }, $filter["daterange"]);
+            $data = $data->whereRaw("DATE(sales.created_at) >='{$dates[0]}'" . " and " . "DATE(sales.created_at) <='{$dates[1]}'");
+        }
+        $data = $data->selectRaw("count(*) as qty, teams.name as team ")
+            ->orderBy("qty", "desc")
+            ->limit(5)
+            ->pluck('qty', 'team')
+            ->all();
+
         return $data;
     }
 }

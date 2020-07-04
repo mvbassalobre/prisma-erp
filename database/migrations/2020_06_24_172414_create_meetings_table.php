@@ -19,6 +19,15 @@ class CreateMeetingsTable extends Migration
             $table->string('type');
             $table->boolean('status');
             $table->unsignedBigInteger('meeting_room_id');
+            $table->foreign('meeting_room_id')
+                ->references('id')
+                ->on('meeting_rooms')
+                ->onDelete('cascade');
+            $table->unsignedBigInteger('customer_id');
+            $table->foreign('customer_id')
+                ->references('id')
+                ->on('customers')
+                ->onDelete('cascade');
             $table->datetime('starts_at');
             $table->timestamp('ends_at');
             $table->string('feedback_url')->nullable();

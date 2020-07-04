@@ -28,7 +28,8 @@
                 <users-card :user="user" :roles="roles" :filter="filter" />
             </div>
             <div class="row mt-3 d-flex flex-row flex-wrap">
-                <top-users :user="user" :roles="roles" :filter="filter" />
+                <top-teams-new-customers :user="user" :roles="roles" :filter="filter" />
+                <top-users-new-customers :user="user" :roles="roles" :filter="filter" />
             </div>
         </div>
     </div>
@@ -48,7 +49,8 @@ export default {
         "products-card": require("./partials/-ProductsCard").default,
         "customers-card": require("./partials/-CustomersCard").default,
         "users-card": require("./partials/-UsersCard").default,
-        "top-users": require("./partials/-TopUsers").default,
+        "top-users-new-customers": require("./partials/-TopUsersNewsCustomer.vue").default,
+        "top-teams-new-customers": require("./partials/-TopTeamsNewsCustomer.vue").default,
     },
     created() {
         if (this.params.daterange) this.filter.daterange = this.params.daterange.split(",")

@@ -18,6 +18,7 @@ class CreateMeetingsTable extends Migration
             $table->collation = 'utf8_unicode_ci';
             $table->engine = 'InnoDB';
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('tenant_id');
             $table->string('subject');
             $table->string('type');
             $table->boolean('status');

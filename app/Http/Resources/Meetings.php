@@ -46,19 +46,20 @@ class Meetings extends Resource
                 "placeholder" => "Ex: orçamento, investimento etc",
                 "rules" => "required|max:255"
             ]),
+            new BelongsTo([
+                "label" => "Cliente da Reunião",
+                "field" => "customer_id",
+                "required" => true,
+                "placeholder" => "Selecione o cliente",
+                "model" => \App\Http\Models\Customer::class,
+                "rules" => "required|min:1"
+            ]),
             new Url([
                 "label" => "Url de feedback",
                 "field" => "feedback_url",
                 "required" => true,
                 "placeholder" => "Url do Google Forms",
                 "rules" => "required|url|max:255"
-            ]),
-            new Text([
-                "label" => "Tipo de Reunião",
-                "field" => "type",
-                "required" => true,
-                "placeholder" => "Ex: orçamento, investimento etc",
-                "rules" => "required|max:255"
             ]),
             new BelongsTo([
                 "label" => "Local da Reunião",

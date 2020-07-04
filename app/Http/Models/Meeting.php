@@ -9,7 +9,7 @@ class Meeting extends DefaultModel
     // public $relations = []; //add relations that you want to load in resource field (ajax)
     public static function hasTenant() //default true
     {
-        return false;
+        return true;
     }
 
     public function room(){

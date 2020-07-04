@@ -48,6 +48,14 @@ class Meetings extends Resource
                 "rules" => "required|max:255"
             ]),
             new BelongsTo([
+                "label" => "Status",
+                "field" => "status_id",
+                "required" => true,
+                "placeholder" => "Selecione o status",
+                "model" => \App\Http\Models\MeetingStatus::class,
+                "rules" => "required|min:1"
+            ]),
+            new BelongsTo([
                 "label" => "Cliente da Reunião",
                 "field" => "customer_id",
                 "required" => true,
@@ -55,7 +63,7 @@ class Meetings extends Resource
                 "model" => \App\Http\Models\Customer::class,
                 "rules" => "required|min:1"
             ]),
-            new Url([
+            new Text([
                 "label" => "Url de feedback",
                 "field" => "feedback_url",
                 "required" => true,
@@ -71,6 +79,17 @@ class Meetings extends Resource
                 "rules" => "required|min:1"
             ])
         ])];
+    }
+
+    public function table()
+    {
+        $columns =  [
+            "room->name" => ["label" => "Sala", "sortable_index" => "meeting_room_id"]
+        ];
+        if (Auth::user()->hasRole(["super-admin"])) {
+            $columns["tenant->name"] = ["label" => "Tenant", "sortable_index" => "tenant_id"];
+        }
+        return $columns;
     }
 
     public function canImport()

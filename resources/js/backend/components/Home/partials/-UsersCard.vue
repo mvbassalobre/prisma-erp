@@ -1,8 +1,5 @@
 <template>
-    <div
-        class="col-md-3 col-sm-12"
-        @click="$goTo('/admin/users')"
-    >
+    <div class="col-md-3 col-sm-12" @click="$goTo('/admin/users')">
         <div class="dashcard d-flex flex-row justify-content-between align-items-center p-3">
             <div class="title d-flex flex-column">
                 <div class="mb-2">Usuários</div>
@@ -23,7 +20,7 @@ export default {
         return {
             loaded: null,
             qty: null,
-            attempts : 0
+            attempts: 0
         }
     },
     components: {
@@ -35,14 +32,14 @@ export default {
     methods: {
         initialize() {
             this.attempts++
-            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info`, { type: "qtyCustomers" }).then(res => {
+            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info/qtyCustomers`, {}).then(res => {
                 setTimeout(() => {
                     res = res.data
                     this.qty = res.qty <= 0 ? "Nenhum" : res.qty
                     this.loaded = true
                 }, 500)
             }).catch(er => {
-                if(this.attempts <=3 ) return this.initialize()
+                if (this.attempts <= 3) return this.initialize()
                 console.log(er)
             })
         }
@@ -52,6 +49,6 @@ export default {
 
 <style lang="scss" scoped>
 .dashcard {
-    background-color : #ec7676;
+    background-color: #ec7676;
 }
 </style>

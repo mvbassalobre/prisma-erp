@@ -1,18 +1,38 @@
 <?php
+
 namespace App\Http\Models;
+
 use marcusvbda\vstack\Models\DefaultModel;
+use marcusvbda\vstack\Models\Scopes\TenantScope;
+use marcusvbda\vstack\Models\Observers\TenantObserver;
+use Auth;
+
 class Meeting extends DefaultModel
 {
     protected $table = "meetings";
-    // public $cascadeDeletes = [];
-    // public $restrictDeletes = [];
-    // public $relations = []; //add relations that you want to load in resource field (ajax)
-    public static function hasTenant() //default true
+
+    public static function boot()
+    {
+        $user = Auth::user();
+        parent::boot();
+        if (Auth::check()) {
+            if (Auth::user()->hasRole(["admin", "user"])) {
+                static::observe(new TenantObserver());
+                static::addGlobalScope(new TenantScope());
+            }
+        }
+        self::creating(function ($model) use ($user) {
+            $model->user_id = $user->id;
+        });
+    }
+
+    public static function hasTenant()
     {
         return true;
     }
 
-    public function room(){
-        return $this->belongsTo(MeetingRoom::class);
+    public function room()
+    {
+        return $this->belongsTo(MeetingRoom::class, "meeting_room_id");
     }
 }

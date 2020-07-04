@@ -30,10 +30,11 @@
             <div class="row mt-3 d-flex flex-row flex-wrap">
                 <top-teams-new-customers :user="user" :roles="roles" :filter="filter" />
                 <top-users-new-customers :user="user" :roles="roles" :filter="filter" />
-                <top-teams-new-metting :user="user" :roles="roles" :filter="filter" />
+                <meeting-statuses :user="user" :roles="roles" :filter="filter" />
             </div>
             <div class="row mt-3 d-flex flex-row flex-wrap">
-                <top-users-new-metting :user="user" :roles="roles" :filter="filter" />
+                <top-teams-new-meeting :user="user" :roles="roles" :filter="filter" />
+                <top-users-new-meeting :user="user" :roles="roles" :filter="filter" />
             </div>
         </div>
     </div>
@@ -55,8 +56,9 @@ export default {
         "users-card": require("./partials/-UsersCard").default,
         "top-users-new-customers": require("./partials/-TopUsersNewsCustomer.vue").default,
         "top-teams-new-customers": require("./partials/-TopTeamsNewsCustomer.vue").default,
-        "top-teams-new-metting": require("./partials/-TopTeamsNewMeetting.vue").default,
-        "top-users-new-metting": require("./partials/-TopUsersNewMeetting.vue").default,
+        "top-teams-new-meeting": require("./partials/-TopTeamsNewMeeting.vue").default,
+        "top-users-new-meeting": require("./partials/-TopUsersNewMeeting.vue").default,
+        "meeting-statuses": require("./partials/-MeetingStatuses.vue").default,
     },
     created() {
         if (this.params.daterange) this.filter.daterange = this.params.daterange.split(",")

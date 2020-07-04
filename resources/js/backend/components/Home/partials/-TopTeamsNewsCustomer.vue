@@ -72,13 +72,15 @@ export default {
     methods: {
         init() {
             this.attempts++
-            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info`, { type: "topTeams", ...this.filter }).then(resp => {
+            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info/topTeams`, { ...this.filter }).then(resp => {
                 setTimeout(() => {
                     resp = resp.data
                     let data = {}
                     Object.keys(resp).forEach(k => {
-                        if (!k) return data["Sem Time"] = resp[k]
-                        return data[k] = resp[k]
+                        if (resp[k] > 0) {
+                            if (!k) return data["Sem Time"] = resp[k]
+                            return data[k] = resp[k]
+                        }
                     })
                     this.data = data
                     this.loading = false

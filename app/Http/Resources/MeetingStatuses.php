@@ -12,7 +12,7 @@ use Auth;
 
 class MeetingStatuses extends Resource
 {
-    public $model = \App\Http\Models\MettingStatus::class;
+    public $model = \App\Http\Models\MeetingStatus::class;
 
     public function label()
     {

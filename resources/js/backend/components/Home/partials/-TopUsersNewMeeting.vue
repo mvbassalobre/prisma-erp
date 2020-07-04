@@ -3,7 +3,7 @@
         <div class="card h-100">
             <div class="card-body d-flex flex-column">
                 <span class="f-12 mb-3">
-                    <b>TOP 5 OPERADORES</b> / novas reuniões agendadas filtro
+                    <b>TOP 5 OPERADORES</b> / novas reuniões agendadas no periodo do filtro
                 </span>
                 <loading-shimmer :loading="loading" :h="50">
                     <template v-if="!loading">
@@ -71,15 +71,12 @@ export default {
     methods: {
         init() {
             this.attempts++
-            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info`, { type: "topTeamNewMeeting", ...this.filter }).then(resp => {
+            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info/topUsersNewMeeting`, { ...this.filter }).then(resp => {
                 setTimeout(() => {
                     resp = resp.data
                     let data = {}
                     Object.keys(resp).forEach(k => {
-                        if (resp[k] > 0) {
-                            if (!k) return data["Sem Time"] = resp[k]
-                            return data[k] = resp[k]
-                        }
+                        if (resp[k] > 0) return data[k] = resp[k]
                     })
                     this.data = data
                     this.loading = false

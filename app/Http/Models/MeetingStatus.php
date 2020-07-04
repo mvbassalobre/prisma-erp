@@ -7,7 +7,7 @@ use marcusvbda\vstack\Models\Scopes\TenantScope;
 use marcusvbda\vstack\Models\Observers\TenantObserver;
 use Auth;
 
-class MettingStatus extends DefaultModel
+class MeetingStatus extends DefaultModel
 {
     protected $table = "meeting_statuses";
     public $appends = ["f_color"];

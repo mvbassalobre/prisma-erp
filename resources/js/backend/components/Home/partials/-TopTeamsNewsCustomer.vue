@@ -77,10 +77,8 @@ export default {
                     resp = resp.data
                     let data = {}
                     Object.keys(resp).forEach(k => {
-                        if (!resp[k]) {
-                            if (!k) return data["Sem Time"] = resp[k]
-                            return data[k] = resp[k]
-                        }
+                        if (!k) return data["Sem Time"] = resp[k]
+                        return data[k] = resp[k]
                     })
                     this.data = data
                     this.loading = false

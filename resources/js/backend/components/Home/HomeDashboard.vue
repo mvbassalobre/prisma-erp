@@ -30,6 +30,7 @@
             <div class="row mt-3 d-flex flex-row flex-wrap">
                 <top-teams-new-customers :user="user" :roles="roles" :filter="filter" />
                 <top-users-new-customers :user="user" :roles="roles" :filter="filter" />
+                <top-teams-new-metting :user="user" :roles="roles" :filter="filter" />
             </div>
         </div>
     </div>
@@ -51,6 +52,7 @@ export default {
         "users-card": require("./partials/-UsersCard").default,
         "top-users-new-customers": require("./partials/-TopUsersNewsCustomer.vue").default,
         "top-teams-new-customers": require("./partials/-TopTeamsNewsCustomer.vue").default,
+        "top-teams-new-metting": require("./partials/-TopTeamsNewMeetting.vue").default,
     },
     created() {
         if (this.params.daterange) this.filter.daterange = this.params.daterange.split(",")

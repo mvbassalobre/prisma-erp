@@ -90,4 +90,27 @@ class HomeController extends Controller
 
         return $data;
     }
+
+    public function topTeamNewMeeting($user, $filter)
+    {
+        $data = DB::table("customers")
+            ->leftJoin("user_team", "user_team.user_id", "=", "users.id")
+            ->leftJoin("teams", "teams.id", "=", "user_team.team_id")
+            ->leftJoin("meetings", "meetings.customer_id", "=", "customers.id")
+            ->where("users.tenant_id", $user->tenant_id);
+
+        if (@$filter["daterange"]) {
+            $dates = array_map(function ($date) {
+                return Carbon::create($date)->format("Y-m-d 00:00:00");
+            }, $filter["daterange"]);
+            $data = $data->whereRaw("DATE(sales.created_at) >='{$dates[0]}'" . " and " . "DATE(sales.created_at) <='{$dates[1]}'");
+        }
+        $data = $data->selectRaw("count(*) as qty, teams.name as team ")
+            ->orderBy("qty", "desc")
+            ->limit(5)
+            ->pluck('qty', 'team')
+            ->all();
+
+        return $data;
+    }
 }

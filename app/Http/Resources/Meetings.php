@@ -31,44 +31,48 @@ class Meetings extends Resource
 
     public function fields()
     {
-        return [new Card("Informações", [
-            new Text([
-                "label" => "Assunto da Reunião",
-                "field" => "subject",
-                "required" => true,
-                "placeholder" => "Assunto",
-                "rules" => "required|max:255"
+        return [
+            new Card("Informações", [
+                new Text([
+                    "label" => "Assunto da Reunião",
+                    "field" => "subject",
+                    "required" => true,
+                    "placeholder" => "Assunto",
+                    "rules" => "required|max:255"
+                ]),
+                new Text([
+                    "label" => "Tipo de Reunião",
+                    "field" => "type",
+                    "required" => true,
+                    "placeholder" => "Ex: orçamento, investimento etc",
+                    "rules" => "required|max:255"
+                ]),
+                new BelongsTo([
+                    "label" => "Cliente da Reunião",
+                    "field" => "customer_id",
+                    "required" => true,
+                    "placeholder" => "Selecione o cliente",
+                    "model" => \App\Http\Models\Customer::class,
+                    "rules" => "required|min:1"
+                ]),
+                new BelongsTo([
+                    "label" => "Local da Reunião",
+                    "field" => "meeting_room_id",
+                    "required" => true,
+                    "placeholder" => "Selecione o local da Reunião",
+                    "model" => \App\Http\Models\MeetingRoom::class,
+                    "rules" => "required|min:1"
+                ])
             ]),
-            new Text([
-                "label" => "Tipo de Reunião",
-                "field" => "type",
-                "required" => true,
-                "placeholder" => "Ex: orçamento, investimento etc",
-                "rules" => "required|max:255"
-            ]),
-            new BelongsTo([
-                "label" => "Cliente da Reunião",
-                "field" => "customer_id",
-                "required" => true,
-                "placeholder" => "Selecione o cliente",
-                "model" => \App\Http\Models\Customer::class,
-                "rules" => "required|min:1"
-            ]),
-            new Url([
-                "label" => "Url de feedback",
-                "field" => "feedback_url",
-                "required" => true,
-                "placeholder" => "Url do Google Forms",
-                "rules" => "required|url|max:255"
-            ]),
-            new BelongsTo([
-                "label" => "Local da Reunião",
-                "field" => "meeting_room_id",
-                "required" => true,
-                "placeholder" => "Selecione o local da Reunião",
-                "model" => \App\Http\Models\MeetingRoom::class,
-                "rules" => "required|min:1"
+            new Card("Feedback", [
+                new Url([
+                    "label" => "Url de feedback",
+                    "field" => "feedback_url",
+                    "required" => true,
+                    "placeholder" => "Url do Google Forms",
+                    "rules" => "required|url|max:255"
+                ]),
             ])
-        ])];
+        ];
     }
 }

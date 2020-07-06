@@ -66,9 +66,15 @@ export default {
                 let text = ""
                 text = addToCsv(text, "Código")
                 text = addToCsv(text, "Nome")
+                text = addToCsv(text, "Time")
+                text = addToCsv(text, "Data de Criação")
+                text = addToCsv(text, "Última Atualização", true)
                 result.forEach(row => {
                     text = addToCsv(text, row.code ? row.code : "")
                     text = addToCsv(text, row.name ? row.name : "")
+                    text = addToCsv(text, row.name ? row.team_name : "")
+                    text = addToCsv(text, row.name ? row.f_created_at : "")
+                    text = addToCsv(text, row.name ? row.last_update : "", true)
                 })
                 makeTextFile(text, `${this.report_name} - ${(new Date()).toLocaleDateString()}.csv`)
                 this.attempts.csv = 0

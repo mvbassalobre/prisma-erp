@@ -31,6 +31,8 @@
                                                 <th>#</th>
                                                 <th>Nome</th>
                                                 <th>Time</th>
+                                                <th>Data Criação</th>
+                                                <th>Última Atualização</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -42,12 +44,21 @@
                                                         target="_BLANK"
                                                     >{{row.code}}</a>
                                                 </td>
+                                                <td v-html="row.name" />
                                                 <td>
-                                                    <div v-html="row.name"></div>
+                                                    <div
+                                                        v-html="row.team_name"
+                                                        v-if="!row.team_code"
+                                                    ></div>
+                                                    <a
+                                                        v-else
+                                                        class="link"
+                                                        :href="`/admin/teams/${row.team_code}`"
+                                                        v-html="row.team_name"
+                                                    ></a>
                                                 </td>
-                                                <td>
-                                                    <div v-html="row.team_name"></div>
-                                                </td>
+                                                <td v-html="row.f_created_at" />
+                                                <td v-html="row.f_last_update" />
                                             </tr>
                                         </tbody>
                                     </table>

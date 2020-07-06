@@ -19,10 +19,15 @@ class ReportsController extends Controller
     {
         $user = Auth::user();
         $data = DB::table('customers')
-            ->selectRaw("customers.*, if(teams.name is null, 'Sem Time', teams.name)  as team_name")
-            ->leftjoin("users", "users.id", "=", "customers.user_id")
-            ->leftjoin("user_team", "user_team.user_id", "=", "users.id")
-            ->leftjoin("teams", "teams.id", "=", "user_team.team_id")
+            ->selectRaw("customers.*, 
+                    if(teams.name is null, 'Sem Time', teams.name)  as team_name,
+                    user_team.team_id as team_id,
+                    DATE_FORMAT(customers.created_at,'%d/%m/%Y') as f_created_at,
+                    if(customers.updated_at is null,'Nunca Alterado', DATE_FORMAT(customers.updated_at,'%d/%m/%Y')) as f_last_update
+                ")
+            ->leftJoin("users", "users.id", "=", "customers.user_id")
+            ->leftJoin("user_team", "user_team.user_id", "=", "users.id")
+            ->leftJoin("teams", "teams.id", "=", "user_team.team_id")
             ->where("customers.tenant_id", "=", $user->tenant_id)
             ->orderBy("customers.created_at", "desc");
         $data = $this->applyFilterToSales($data, $request);
@@ -34,7 +39,10 @@ class ReportsController extends Controller
                 break;
             case "table":
                 $table = $data->paginate(25);
-                foreach ($table as $key => $value) $table[$key]->code = \Hashids::encode($value->id);
+                foreach ($table as $key => $value) {
+                    $table[$key]->code = \Hashids::encode($value->id);
+                    if ($value->team_id) $table[$key]->team_code = \Hashids::encode($value->team_id);
+                }
                 return ["success" => true, "data" => $table];
                 break;
             case "team":

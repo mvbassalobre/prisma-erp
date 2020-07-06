@@ -19,7 +19,7 @@ class ReportsController extends Controller
     {
         $user = Auth::user();
         $data = DB::table('customers')
-            ->selectRaw("customers.*")
+            ->selectRaw("customers.*, if(teams.name is null, 'Sem Time', teams.name)  as team_name")
             ->leftjoin("users", "users.id", "=", "customers.user_id")
             ->leftjoin("user_team", "user_team.user_id", "=", "users.id")
             ->leftjoin("teams", "teams.id", "=", "user_team.team_id")
@@ -39,10 +39,10 @@ class ReportsController extends Controller
                 break;
             case "team":
                 $chart_data = $this->applyFilterToSales($data, $request);
-                $chart_data = $chart_data->selectRaw('count(*) as qty, teams.name as name')
+                $chart_data = $chart_data->selectRaw("count(*) as qty,  if(teams.name is null, 'Sem Time', teams.name)  as team_name")
                     ->groupBy("teams.id")
                     ->orderBy("qty", "desc")
-                    ->pluck('qty', 'name')
+                    ->pluck('qty', 'team_name')
                     ->all();
                 return ["success" => true, "chart_data" => $chart_data];
                 break;
@@ -55,12 +55,12 @@ class ReportsController extends Controller
 
     private function applyFilterToSales($data, $request)
     {
-        if (@$request["code"]) $data = $data->where("customers.id", Hashids::decode($request["code"])[0]);
+        if (@$request["code"]) $data = $data->where("customers.id", \Hashids::decode($request["code"])[0]);
         if (@$request["name"]) $data->where("customers.name", "like", "%" . $request["name"] . "%");
         if (@$request["created_at_interval"][0] && @$request["created_at_interval"][1]) {
             $date_start = Carbon::create($request["created_at_interval"][0])->format("Y-m-d");
             $date_end = Carbon::create($request["created_at_interval"][1])->format("Y-m-d");
-            $data = $data->whereDate("customers.created_at", ">=", "$date_start 00:00:00")->whereDate("customers.created_at", "<=", "$date_end");
+            $data = $data->whereRaw("DATE(customers.created_at) >= Date('{$date_start}') and DATE(customers.created_at) <= Date('{$date_end}')");
         }
         if (@$request["team"]) {
             if ($request["team"] != "all") {

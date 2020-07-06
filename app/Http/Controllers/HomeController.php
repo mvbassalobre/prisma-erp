@@ -48,9 +48,9 @@ class HomeController extends Controller
 
     public function topUsers($user, $filter)
     {
-        $data = DB::table("customers")->join("users", "users.id", "=", "customers.user_id")
-            ->where("customers.tenant_id", $user->tenant_id)
-            ->where("users.tenant_id", $user->tenant_id);
+        $data = DB::table("customers")
+            ->leftJoin("users", "users.id", "=", "customers.user_id")
+            ->where("customers.tenant_id", $user->tenant_id);
 
         if (@$filter["daterange"]) {
             $dates = array_map(function ($date) {
@@ -59,7 +59,7 @@ class HomeController extends Controller
             $data = $data->whereRaw("DATE(customers.created_at) >='{$dates[0]}'" . " and " . "DATE(customers.created_at) <='{$dates[1]}'");
         }
 
-        $data = $data->selectRaw("count(*) as qty, users.name as name")
+        $data = $data->selectRaw("count(*) as qty, if(users.name is null,'Sem Operador', users.name) as name")
             ->groupByRaw("users.id")
             ->orderBy("qty", "desc")
             ->limit(5)
@@ -70,11 +70,12 @@ class HomeController extends Controller
 
     public function topTeams($user, $filter)
     {
-        $data = DB::table("customers")->join("users", "users.id", "=", "customers.user_id")
+        $data = DB::table("customers")
+            ->selectRaw("count(*) as qty, if(teams.name is null, 'Sem Time',teams.name) as name")
+            ->leftJoin("users", "users.id", "=", "customers.user_id")
             ->leftJoin("user_team", "user_team.user_id", "=", "users.id")
             ->leftJoin("teams", "teams.id", "=", "user_team.team_id")
-            ->where("customers.tenant_id", $user->tenant_id)
-            ->where("users.tenant_id", $user->tenant_id);
+            ->where("customers.tenant_id", $user->tenant_id);
 
         if (@$filter["daterange"]) {
             $dates = array_map(function ($date) {
@@ -83,8 +84,8 @@ class HomeController extends Controller
             $data = $data->whereRaw("DATE(customers.created_at) >='{$dates[0]}'" . " and " . "DATE(customers.created_at) <='{$dates[1]}'");
         }
 
-        $data = $data->selectRaw("count(*) as qty, teams.name as name")
-            ->groupByRaw("users.id")
+        $data = $data
+            ->groupBy("teams.id")
             ->orderBy("qty", "desc")
             ->limit(5)
             ->pluck('qty', 'name')
@@ -102,9 +103,10 @@ class HomeController extends Controller
             $dates = array_map(function ($date) {
                 return Carbon::create($date)->format("Y-m-d 00:00:00");
             }, $filter["daterange"]);
-            $data = $data->whereRaw("DATE(meetings.created_at) >='{$dates[0]}'" . " and " . "DATE(meetings.created_at) <='{$dates[1]}'");
+            $data = $data->whereRaw("DATE(meetings.created_at) >= Date('{$dates[0]}')  and  DATE(meetings.created_at) <= Date('{$dates[1]}') ");
         }
-        $data = $data->selectRaw("count(*) as qty, users.name as name ")
+        $data = $data->selectRaw("count(*) as qty, if(users.name is null, 'Sem Operador',users.name) as name ")
+            ->groupBy("users.id")
             ->orderBy("qty", "desc")
             ->limit(5)
             ->pluck('qty', 'name')
@@ -116,18 +118,20 @@ class HomeController extends Controller
     public function topTeamNewMeeting($user, $filter)
     {
         $data = DB::table("meetings")
+            ->selectRaw("count(*) as qty, if(teams.name is null,'Sem Time',teams.name) as team")
             ->leftJoin("users", "users.id", "=", "meetings.user_id")
             ->leftJoin("user_team", "user_team.user_id", "=", "users.id")
             ->leftJoin("teams", "teams.id", "=", "user_team.team_id")
-            ->where("meetings.tenant_id", $user->tenant_id);
+            ->where("users.tenant_id", $user->tenant_id);
 
         if (@$filter["daterange"]) {
             $dates = array_map(function ($date) {
                 return Carbon::create($date)->format("Y-m-d 00:00:00");
             }, $filter["daterange"]);
-            $data = $data->whereRaw("DATE(meetings.created_at) >='{$dates[0]}'" . " and " . "DATE(meetings.created_at) <='{$dates[1]}'");
+            $data = $data->whereRaw("DATE(meetings.created_at) >='{$dates[0]}' and DATE(meetings.created_at) <='{$dates[1]}'");
         }
-        $data = $data->selectRaw("count(*) as qty, teams.name as team ")
+        $data = $data->groupBy("users.id")
+            ->groupBy("users.id")
             ->orderBy("qty", "desc")
             ->limit(5)
             ->pluck('qty', 'team')

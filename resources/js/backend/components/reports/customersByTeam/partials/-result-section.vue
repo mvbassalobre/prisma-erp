@@ -29,7 +29,8 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Name</th>
+                                                <th>Nome</th>
+                                                <th>Time</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -43,6 +44,9 @@
                                                 </td>
                                                 <td>
                                                     <div v-html="row.name"></div>
+                                                </td>
+                                                <td>
+                                                    <div v-html="row.team_name"></div>
                                                 </td>
                                             </tr>
                                         </tbody>

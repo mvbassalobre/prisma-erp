@@ -46,7 +46,9 @@ $menu[] = [
 ];
 $small_logo = @json_decode($user->getSettings("logo-pequeno"))[0];
 $big_logo = @json_decode($user->getSettings("logo-grande"))[0];
-$logo = ["src"=> $big_logo ? $big_logo : asset('assets/images/big_logo.png'),"href"=>route('admin.home')];
-$smalllogo = ["src"=> $small_logo ? $small_logo : asset('assets/images/logo.png'),"href"=>route('admin.home')];
+// $logo = ["src"=> $big_logo ? $big_logo : asset('assets/images/big_logo.png'),"href"=>route('admin.home')];
+// $smalllogo = ["src"=> $small_logo ? $small_logo : asset('assets/images/logo.png'),"href"=>route('admin.home')];
+$logo = ["src"=> asset('assets/images/big_logo.png'),"href"=>route('admin.home')];
+$smalllogo = ["src"=>  asset('assets/images/logo.png'),"href"=>route('admin.home')];
 ?>
 <template-sidebar  :logo="{{json_encode($logo)}}"  :smalllogo="{{json_encode($smalllogo)}}" :menu="{{json_encode($menu)}}"></template-sidebar>

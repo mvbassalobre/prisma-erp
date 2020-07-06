@@ -3,7 +3,7 @@
         <div class="card h-100">
             <div class="card-body d-flex flex-column">
                 <span class="f-12 mb-3">
-                    <b>REUNIÕES</b> / novas reuniões por status
+                    <b>REUNIÕES</b> / novas reuniões por times
                 </span>
                 <loading-shimmer :loading="loading" :h="200">
                     <template v-if="!loading">
@@ -11,6 +11,7 @@
                             <tbody>
                                 <template v-if="Object.keys(data).length > 0">
                                     <pie-chart
+                                        :donut="true"
                                         legend="right"
                                         :discrete="true"
                                         height="200px"
@@ -58,7 +59,7 @@ export default {
     methods: {
         init() {
             this.attempts++
-            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info/meetingPerStatus`, { ...this.filter }).then(resp => {
+            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info/meetingPerTeam`, { ...this.filter }).then(resp => {
                 setTimeout(() => {
                     resp = resp.data
                     this.data = resp

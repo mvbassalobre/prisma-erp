@@ -35,6 +35,7 @@
             <div class="row mt-3 d-flex flex-row flex-wrap">
                 <top-teams-new-meeting :user="user" :roles="roles" :filter="filter" />
                 <top-users-new-meeting :user="user" :roles="roles" :filter="filter" />
+                <meeting-team :user="user" :roles="roles" :filter="filter" />
             </div>
         </div>
     </div>
@@ -59,6 +60,7 @@ export default {
         "top-teams-new-meeting": require("./partials/-TopTeamsNewMeeting.vue").default,
         "top-users-new-meeting": require("./partials/-TopUsersNewMeeting.vue").default,
         "meeting-statuses": require("./partials/-MeetingStatuses.vue").default,
+        "meeting-team": require("./partials/-MeetingTeam.vue").default,
     },
     created() {
         if (this.params.daterange) this.filter.daterange = this.params.daterange.split(",")

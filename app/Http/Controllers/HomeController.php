@@ -143,7 +143,7 @@ class HomeController extends Controller
     public function meetingPerStatus($user, $filter)
     {
         $data = DB::table("meetings")
-            ->join("meeting_statuses", "meeting_statuses.id", "=", "meetings.status_id")
+            ->leftJoin("meeting_statuses", "meeting_statuses.id", "=", "meetings.status_id")
             ->where("meetings.tenant_id", $user->tenant_id);
 
         if (@$filter["daterange"]) {
@@ -152,10 +152,36 @@ class HomeController extends Controller
             }, $filter["daterange"]);
             $data = $data->whereRaw("DATE(meetings.created_at) >='{$dates[0]}'" . " and " . "DATE(meetings.created_at) <='{$dates[1]}'");
         }
-        $data = $data->selectRaw("count(*) as qty, meeting_statuses.name as status ")
+        $data = $data->selectRaw("count(*) as qty, meeting_statuses.name as status")
+            ->groupBy("meetings.status_id")
             ->orderBy("qty", "desc")
             ->limit(5)
             ->pluck('qty', 'status')
+            ->all();
+
+        return $data;
+    }
+
+    public function meetingPerTeam($user, $filter)
+    {
+        $data = DB::table("meetings")
+            ->leftJoin("meeting_statuses", "meeting_statuses.id", "=", "meetings.status_id")
+            ->leftJoin("users", "users.id", "=", "meetings.user_id")
+            ->leftJoin("user_team", "user_team.user_id", "=", "users.id")
+            ->leftJoin("teams", "teams.id", "=", "user_team.team_id")
+            ->where("meetings.tenant_id", $user->tenant_id);
+
+        if (@$filter["daterange"]) {
+            $dates = array_map(function ($date) {
+                return Carbon::create($date)->format("Y-m-d 00:00:00");
+            }, $filter["daterange"]);
+            $data = $data->whereRaw("DATE(meetings.created_at) >='{$dates[0]}'" . " and " . "DATE(meetings.created_at) <='{$dates[1]}'");
+        }
+        $data = $data->selectRaw("count(*) as qty, if(teams.name is null,'Sem Time',teams.name) as name")
+            ->groupBy("teams.id")
+            ->orderBy("qty", "desc")
+            ->limit(5)
+            ->pluck('qty', 'name')
             ->all();
 
         return $data;

@@ -14,7 +14,6 @@
                             <filter-section
                                 ref="filter"
                                 @filter="f => refreshResult(f)"
-                                :status_list="status_list"
                                 :teams="teams"
                             />
                             <result-section ref="result" :checkout_route="checkout_route" />
@@ -27,7 +26,7 @@
 </template>
 <script>
 export default {
-    props: ["checkout_route", "status_list", "teams"],
+    props: ["checkout_route", "teams"],
     components: {
         "filter-section": require("./partials/-filter-section.vue").default,
         "result-section": require("./partials/-result-section.vue").default

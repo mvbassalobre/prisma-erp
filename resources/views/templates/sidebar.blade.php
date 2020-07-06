@@ -41,6 +41,12 @@ $menu[] = [
             "active" => isActive('/admin/reports/customer-by-team'),
             "url" => "/admin/reports/customer-by-team",
             "icon" => "el-icon-s-data"
+    ],
+    [
+            "label" => "Clientes Por Usuário",
+            "active" => isActive('/admin/reports/customer-by-user'),
+            "url" => "/admin/reports/customer-by-user",
+            "icon" => "el-icon-s-data"
         ]
     ]
 ];

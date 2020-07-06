@@ -20,6 +20,10 @@ class ReportsController extends Controller
         $user = Auth::user();
         $data = DB::table('customers')
             ->selectRaw("customers.*, 
+                    customers.email as email,
+                    customers.phone as phone,
+                    customers.cellphone as cellphone,
+                    if(users.name is null, 'Sem Operador', users.name)  as user_name,
                     if(teams.name is null, 'Sem Time', teams.name)  as team_name,
                     user_team.team_id as team_id,
                     DATE_FORMAT(customers.created_at,'%d/%m/%Y') as f_created_at,
@@ -30,7 +34,7 @@ class ReportsController extends Controller
             ->leftJoin("teams", "teams.id", "=", "user_team.team_id")
             ->where("customers.tenant_id", "=", $user->tenant_id)
             ->orderBy("customers.created_at", "desc");
-        $data = $this->applyFilterToSales($data, $request);
+        $data = $this->applyFilter($data, $request);
         switch ($type) {
             case "csv":
                 $csv = $data->get();
@@ -42,11 +46,12 @@ class ReportsController extends Controller
                 foreach ($table as $key => $value) {
                     $table[$key]->code = \Hashids::encode($value->id);
                     if ($value->team_id) $table[$key]->team_code = \Hashids::encode($value->team_id);
+                    if ($value->user_id) $table[$key]->user_code = \Hashids::encode($value->user_id);
                 }
                 return ["success" => true, "data" => $table];
                 break;
             case "team":
-                $chart_data = $this->applyFilterToSales($data, $request);
+                $chart_data = $this->applyFilter($data, $request);
                 $chart_data = $chart_data->selectRaw("count(*) as qty,  if(teams.name is null, 'Sem Time', teams.name)  as team_name")
                     ->groupBy("teams.id")
                     ->orderBy("qty", "desc")
@@ -61,7 +66,7 @@ class ReportsController extends Controller
         }
     }
 
-    private function applyFilterToSales($data, $request)
+    private function applyFilter($data, $request)
     {
         if (@$request["code"]) $data = $data->where("customers.id", \Hashids::decode($request["code"])[0]);
         if (@$request["name"]) $data->where("customers.name", "like", "%" . $request["name"] . "%");
@@ -75,6 +80,67 @@ class ReportsController extends Controller
                 $data->where("teams.id", "=", $request["team"]);
             }
         }
+        if (@$request["user"]) {
+            if ($request["user"] != "all") {
+                $data->where("users.id", "=", $request["user"]);
+            }
+        }
         return $data;
+    }
+
+    public function customerByUser()
+    {
+        return view("admin.reports.customer_by_user");
+    }
+
+    public function getCustomerByUserTable($type, Request $request)
+    {
+        $user = Auth::user();
+        $data = DB::table('customers')
+            ->selectRaw("customers.*, 
+                    customers.email as email,
+                    customers.phone as phone,
+                    customers.cellphone as cellphone,
+                    if(users.name is null, 'Sem Operador', users.name)  as user_name,
+                    if(teams.name is null, 'Sem Time', teams.name)  as team_name,
+                    user_team.team_id as team_id,
+                    DATE_FORMAT(customers.created_at,'%d/%m/%Y') as f_created_at,
+                    if(customers.updated_at is null,'Nunca Alterado', DATE_FORMAT(customers.updated_at,'%d/%m/%Y')) as f_last_update
+                ")
+            ->leftJoin("users", "users.id", "=", "customers.user_id")
+            ->leftJoin("user_team", "user_team.user_id", "=", "users.id")
+            ->leftJoin("teams", "teams.id", "=", "user_team.team_id")
+            ->where("customers.tenant_id", "=", $user->tenant_id)
+            ->orderBy("customers.created_at", "desc");
+        $data = $this->applyFilter($data, $request);
+        switch ($type) {
+            case "csv":
+                $csv = $data->get();
+                foreach ($csv as $key => $value) $csv[$key]->code = \Hashids::encode($value->id);
+                return ["success" => true, "csv" => $csv];
+                break;
+            case "table":
+                $table = $data->paginate(25);
+                foreach ($table as $key => $value) {
+                    $table[$key]->code = \Hashids::encode($value->id);
+                    if ($value->team_id) $table[$key]->team_code = \Hashids::encode($value->team_id);
+                    if ($value->user_id) $table[$key]->user_code = \Hashids::encode($value->user_id);
+                }
+                return ["success" => true, "data" => $table];
+                break;
+            case "team":
+                $chart_data = $this->applyFilter($data, $request);
+                $chart_data = $chart_data->selectRaw("count(*) as qty,  if(teams.name is null, 'Sem Time', teams.name)  as team_name")
+                    ->groupBy("teams.id")
+                    ->orderBy("qty", "desc")
+                    ->pluck('qty', 'team_name')
+                    ->all();
+                return ["success" => true, "chart_data" => $chart_data];
+                break;
+
+            default:
+                return ["success" => false];
+                break;
+        }
     }
 }

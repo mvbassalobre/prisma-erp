@@ -30,6 +30,10 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Nome</th>
+                                                <th>Email</th>
+                                                <th>Telefone</th>
+                                                <th>Celular</th>
+                                                <th>Responsável</th>
                                                 <th>Time</th>
                                                 <th>Data Criação</th>
                                                 <th>Última Atualização</th>
@@ -42,20 +46,44 @@
                                                         class="link"
                                                         :href="`/admin/customers/${row.code}`"
                                                         target="_BLANK"
-                                                    >{{row.code}}</a>
+                                                        v-html="row.code"
+                                                    />
                                                 </td>
                                                 <td v-html="row.name" />
+                                                <td>
+                                                    <a
+                                                        class="link"
+                                                        :href="`mailto:${row.email}`"
+                                                        v-html="row.email"
+                                                    />
+                                                </td>
+                                                <td v-html="row.phone" />
+                                                <td v-html="row.cellphone" />
+                                                <td>
+                                                    <div
+                                                        v-html="row.user_name"
+                                                        v-if="!row.user_name"
+                                                    />
+                                                    <a
+                                                        v-else
+                                                        target="_BLANK"
+                                                        class="link"
+                                                        :href="`/admin/users/${row.user_code}`"
+                                                        v-html="row.user_name"
+                                                    />
+                                                </td>
                                                 <td>
                                                     <div
                                                         v-html="row.team_name"
                                                         v-if="!row.team_code"
-                                                    ></div>
+                                                    />
                                                     <a
                                                         v-else
+                                                        target="_BLANK"
                                                         class="link"
                                                         :href="`/admin/teams/${row.team_code}`"
                                                         v-html="row.team_name"
-                                                    ></a>
+                                                    />
                                                 </td>
                                                 <td v-html="row.f_created_at" />
                                                 <td v-html="row.f_last_update" />

@@ -85,7 +85,7 @@
 </template>
 <script>
 export default {
-    props: ["status_list", "teams"],
+    props: ["teams"],
     data() {
         return {
             filter: {

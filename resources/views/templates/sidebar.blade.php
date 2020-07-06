@@ -41,11 +41,23 @@ $menu[] = [
             "active" => isActive('/admin/reports/customer-by-team'),
             "url" => "/admin/reports/customer-by-team",
             "icon" => "el-icon-s-data"
-    ],
-    [
+        ],
+        [
             "label" => "Clientes Por Usuário",
             "active" => isActive('/admin/reports/customer-by-user'),
             "url" => "/admin/reports/customer-by-user",
+            "icon" => "el-icon-s-data"
+        ],
+        [
+            "label" => "Reuniões Por Time",
+            "active" => isActive('/admin/reports/meetings-by-team'),
+            "url" => "/admin/reports/meetings-by-team",
+            "icon" => "el-icon-s-data"
+        ],
+        [
+            "label" => "Reuniões Por Usuário",
+            "active" => isActive('/admin/reports/meetings-by-user'),
+            "url" => "/admin/reports/meetings-by-user",
             "icon" => "el-icon-s-data"
         ]
     ]

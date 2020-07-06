@@ -133,7 +133,7 @@ export default {
             this.attempts++
             this.loading = true
             this.initialized = true
-            this.$http.post("/admin/reports/customer-by-team/table", { page: this.page, ...filter }).then(resp => {
+            this.$http.post("/admin/reports/get-data-customers/table", { page: this.page, ...filter }).then(resp => {
                 resp = resp.data
                 this.result = resp.data
                 this.loading = false

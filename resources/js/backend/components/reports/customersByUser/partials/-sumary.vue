@@ -16,10 +16,12 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3 col-sm-12">
-                                <p class="f-12">
-                                    <b>Quantidade :</b>
-                                    {{result.total}}
-                                </p>
+                                <h2>
+                                    <p>
+                                        <b>Total :</b>
+                                        {{result.total}}
+                                    </p>
+                                </h2>
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <pie-chart
@@ -28,6 +30,16 @@
                                     :discrete="true"
                                     height="200px"
                                     :data="chart_data_team"
+                                    suffix=" clientes(s)"
+                                />
+                            </div>
+                            <div class="col-md-3 col-sm-12">
+                                <pie-chart
+                                    :donut="true"
+                                    legend="top"
+                                    :discrete="true"
+                                    height="200px"
+                                    :data="chart_data_user"
                                     suffix=" clientes(s)"
                                 />
                             </div>
@@ -46,7 +58,9 @@ export default {
             report_name: "Relatório de Clientes por Usuário",
             total: 0,
             chart_data_team: [],
+            chart_data_user: [],
             attempts: {
+                user: 0,
                 team: 0,
                 csv: 0
             }
@@ -60,7 +74,7 @@ export default {
             this.attempts.csv++
             let loading = this.$loading({ text: "Gerando CSV, aguarde ..." })
             let filter = this.$parent.$parent.$refs.filter.filter
-            this.$http.post("/admin/reports/customer-by-user/csv", { page: this.page, ...filter, paginate: false }).then(resp => {
+            this.$http.post("/admin/reports/get-data-customers/csv", { page: this.page, ...filter, paginate: false }).then(resp => {
                 resp = resp.data
                 let result = resp.csv
                 let text = ""
@@ -93,7 +107,7 @@ export default {
         getTeams() {
             this.attempts.team++
             let filter = this.$parent.$parent.$refs.filter.filter
-            this.$http.post("/admin/reports/customer-by-user/team", { page: this.page, ...filter }).then(resp => {
+            this.$http.post("/admin/reports/get-data-customers/team", { page: this.page, ...filter }).then(resp => {
                 resp = resp.data
                 this.chart_data_team = resp.chart_data
                 this.attempts.team = 0
@@ -102,8 +116,21 @@ export default {
                 console.log(er)
             })
         },
+        getUser() {
+            this.attempts.user++
+            let filter = this.$parent.$parent.$refs.filter.filter
+            this.$http.post("/admin/reports/get-data-customers/user", { page: this.page, ...filter }).then(resp => {
+                resp = resp.data
+                this.chart_data_user = resp.chart_data
+                this.attempts.user = 0
+            }).catch(er => {
+                if (this.attempts.user <= 3) this.getUser()
+                console.log(er)
+            })
+        },
         init() {
             this.getTeams()
+            this.getUser()
         }
     }
 }

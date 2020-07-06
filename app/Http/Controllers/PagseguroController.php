@@ -9,24 +9,12 @@ use Request;
 use Illuminate\Support\Facades\Log;
 use Auth;
 use App\Http\Models\{
-    SalePayment
+    SalePayment,
+    // Sale,
 };
 
 class PagseguroController extends Controller
 {
-    public function teste()
-    {
-        $this->test_payment();
-    }
-
-    private function test_payment()
-    {
-        $this->makePayment(\App\Http\Models\Customer::orderBy("id", "desc")->first(), uniqid());
-        $this->setItem(uniqid(), "lorem ipsum", 12, 1);
-        $url = $this->generateUrl();
-        dd($url);
-    }
-
     public function makePayment($customer, $ref)
     {
         $this->setAuth();
@@ -45,7 +33,7 @@ class PagseguroController extends Controller
 
     public function generateUrl()
     {
-        $this->pagseguro->setNotificationURL(route("admin.pagseguro.notification"));
+        $this->pagseguro->setNotificationURL(route("pagseguro.notification"));
         $url = $this->pagseguro->gerarURLCompra();
         return $url;
     }
@@ -54,23 +42,24 @@ class PagseguroController extends Controller
     {
         $this->setAuth();
         $this->init();
-        if (@$request['notificationType'] == 'transaction') {
-            $cod = $request['notificationCode'];
-            $response = $this->getPayment($cod);
-            $sale = SalePayment::where("reference", $cod)->first();
-            if ($sale) {
-                $sale->status = $response["info"]["estado"];
-                $sale->description = $response["info"]["descricao"];
-                $sale->save();
-            }
-            return Log::debug("pagseguro", $response);
-        }
+        Log::debug("pagseguro_notification", $request->all());
+        // if (@$request['notificationType'] == 'transaction') {
+        //     $cod = $request['notificationCode'];
+        //     $response = $this->consultarNotificacao($cod);
+        //     $sale = SalePayment::where("reference", $cod)->first();
+        //     if ($sale) {
+        //         $sale->status = $response["info"]["estado"];
+        //         $sale->description = $response["info"]["descricao"];
+        //         $sale->save();
+        //     }
+        // return Log::debug("pagseguro_notification", $response);
+        // }
     }
 
     private function init()
     {
         $this->pagseguro = new PagSeguroCompras(Config::get("pagseguro.email"), Config::get("pagseguro.token"), Config::get("pagseguro.sandbox"));
-        $this->pagseguro->setNotificationURL(route("admin.pagseguro.notification"));
+        $this->pagseguro->setNotificationURL(route("pagseguro.notification"));
     }
 
     public function setAuth()
@@ -81,29 +70,16 @@ class PagseguroController extends Controller
         Config::set("pagseguro.token", $user->getSettings("pagseguro-token"));
     }
 
-    // private function estornoCompraAprovada($cod)
+    // private function cancelPayment($cod)
     // {
     //     $this->setAuth();
     //     $this->init();
     //     try {
-    //         $this->pagseguro->estornar($cod);
-    //         //Opcionalmente pode informar a quantia a estornar (Ex: R$ 178,99). Senão informado, estorna todo valor
-    //         //$pagseguro->estornar($codigoTransacao, 178.99);
+    //         $this->pagseguro->cancelar($cod);
     //     } catch (Exception $e) {
     //         echo $e->getMessage();
     //     }
     // }
-
-    private function cancelPayment($cod)
-    {
-        $this->setAuth();
-        $this->init();
-        try {
-            $this->pagseguro->cancelar($cod);
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-    }
 
     private function getPayment($cod)
     {

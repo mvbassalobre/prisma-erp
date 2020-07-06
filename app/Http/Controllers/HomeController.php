@@ -186,4 +186,48 @@ class HomeController extends Controller
 
         return $data;
     }
+
+    public function sold($user, $filter)
+    {
+        $today = @$filter['daterange'][1]  ? Carbon::create($filter['daterange'][1]) : Carbon::now();
+
+        $salesToday = DB::table('sales')->where("sales.tenant_id", $user->tenant_id)->whereRaw("DATE(created_at) = DATE('{$today->format('Y-m-d')}')");
+        $totalQty = 0;
+        $totalAmount = 0;
+
+        $amountToday = $salesToday->sum("subtotal");
+
+        $yesterday =  Carbon::create($today->format("Y-m-d"))->subdays(1)->format("Y-m-d");
+        $salesYesterday = DB::table('sales')->where("sales.tenant_id", $user->tenant_id)->whereRaw("DATE(created_at) = DATE('{$yesterday}')")->whereRaw("DATE(created_at) <= DATE('{$yesterday}')");
+        $amountYesterday = $salesYesterday->sum("subtotal");
+        $percentage =  ($amountYesterday == 0) ? "Infinito " : (($amountToday == 0) ? 0 : round((($amountToday * 100) / $amountYesterday) - 100, 2));
+        $totalQty += $salesYesterday->count();
+        $chartData = [];
+
+        $diff = 5;
+        if (@$filter['daterange'][1] && @$filter['daterange'][0]) $diff = Carbon::create($filter['daterange'][1])->diffInDays(Carbon::create($filter["daterange"][0]));
+
+        for ($i = $diff; $i >= 0; $i--) {
+            $date = (clone $today)->subdays($i);
+            $query = DB::table('sales')->where("sales.tenant_id", $user->tenant_id)->whereRaw("DATE(created_at) =  DATE('{$date->format('Y-m-d')}')");
+            $totalQty += $query->count();
+            $amount = (clone $query)->sum('subtotal');
+            $totalAmount += $amount;
+            $chartData[$date->format("d/m")] = round($amount, 2);
+        }
+        $amountToday = $this->amountFormat($amountToday);
+
+        return [
+            "percentage" => $percentage,
+            "total_amount" => $this->amountFormat($totalAmount),
+            "qty" => $totalQty,
+            "today" => ["amount" => $amountToday],
+            "chart_data" => $chartData
+        ];
+    }
+
+    private function amountFormat($amount)
+    {
+        return "R$ " . number_format($amount, 2, ".", ",");
+    }
 }

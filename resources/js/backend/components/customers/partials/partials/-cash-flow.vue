@@ -43,7 +43,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <b>Geração de Patrimônio</b>
+                                            <b>Saldo</b>
                                             <small>Reserva</small>
                                         </td>
                                         <template v-for="(m,i) in months">

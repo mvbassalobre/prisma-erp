@@ -9,8 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Models\{
     Customer,
     Sale,
-    SalePayment,
-    Tenant
+    SalePayment
 };
 use Auth;
 use marcusvbda\vstack\Services\Messages;
@@ -117,22 +116,26 @@ class CustomersController extends Controller
 
     public function saveSections($id, Request $request)
     {
+        $user = Auth::user();
         $customer = Customer::findOrFail($id);
         $data = @$customer->data ? $customer->data : [];
         $data["sections"][$request["year"]] = (object) @$request["section"] ? $request["section"] : [];
         $customer->data = $data;
         $customer->save();
+        $customer->appendToTimeline("Fluxo de Caixa", "Salva section de fluxo de caixa <b>$user->name</b>");
         return ["success" => true];
     }
 
     public function createAreaAccess($id)
     {
+        $user = Auth::user();
         $customer = Customer::findOrFail($id);
         $customer->username =  $this->generateAreaCustomerUsername($customer);
         $pass = $this->generateAreaCustomerPassword($customer);
         $customer->password = md5($pass);
         $this->sendAccessEmail($customer->name, @$customer->email, $customer->username, $pass);
         $customer->save();
+        $customer->appendToTimeline("Area do Cliente", "O usuário <b>$user->name</b> criou um acesso para area de cliente");
         Messages::send("success", "Usuário criado com sucesso e um email com os dados foram enviados para o cliente !!");
         return ["success" => true];
     }
@@ -154,11 +157,13 @@ class CustomersController extends Controller
 
     public function removeAreaAccess($id)
     {
+        $user = Auth::user();
         $customer = Customer::findOrFail($id);
         $customer->username =  null;
         $customer->password = null;
         $customer->save();
         Messages::send("success", "Usuário removido com sucesso !!");
+        $customer->appendToTimeline("Area do Cliente", "O usuário <b>$user->name</b> removeu o acesso para area de cliente");
         return ["success" => true];
     }
 
@@ -177,5 +182,11 @@ class CustomersController extends Controller
         if (@$customer->cpfcnpj) return preg_replace('/[^0-9]/', '', $customer->cpfcnpj);
         if (@$customer->date_exp_rg) return preg_replace('/[^0-9]/', '', $customer->date_exp_rg);
         return uniqid();
+    }
+
+    public function getTimeline($id)
+    {
+        $customer = Customer::findOrFail($id);
+        return ["success" => true, "data" => $customer->timeline ? $customer->timeline : []];
     }
 }

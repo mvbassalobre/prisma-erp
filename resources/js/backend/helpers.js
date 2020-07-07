@@ -118,3 +118,7 @@ window.makeTextFile = function (text, title) {
     element.click()
     document.body.removeChild(element)
 }
+
+Array.prototype.isEqual = function (arr2) {
+    return JSON.stringify(this) === JSON.stringify(arr2)
+}

@@ -112,7 +112,7 @@
                 </div>
                 <div class="tab-content" id="v-pills-tabContent">
                     <comp-info :info="data" :active="active" :customer="customer" />
-                    <comp-timeline :timeline="customer.timeline" :active="active" />
+                    <comp-timeline :customer="customer" :active="active" />
                     <comp-sales
                         :sales="customer.sales"
                         :customer="customer"

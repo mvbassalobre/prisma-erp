@@ -6,7 +6,7 @@
         role="tabpanel"
         aria-labelledby="v-pills-timeline-tab"
     >
-        <div class="row">
+        <div class="row" v-loading="loading">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
@@ -15,20 +15,97 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <div class="block">
-                            <el-timeline>
-                                <el-timeline-item
-                                    v-for="(t,i) in timeline"
-                                    :timestamp="t.datetime"
-                                    placement="top"
-                                    :key="i"
+                        <div
+                            class="d-flex flex-column row justify-content-center align-items-center"
+                        >
+                            <div class="col-12 mb-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <b>
+                                            <span class="el-icon-s-operation mr-2" />Filtro
+                                        </b>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4 col-sm-12">
+                                                <label>Tipo de Registro</label>
+                                                <el-select
+                                                    class="w-100"
+                                                    v-model="filter.type"
+                                                    filterable
+                                                    multiple
+                                                    placeholder="Selecione o Tipo de Registro"
+                                                >
+                                                    <el-option
+                                                        v-for="(item,i) in types"
+                                                        :key="i"
+                                                        :label="item"
+                                                        :value="item"
+                                                    />
+                                                </el-select>
+                                            </div>
+                                            <div class="col-md-4 col-sm-12">
+                                                <label>Descrição de Registro</label>
+                                                <el-input
+                                                    class="w-100"
+                                                    placeholder="Descrição do registro"
+                                                    v-model="filter.description"
+                                                    clearable
+                                                />
+                                            </div>
+                                            <div class="col-md-4 col-sm-12">
+                                                <label>Data do Registro</label>
+                                                <el-date-picker
+                                                    class="w-100"
+                                                    v-model="filter.range_data"
+                                                    type="datetimerange"
+                                                    range-separator="-"
+                                                    start-placeholder="Início do Periodo"
+                                                    end-placeholder="Fim do Periodo"
+                                                    format="dd/MM/yyyy HH:mm:ss"
+                                                    value-format="yyyy-MM-dd HH:mm:ss"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-4">
+                                <div
+                                    class="d-flex align-items-center flex-column justify-content-center"
                                 >
-                                    <el-card>
-                                        <h5 v-html="t.title"></h5>
-                                        <p v-html="t.description"></p>
-                                    </el-card>
-                                </el-timeline-item>
-                            </el-timeline>
+                                    <span
+                                        class="el-icon-loading"
+                                        :style="{fontSize:50, color :'#9e6de0'}"
+                                    />
+                                    <small
+                                        :style="{color :'rgba(158, 109, 224, 0.53)'}"
+                                    >Atualizando em tempo real</small>
+                                </div>
+                            </div>
+                            <div
+                                class="col-12 mb-3"
+                                v-for="(t,i) in (_timeline ? _timeline : [])"
+                                :key="i"
+                            >
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div
+                                            class="d-flex justify-content-between align-items-center"
+                                        >
+                                            <b>
+                                                <span class="el-icon-info mr-2" />
+                                                <span v-html="t.title" classs="capitalize" />
+                                            </b>
+                                            <div>
+                                                <span class="el-icon-time mr-1" />
+                                                <span v-html="t.datetime" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body capitalize" v-html="t.description" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -39,9 +116,9 @@
 <script>
 export default {
     props: {
-        timeline: {
-            type: Array,
-            default: () => ([])
+        customer: {
+            type: Object,
+            default: () => ({})
         },
         activeOption: {
             type: Object,
@@ -52,5 +129,55 @@ export default {
             default: null
         }
     },
+    data() {
+        return {
+            loading: false,
+            filter: {
+                type: [],
+                range_data: [],
+                description: null
+            }
+        }
+    },
+    computed: {
+        types() {
+            return this.customer.timeline.map(({ title }) => title)
+        },
+        _timeline() {
+            if (this.filter.type.length > 0) return this.customer.timeline.filter(row => this.filter.type.includes(row["title"]))
+            if (this.filter.description != null) return this.customer.timeline.filter(row => row.description.indexOf(this.filter.description.toLowerCase()) >= 0)
+            if (this.filter.range_data.length >= 2) return this.customer.timeline.filter(row => {
+                let date_1 = new Date(this.filter.range_data[0])
+                let date_2 = new Date(this.filter.range_data[1])
+                let date = row.datetime.split(" - ")
+                let day = date[0].substring(0, 2)
+                let month = date[0].substring(3, 5)
+                let year = date[0].substring(6, 10)
+                date = new Date(`${year}-${month}-${day} ${date[1]}`)
+                if ((date >= date_1) && (date <= date_2)) return true
+                return false
+            })
+            return this.customer.timeline
+        }
+    },
+    created() {
+        setInterval(() => {
+            this.getTimeline()
+        }, 7000)
+    },
+    methods: {
+        getTimeline() {
+            this.$http.post(`/admin/customers/${this.customer.code}/get-timeline`, {}).then(resp => {
+                resp = resp.data
+                if (!resp.data.isEqual(this.customer.timeline)) {
+                    this.loading = true
+                    setTimeout(() => {
+                        this.customer.timeline = resp.data
+                        this.loading = false
+                    }, 1000)
+                }
+            })
+        }
+    }
 }
 </script>

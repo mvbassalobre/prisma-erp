@@ -41,8 +41,8 @@ class Customer extends DefaultModel
             $user = $user ? $user->name : "root";
             $model->timeline = [[
                 "title" => "Cadastro",
-                "description" => "cadastrado no sistema por <b>$user</b>",
-                "datetime" => Carbon::now()->format('d/m/Y - H:i:s')
+                "description" => "Cadastrado no sistema por <b>$user</b>",
+                "datetime" => Carbon::now()->format('d/m/Y - H:i:s'),
             ]];
         });
 
@@ -52,7 +52,7 @@ class Customer extends DefaultModel
         static::addGlobalScope(new UserScope());
     }
 
-    public function appendToTimeline($title, $desc)
+    public function appendToTimeline($title, $desc, $tags = [])
     {
         $timeline = @$this->timeline ? (is_array($this->timeline) ? $this->timeline : []) : [];
         array_unshift($timeline, [

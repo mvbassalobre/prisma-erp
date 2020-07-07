@@ -212,7 +212,7 @@ export default {
         },
         subtotal() {
             let value = 0
-            for (let i in this.items) value += Number(this.items[i].total)
+            this.items.forEach(item => value += Number(item.total))
             return value
         }
     },

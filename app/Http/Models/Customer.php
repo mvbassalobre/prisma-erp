@@ -52,6 +52,18 @@ class Customer extends DefaultModel
         static::addGlobalScope(new UserScope());
     }
 
+    public function appendToTimeline($title, $desc)
+    {
+        $timeline = @$this->timeline ? (is_array($this->timeline) ? $this->timeline : []) : [];
+        array_unshift($timeline, [
+            "title" => $title,
+            "description" => $desc,
+            "datetime" => Carbon::now()->format('d/m/Y - H:i:s')
+        ]);
+        $this->timeline = $timeline;
+        $this->save();
+    }
+
     public function getLastUpdateAttribute()
     {
         if (!$this->updated_at) return;

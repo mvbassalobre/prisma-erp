@@ -14,7 +14,6 @@ use App\Http\Models\{
 };
 use Auth;
 use marcusvbda\vstack\Services\Messages;
-use Carbon\Carbon;
 use marcusvbda\vstack\Services\SendMail;
 
 class CustomersController extends Controller
@@ -56,14 +55,8 @@ class CustomersController extends Controller
 
         if ($data["payment"]) $this->makePayment($sale, $customer);
 
-        $timeline = $customer->timeline;
-        array_unshift($timeline, [
-            "title" => "Lançamento adicionado",
-            "description" => "O lançamento <b>" . $sale->code . "</b> foi realizada pelo usuario <b>" . $user->name . "</b>",
-            "datetime" => Carbon::now()->format('d/m/Y - H:i:s')
-        ]);
-        $customer->timeline = $timeline;
-        $customer->save();
+        $customer->appendToTimeline("Lançamento adicionado", "O lançamento <b>" . $sale->code . "</b> foi realizada pelo usuario <b>" . $user->name . "</b>");
+
         Messages::send("success", "Lançamento adicionado com sucesso !!");
         return ["success" => true];
     }
@@ -86,14 +79,7 @@ class CustomersController extends Controller
         $customer = Customer::findOrFail($request["customer_id"]);
         $user = Auth::user();
         Sale::where("id", $request["sale"]["id"])->delete();
-        $timeline = $customer->timeline;
-        array_unshift($timeline, [
-            "title" => "Exclusão de Lançamento",
-            "description" => "O lançamento <b>" . $request["sale"]["f_code"] . "</b> foi excluido pelo usuario <b>" . $user->name . "</b>",
-            "datetime" => Carbon::now()->format('d/m/Y - H:i:s')
-        ]);
-        $customer->timeline = $timeline;
-        $customer->save();
+        $customer->appendToTimeline("Exclusão de Lançamento", "O lançamento <b>" . $request["sale"]["f_code"] . "</b> foi excluido pelo usuario <b>" . $user->name . "</b>");
         Messages::send("success", "Lançamento excluido com sucesso !!");
         return ["success" => true];
     }
@@ -106,13 +92,7 @@ class CustomersController extends Controller
         $goals = $request->all();
         $data["goals"] = $goals;
         $customer->data = $data;
-        $timeline = @$customer->timeline ? $customer->timeline : [];
-        $timeline[] = [
-            "title" => "Metas e Objetivos",
-            "description" => "Adição de Entrada nas metas e objetivos por <b>$user->name</b>",
-            "datetime" => Carbon::now()->format('d/m/Y - H:i:s')
-        ];
-        $customer->timeline = $timeline;
+        $customer->appendToTimeline("Metas e Objetivos", "Adição de Entrada nas metas e objetivos por <b>$user->name</b>");
         $customer->save();
         return ["success" => true];
     }
@@ -130,13 +110,7 @@ class CustomersController extends Controller
         }
         $data["sections"] = $sections;
         $customer->data = $data;
-        $timeline = @$customer->timeline ? $customer->timeline : [];
-        $timeline[] = [
-            "title" => "Fluxo de Caixa",
-            "description" => "Adição de Entrada no Fluxo de Caixa por <b>$user->name</b>",
-            "datetime" => Carbon::now()->format('d/m/Y - H:i:s')
-        ];
-        $customer->timeline = $timeline;
+        $customer->appendToTimeline("Fluxo de Caixa", "Adição de Entrada no Fluxo de Caixa por <b>$user->name</b>");
         $customer->save();
         return ["success" => true];
     }

@@ -202,16 +202,24 @@
                                                                     >Hora do Lançamento :</b>
                                                                     {{s.f_created_at.split(" - ")[1]}}
                                                                 </div>
-                                                                <div>
+                                                                <div v-if="!s.payment">
                                                                     <b
-                                                                        v-if="!s.payment"
                                                                         class="text-danger"
                                                                     >Sem Link de Pagto</b>
-                                                                    <b
-                                                                        v-else
-                                                                        class="text-success"
-                                                                    >Com Link de Pagto</b>
                                                                 </div>
+                                                                <template v-else>
+                                                                    <div>
+                                                                        <b
+                                                                            class="text-success"
+                                                                        >Com Link de Pagto</b>
+                                                                    </div>
+                                                                    <div>
+                                                                        <b
+                                                                            class="mr-1"
+                                                                        >Status de Pagto :</b>
+                                                                        {{s.payment.status}}
+                                                                    </div>
+                                                                </template>
                                                             </div>
                                                         </div>
                                                     </div>

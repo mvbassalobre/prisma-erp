@@ -29,6 +29,16 @@
                                     legend="top"
                                     :discrete="true"
                                     height="200px"
+                                    :data="chart_data_user"
+                                    suffix=" vendas(s)"
+                                />
+                            </div>
+                            <div class="col-md-3 col-sm-12">
+                                <pie-chart
+                                    :donut="true"
+                                    legend="top"
+                                    :discrete="true"
+                                    height="200px"
                                     :data="chart_data_team"
                                     suffix=" vendas(s)"
                                 />
@@ -82,20 +92,20 @@ export default {
                 text = addToCsv(text, "Código")
                 text = addToCsv(text, "Cliente")
                 text = addToCsv(text, "Pagto")
-                text = addToCsv(text, "items")
                 text = addToCsv(text, "Responsável")
                 text = addToCsv(text, "Time")
                 text = addToCsv(text, "SubTotal")
-                text = addToCsv(text, "Data Lançamento", true)
+                text = addToCsv(text, "Data Lançamento")
+                text = addToCsv(text, "Items", true)
                 result.forEach(row => {
                     text = addToCsv(text, row.code ? row.code : "")
                     text = addToCsv(text, row.customer_name ? row.customer_name : "")
-                    text = addToCsv(text, row.user_name ? row.user_name : "")
                     text = addToCsv(text, row.status_payment ? row.status_payment : "")
-                    text = addToCsv(text, row.items ? this.itemsRow(row.items) : "")
+                    text = addToCsv(text, row.user_name ? row.user_name : "")
                     text = addToCsv(text, row.team_name ? row.team_name : "")
                     text = addToCsv(text, row.subtotal ? row.subtotal : "")
-                    text = addToCsv(text, row.f_created_at ? row.f_created_at : "", true)
+                    text = addToCsv(text, row.f_created_at ? row.f_created_at : "")
+                    text = addToCsv(text, row.items ? this.itemsRow(row.items) : "", true)
                 })
                 makeTextFile(text, `${this.report_name} - ${(new Date()).toLocaleDateString()}.csv`)
                 this.attempts.csv = 0
@@ -129,15 +139,28 @@ export default {
                 console.log(er)
             })
         },
+        getUser() {
+            this.attempts.user++
+            let filter = this.$parent.$parent.$refs.filter.filter
+            this.$http.post("/admin/reports/get-data-sales/user", { page: this.page, ...filter }).then(resp => {
+                resp = resp.data
+                this.chart_data_user = resp.chart_data
+                this.attempts.user = 0
+            }).catch(er => {
+                if (this.attempts.user <= 3) this.getUser()
+                console.log(er)
+            })
+        },
         itemsRow(items) {
             items = JSON.parse(items)
             let text = ''
-            items.forEach(i => text += `${i.name} ${i.price.currency()} x ${i.qty} = ${i.total.currency()},`)
+            items.forEach(i => text += ` ${i.name} -`)
             return text.slice(0, -1)
         },
         init() {
             this.getTeams()
             this.getStatus()
+            this.getUser()
         }
     }
 }

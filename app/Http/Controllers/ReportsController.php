@@ -236,14 +236,9 @@ class ReportsController extends Controller
         return $data->whereNull("meetings.deleted_at");
     }
 
-    public function salesByTeam()
+    public function salesReport()
     {
-        return view("admin.reports.sales_by_team");
-    }
-
-    public function salesByUser()
-    {
-        return view("admin.reports.sales_by_user");
+        return view("admin.reports.sales_report");
     }
 
     public function getDataSales($type, Request $request)
@@ -295,6 +290,15 @@ class ReportsController extends Controller
                     ->groupBy("teams.id")
                     ->orderBy("qty", "desc")
                     ->pluck('qty', 'team_name')
+                    ->all();
+                return ["success" => true, "chart_data" => $chart_data];
+                break;
+            case "user":
+                $chart_data = $this->applyFilterSales($data, $request);
+                $chart_data = $chart_data->selectRaw("count(*) as qty,  if(users.name is null, 'Sem Usuário', users.name)  as user_name")
+                    ->groupBy("users.id")
+                    ->orderBy("qty", "desc")
+                    ->pluck('qty', 'user_name')
                     ->all();
                 return ["success" => true, "chart_data" => $chart_data];
                 break;

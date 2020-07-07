@@ -3,7 +3,9 @@
         <div class="card h-100">
             <div class="card-body d-flex flex-column">
                 <span class="f-12 mb-3">
-                    <b>VENDAS</b> /
+                    <b>
+                        <span class="el-icon-money mr-2"></span>VENDAS
+                    </b> /
                     <template v-if="filter.daterange.length>0">No periodo do filtro</template>
                     <template v-else>Nos últimos 7 dias</template>
                 </span>
@@ -36,6 +38,7 @@
                 <loading-shimmer :loading="loading" :h="200" class="dashboard-chart-area">
                     <template v-if="!loading">
                         <area-chart
+                            legend="bottom"
                             :discrete="true"
                             height="200px"
                             :data="data.chart_data"

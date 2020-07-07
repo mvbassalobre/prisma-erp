@@ -3,7 +3,9 @@
         <div class="card h-100">
             <div class="card-body d-flex flex-column">
                 <span class="f-12 mb-3">
-                    <b>REUNIÕES</b> / Novas reuniões por status
+                    <b>
+                        <span class="el-icon-data-line mr-2"></span>REUNIÕES
+                    </b> / Novas reuniões por status
                 </span>
                 <loading-shimmer :loading="loading" :h="200">
                     <template v-if="!loading">

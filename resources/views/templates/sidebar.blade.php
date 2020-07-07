@@ -40,25 +40,25 @@ $menu[] = [
             "label" => "Clientes Por Time",
             "active" => isActive('/admin/reports/customer-by-team'),
             "url" => "/admin/reports/customer-by-team",
-            "icon" => "el-icon-s-data"
+            "icon" => "el-icon-s-custom"
         ],
         [
             "label" => "Clientes Por Usuário",
             "active" => isActive('/admin/reports/customer-by-user'),
             "url" => "/admin/reports/customer-by-user",
-            "icon" => "el-icon-s-data"
+            "icon" => "el-icon-s-custom"
         ],
         [
             "label" => "Reuniões Por Time",
             "active" => isActive('/admin/reports/meetings-by-team'),
             "url" => "/admin/reports/meetings-by-team",
-            "icon" => "el-icon-s-data"
+            "icon" => "el-icon-notebook-1"
         ],
         [
             "label" => "Reuniões Por Usuário",
             "active" => isActive('/admin/reports/meetings-by-user'),
             "url" => "/admin/reports/meetings-by-user",
-            "icon" => "el-icon-s-data"
+            "icon" => "el-icon-notebook-1"
         ]
     ]
 ];

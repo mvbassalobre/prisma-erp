@@ -3,7 +3,9 @@
         <div class="card h-100">
             <div class="card-body d-flex flex-column">
                 <span class="f-12 mb-3">
-                    <b>PAGAMENTOS</b> / Por status no periodo do filtro
+                    <b>
+                        <span class="el-icon-money mr-2"></span>PAGAMENTOS
+                    </b> / Por status no periodo do filtro
                 </span>
                 <loading-shimmer :loading="loading" :h="275">
                     <template v-if="!loading">
@@ -11,7 +13,7 @@
                             <tbody>
                                 <template v-if="Object.keys(data).length > 0">
                                     <pie-chart
-                                        legend="right"
+                                        legend="bottom"
                                         :discrete="true"
                                         height="275px"
                                         :data="data"

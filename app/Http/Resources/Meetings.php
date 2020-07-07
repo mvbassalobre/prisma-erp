@@ -86,6 +86,7 @@ class Meetings extends Resource
     public function table()
     {
         $columns =  [
+            "subject" => ["label" => "Assunto", "sortable_index" => "subject"],
             "room->name" => ["label" => "Sala", "sortable_index" => "meeting_room_id"]
         ];
         if (Auth::user()->hasRole(["super-admin"])) {

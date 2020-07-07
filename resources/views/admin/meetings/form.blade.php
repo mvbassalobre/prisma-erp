@@ -29,5 +29,5 @@
         </div>
     </div>
 </div>
-<meeting-form></meeting-form>
+<meeting-form :config='@json(@$config)'></meeting-form>
 @endsection

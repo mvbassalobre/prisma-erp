@@ -130,6 +130,7 @@
 
 <script>
 export default {
+    props: ["config"],
     data() {
         return {
             sending: false,
@@ -166,6 +167,10 @@ export default {
     },
     created() {
         this.loadModelData()
+        if (this.config) {
+            this.form = this.config.form
+            this.meeting_duration = this.config.meeting_duration
+        }
     },
     methods: {
         loadModelData() {

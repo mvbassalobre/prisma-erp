@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use DB;
 use Auth;
 use App\Http\Models\Customer;
+use App\Http\Models\SalePayment;
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -187,44 +188,79 @@ class HomeController extends Controller
         return $data;
     }
 
+    public function salesPayment($user, $filter)
+    {
+        $data = DB::table("sales")
+            ->leftJoin("sale_payment", "sale_payment.sale_id", "=", "sales.id")
+            ->where("sales.tenant_id", $user->tenant_id);
+
+        if (@$filter["daterange"]) {
+            $dates = array_map(function ($date) {
+                return Carbon::create($date)->format("Y-m-d 00:00:00");
+            }, $filter["daterange"]);
+            $data = $data->whereRaw("DATE(sales.created_at) >='{$dates[0]}'" . " and " . "DATE(sales.created_at) <='{$dates[1]}'")
+                ->whereRaw("DATE(sale_payment.created_at) >='{$dates[0]}'" . " and " . "DATE(sale_payment.created_at) <='{$dates[1]}'");
+        }
+
+        $data = $data->selectRaw("count(*) as qty, if(sale_payment.sale_id is null, 'Sem link de Pagto','Com link de pagto') as name")
+            ->groupBy("sale_payment.sale_id")
+            ->orderBy("qty", "desc")
+            ->limit(5)
+            ->pluck('qty', 'name')
+            ->all();
+
+        return $data;
+    }
+
     public function sold($user, $filter)
     {
         $today = @$filter['daterange'][1]  ? Carbon::create($filter['daterange'][1]) : Carbon::now();
 
-        $salesToday = DB::table('sales')->where("sales.tenant_id", $user->tenant_id)->whereRaw("DATE(created_at) = DATE('{$today->format('Y-m-d')}')");
+        $totalAmountWithLink = 0;
+        $totalAmountWithoutLink = 0;
         $totalQty = 0;
         $totalAmount = 0;
 
-        $amountToday = $salesToday->sum("subtotal");
-
-        $yesterday =  Carbon::create($today->format("Y-m-d"))->subdays(1)->format("Y-m-d");
-        $salesYesterday = DB::table('sales')->where("sales.tenant_id", $user->tenant_id)->whereRaw("DATE(created_at) = DATE('{$yesterday}')")->whereRaw("DATE(created_at) <= DATE('{$yesterday}')");
-        $amountYesterday = $salesYesterday->sum("subtotal");
-        $percentage =  ($amountYesterday == 0) ? "Infinito " : (($amountToday == 0) ? 0 : round((($amountToday * 100) / $amountYesterday) - 100, 2));
-        $totalQty += $salesYesterday->count();
         $chartData = [];
+        $chartDataWithLink = [];
+        $chartDataWithoutLink = [];
 
         $diff = 5;
         if (@$filter['daterange'][1] && @$filter['daterange'][0]) $diff = Carbon::create($filter['daterange'][1])->diffInDays(Carbon::create($filter["daterange"][0]));
 
         for ($i = $diff; $i >= 0; $i--) {
             $date = (clone $today)->subdays($i);
-            $query = DB::table('sales')->where("sales.tenant_id", $user->tenant_id)->whereRaw("DATE(created_at) =  DATE('{$date->format('Y-m-d')}')");
-            $totalQty += $query->count();
+            $query = DB::table('sales')->where("sales.tenant_id", $user->tenant_id)->whereRaw("DATE(sales.created_at) =  DATE('{$date->format('Y-m-d')}')");
+
+            $link_ids = SalePayment::where("tenant_id", $user->tenant_id)
+                ->whereRaw("DATE(created_at) =  DATE('{$date->format('Y-m-d')}')")->get()->pluck("sale_id")->toArray();
+
+            $totalAmountWithLink += (clone $query)->whereIn("id", $link_ids)->sum('subtotal');
+            $totalAmountWithoutLink += (clone $query)->whereNotIn("id", $link_ids)->sum('subtotal');
+            $totalQty += (clone $query)->count();
             $amount = (clone $query)->sum('subtotal');
+            $amountWithLink = (clone $query)->whereIn("id", $link_ids)->sum('subtotal');
+            $amountWithoutLink = (clone $query)->whereNotIn("id", $link_ids)->sum('subtotal');
             $totalAmount += $amount;
             $chartData[$date->format("d/m")] = round($amount, 2);
+            $chartDataWithoutLink[$date->format("d/m")] = round($amountWithoutLink, 2);
+            $chartDataWithLink[$date->format("d/m")] = round($amountWithLink, 2);
         }
-        $amountToday = $this->amountFormat($amountToday);
 
         return [
-            "percentage" => $percentage,
             "total_amount" => $this->amountFormat($totalAmount),
+            "total_amount_without_link" => $this->amountFormat($totalAmountWithoutLink),
+            "total_amount_with_link" => $this->amountFormat($totalAmountWithLink),
             "qty" => $totalQty,
-            "today" => ["amount" => $amountToday],
-            "chart_data" => $chartData
+            "chart_data" => [
+                ["name" => "Todos", "data" => $chartData],
+                ["name" => "Sem Link de Pagamento", "data" => $chartDataWithoutLink],
+                ["name" => "Com Link de Pagamento", "data" => $chartDataWithLink],
+            ]
         ];
     }
+
+
 
     private function amountFormat($amount)
     {

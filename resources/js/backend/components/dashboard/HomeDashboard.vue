@@ -29,7 +29,7 @@
             </div>
             <div class="row d-flex flex-row flex-wrap cards mt-3">
                 <comp-sales :user="user" :roles="roles" :filter="filter" />
-                <meeting-team :user="user" :roles="roles" :filter="filter" />
+                <sales-payment :user="user" :roles="roles" :filter="filter" />
             </div>
             <div class="row mt-3 d-flex flex-row flex-wrap">
                 <top-teams-new-customers :user="user" :roles="roles" :filter="filter" />
@@ -39,6 +39,7 @@
             <div class="row mt-3 d-flex flex-row flex-wrap">
                 <top-teams-new-meeting :user="user" :roles="roles" :filter="filter" />
                 <top-users-new-meeting :user="user" :roles="roles" :filter="filter" />
+                <meeting-team :user="user" :roles="roles" :filter="filter" />
             </div>
         </div>
     </div>
@@ -65,6 +66,7 @@ export default {
         "meeting-statuses": require("./partials/-MeetingStatuses.vue").default,
         "meeting-team": require("./partials/-MeetingTeam.vue").default,
         "comp-sales": require("./partials/-Sales.vue").default,
+        "sales-payment": require("./partials/-SalesPayment.vue").default,
     },
     created() {
         if (this.params.daterange) this.filter.daterange = this.params.daterange.split(",")

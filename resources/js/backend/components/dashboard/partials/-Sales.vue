@@ -11,6 +11,17 @@
                     <template v-if="!loading">
                         <h3>
                             <b>{{data.total_amount}}</b>
+                            <small class="f-12">
+                                ({{data.total_amount_without_link}})
+                                <small
+                                    class="f-10"
+                                >Sem link de Pagamento</small>
+                                /
+                                ({{data.total_amount_with_link}})
+                                <small
+                                    class="f-10"
+                                >Com link de Pagamento</small>
+                            </small>
                         </h3>
                     </template>
                 </loading-shimmer>
@@ -22,11 +33,11 @@
                         </small>
                     </template>
                 </loading-shimmer>
-                <loading-shimmer :loading="loading" :h="120" class="dashboard-chart-area">
+                <loading-shimmer :loading="loading" :h="200" class="dashboard-chart-area">
                     <template v-if="!loading">
                         <area-chart
                             :discrete="true"
-                            height="120px"
+                            height="200px"
                             :data="data.chart_data"
                             prefix="R$ "
                         />

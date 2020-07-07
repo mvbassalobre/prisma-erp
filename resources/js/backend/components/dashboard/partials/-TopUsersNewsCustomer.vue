@@ -32,7 +32,7 @@
                                     </template>
                                 </template>
                                 <div v-else class="text-center">
-                                    <span class="f-12">Não há movimentação ...</span>
+                                    <span class="f-12">Não há novos clientes ...</span>
                                 </div>
                             </tbody>
                         </table>

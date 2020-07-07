@@ -3,7 +3,7 @@
         <div class="card h-100">
             <div class="card-body d-flex flex-column">
                 <span class="f-12 mb-3">
-                    <b>TOP 5 TIMES</b> / Novas reuniões agendadas no periodo do filtro
+                    <b>TOP 5 TIMES</b> / Novas reuniões no periodo do filtro
                 </span>
                 <loading-shimmer :loading="loading" :h="50">
                     <template v-if="!loading">
@@ -32,7 +32,7 @@
                                     </template>
                                 </template>
                                 <div v-else class="text-center">
-                                    <span class="f-12">Não há movimentação ...</span>
+                                    <span class="f-12">Não há novas reuniões ...</span>
                                 </div>
                             </tbody>
                         </table>

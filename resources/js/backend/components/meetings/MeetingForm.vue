@@ -1,5 +1,5 @@
 <template>
-    <el-form :inline="true" class="row" label-position="top" size="medium">
+    <el-form ref="form" :inline="true" class="row" label-position="top" size="medium">
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
@@ -8,16 +8,6 @@
                         <div class="col-sm-6">
                             <el-form-item label="Assunto da Reunião" required>
                                 <el-input v-model="form.subject" placeholder="Assunto" />
-                            </el-form-item>
-                            <el-form-item label="Local da Reunião" required>
-                                <el-select v-model="form.meeting_room_id">
-                                    <el-option
-                                        v-for="status in modelsData.meetingRooms"
-                                        :key="status.id"
-                                        :value="status.id"
-                                        :label="status.name"
-                                    />
-                                </el-select>
                             </el-form-item>
                             <el-form-item label="Cliente" required>
                                 <el-select v-model="form.customer_id">
@@ -29,8 +19,23 @@
                                     />
                                 </el-select>
                             </el-form-item>
+                            <el-form-item label="Local da Reunião" required>
+                                <el-select v-model="form.meeting_room_id">
+                                    <el-option
+                                        v-for="status in modelsData.meetingRooms"
+                                        :key="status.id"
+                                        :value="status.id"
+                                        :label="status.name"
+                                    />
+                                </el-select>
+                            </el-form-item>
                             <el-form-item label="Data" required>
-                                <el-date-picker v-model="form.starts_at" placeholder="Início"></el-date-picker>
+                                <el-date-picker
+                                    format="dd/MM/yyyy"
+                                    value-format="yyyy-MM-dd"
+                                    v-model="form.starts_at"
+                                    placeholder="Início"
+                                ></el-date-picker>
                             </el-form-item>
                             <el-form-item
                                 :label="`Horário: de ${durationFormatter(meeting_duration[0])} até ${durationFormatter(meeting_duration[1])}`"
@@ -114,7 +119,11 @@
             <a href="/admin/meetings" class="mr-5 text-danger link d-none d-lg-block">
                 <b>Cancelar</b>
             </a>
-            <button type="sumit" class="btn btn-primary btn-sm-block">Cadastrar</button>
+            <button
+                class="btn btn-primary btn-sm-block"
+                :disabled="sending"
+                @click.prevent="submit"
+            >Cadastrar</button>
         </div>
     </el-form>
 </template>
@@ -123,16 +132,18 @@
 export default {
     data() {
         return {
+            sending: false,
             form: {
                 subject: null,
                 type: null,
                 status_id: "",
-                starts_at: +(new Date()),
+                starts_at: new Date(),
+                ends_at: "",
                 customer_id: "",
                 feedback_url: null,
                 meeting_room_id: null,
-                resource_id: "meetings",
-                google_event_id: true
+                google_event_id: true,
+                observations: ""
             },
             modelsToLoad: [["Customer","customers"],["MeetingRoom","meetingRooms"],["MeetingStatus","meetingStatuses"]],
             starts_at_time: "12:00",
@@ -169,8 +180,28 @@ export default {
                 minutes = String((value - hours) * 60).padStart(2,"0")
             return `${hours}:${minutes}`
         },
-        send() {
+        submit() {
+            //this.$refs.form.validate(valid => {
+            //    if (!valid) return
 
+            this.send()
+            //})
+        },
+        send() {
+            this.sending = true
+            this.$http.post("",{
+                model: this.form,
+                time: this.meeting_duration
+            })
+                .finally(v => this.sending = false)
+                .then(({ data }) => {
+                    if (!this.form.id && data.id) {
+                        location.replace("/admin/meetings")
+                    }
+                })
+                .catch((response) => {
+                    console.log(response)
+                })
         }
     }
 }

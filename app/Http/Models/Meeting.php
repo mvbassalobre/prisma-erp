@@ -6,6 +6,7 @@ use marcusvbda\vstack\Models\DefaultModel;
 use marcusvbda\vstack\Models\Scopes\TenantScope;
 use marcusvbda\vstack\Models\Observers\TenantObserver;
 use Auth;
+use Spatie\GoogleCalendar\Event;
 
 class Meeting extends DefaultModel
 {
@@ -24,6 +25,10 @@ class Meeting extends DefaultModel
         self::creating(function ($model) use ($user) {
             $model->user_id = $user->id;
         });
+
+        //self::saved(function($model){
+        //    $event = Event::create();
+        //});
     }
 
     public static function hasTenant()

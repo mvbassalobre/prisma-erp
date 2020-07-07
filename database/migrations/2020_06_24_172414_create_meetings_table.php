@@ -39,7 +39,7 @@ class CreateMeetingsTable extends Migration
             $table->unsignedBigInteger('customer_id');
             $table->string('google_event_id');
             $table->datetime('starts_at');
-            $table->timestamp('ends_at');
+            $table->datetime('ends_at');
             $table->string('feedback_url')->nullable();
             $table->text("observations")->nullable()->default(null);
             $table->softDeletes();

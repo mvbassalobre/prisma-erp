@@ -192,7 +192,7 @@ class CustomersController extends Controller
 
     public function getSales($id)
     {
-        $sales = Sale::where("customer_id", $id)->get();
+        $sales = Sale::where("customer_id", $id)->with(["user"])->get();
         return ["success" => true, "data" => $sales];
     }
 }

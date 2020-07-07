@@ -6,7 +6,7 @@
         role="tabpanel"
         aria-labelledby="v-pills-sales-tab"
     >
-        <div class="row" v-loading="loading">
+        <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">

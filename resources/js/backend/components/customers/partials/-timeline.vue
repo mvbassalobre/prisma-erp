@@ -66,6 +66,7 @@
                                                             end-placeholder="Fim do Periodo"
                                                             format="dd/MM/yyyy HH:mm:ss"
                                                             value-format="yyyy-MM-dd HH:mm:ss"
+                                                            clearable
                                                         />
                                                     </div>
                                                 </div>
@@ -77,7 +78,7 @@
                                             class="d-flex align-items-center flex-column justify-content-center"
                                         >
                                             <span
-                                                class="el-icon-loading"
+                                                class="el-icon-loading mt-3"
                                                 :style="{fontSize:50, color :'#9e6de0'}"
                                             />
                                             <small
@@ -152,20 +153,23 @@ export default {
             return this.customer.timeline.map(({ title }) => title)
         },
         _timeline() {
-            if (this.filter.type.length > 0) return this.customer.timeline.filter(row => this.filter.type.includes(row["title"]))
-            if (this.filter.description != null) return this.customer.timeline.filter(row => row.description.indexOf(this.filter.description.toLowerCase()) >= 0)
-            if (this.filter.range_data.length >= 2) return this.customer.timeline.filter(row => {
-                let date_1 = new Date(this.filter.range_data[0])
-                let date_2 = new Date(this.filter.range_data[1])
-                let date = row.datetime.split(" - ")
-                let day = date[0].substring(0, 2)
-                let month = date[0].substring(3, 5)
-                let year = date[0].substring(6, 10)
-                date = new Date(`${year}-${month}-${day} ${date[1]}`)
-                if ((date >= date_1) && (date <= date_2)) return true
-                return false
-            })
-            return this.customer.timeline
+            let _timeline = this.customer.timeline
+            if (this.filter.type.length > 0) _timeline = _timeline.filter(row => this.filter.type.includes(row["title"]))
+            if (this.filter.description != null) _timeline = _timeline.filter(row => row.description.toLowerCase().indexOf(this.filter.description.toLowerCase()) >= 0)
+            if (this.filter.range_data) {
+                if (this.filter.range_data.length >= 2) _timeline = _timeline.filter(row => {
+                    let date_1 = new Date(this.filter.range_data[0])
+                    let date_2 = new Date(this.filter.range_data[1])
+                    let date = row.datetime.split(" - ")
+                    let day = date[0].substring(0, 2)
+                    let month = date[0].substring(3, 5)
+                    let year = date[0].substring(6, 10)
+                    date = new Date(`${year}-${month}-${day} ${date[1]}`)
+                    if ((date >= date_1) && (date <= date_2)) return true
+                    return false
+                })
+            }
+            return _timeline
         }
     },
     created() {

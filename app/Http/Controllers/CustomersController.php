@@ -189,4 +189,10 @@ class CustomersController extends Controller
         $customer = Customer::findOrFail($id);
         return ["success" => true, "data" => $customer->timeline ? $customer->timeline : []];
     }
+
+    public function getSales($id)
+    {
+        $sales = Sale::where("customer_id", $id)->get();
+        return ["success" => true, "data" => $sales];
+    }
 }

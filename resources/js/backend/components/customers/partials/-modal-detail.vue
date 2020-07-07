@@ -64,7 +64,9 @@
                 </div>
                 <hr />
                 <div class="row mt-4">
-                    <div class="col-md-7 col-sm-12">
+                    <div
+                        v-bind:class="{'col-12' : !sale.payment, 'col-md-7 col-sm-12' : sale.payment}"
+                    >
                         <h5>Itens</h5>
                         <table class="table table-striped hovered resource-table table-hover mb-0">
                             <thead>

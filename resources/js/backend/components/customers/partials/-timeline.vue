@@ -18,93 +18,101 @@
                         <div
                             class="d-flex flex-column row justify-content-center align-items-center"
                         >
-                            <div class="col-12 mb-4">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <b>
-                                            <span class="el-icon-s-operation mr-2" />Filtro
-                                        </b>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-4 col-sm-12">
-                                                <label>Tipo de Registro</label>
-                                                <el-select
-                                                    class="w-100"
-                                                    v-model="filter.type"
-                                                    filterable
-                                                    multiple
-                                                    placeholder="Selecione o Tipo de Registro"
-                                                >
-                                                    <el-option
-                                                        v-for="(item,i) in types"
-                                                        :key="i"
-                                                        :label="item"
-                                                        :value="item"
-                                                    />
-                                                </el-select>
+                            <div class="col-12 mb-3">
+                                <el-timeline class="pl-0">
+                                    <el-timeline-item>
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <b>
+                                                    <span class="el-icon-s-operation mr-2" />Filtro
+                                                </b>
                                             </div>
-                                            <div class="col-md-4 col-sm-12">
-                                                <label>Descrição de Registro</label>
-                                                <el-input
-                                                    class="w-100"
-                                                    placeholder="Descrição do registro"
-                                                    v-model="filter.description"
-                                                    clearable
-                                                />
-                                            </div>
-                                            <div class="col-md-4 col-sm-12">
-                                                <label>Data do Registro</label>
-                                                <el-date-picker
-                                                    class="w-100"
-                                                    v-model="filter.range_data"
-                                                    type="datetimerange"
-                                                    range-separator="-"
-                                                    start-placeholder="Início do Periodo"
-                                                    end-placeholder="Fim do Periodo"
-                                                    format="dd/MM/yyyy HH:mm:ss"
-                                                    value-format="yyyy-MM-dd HH:mm:ss"
-                                                />
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-4 col-sm-12">
+                                                        <label>Tipo de Registro</label>
+                                                        <el-select
+                                                            class="w-100"
+                                                            v-model="filter.type"
+                                                            filterable
+                                                            multiple
+                                                            placeholder="Selecione o Tipo de Registro"
+                                                        >
+                                                            <el-option
+                                                                v-for="(item,i) in types"
+                                                                :key="i"
+                                                                :label="item"
+                                                                :value="item"
+                                                            />
+                                                        </el-select>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-12">
+                                                        <label>Descrição de Registro</label>
+                                                        <el-input
+                                                            class="w-100"
+                                                            placeholder="Descrição do registro"
+                                                            v-model="filter.description"
+                                                            clearable
+                                                        />
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-12">
+                                                        <label>Data do Registro</label>
+                                                        <el-date-picker
+                                                            class="w-100"
+                                                            v-model="filter.range_data"
+                                                            type="datetimerange"
+                                                            range-separator="-"
+                                                            start-placeholder="Início do Periodo"
+                                                            end-placeholder="Fim do Periodo"
+                                                            format="dd/MM/yyyy HH:mm:ss"
+                                                            value-format="yyyy-MM-dd HH:mm:ss"
+                                                        />
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 mb-4">
-                                <div
-                                    class="d-flex align-items-center flex-column justify-content-center"
-                                >
-                                    <span
-                                        class="el-icon-loading"
-                                        :style="{fontSize:50, color :'#9e6de0'}"
-                                    />
-                                    <small
-                                        :style="{color :'rgba(158, 109, 224, 0.53)'}"
-                                    >Atualizando em tempo real</small>
-                                </div>
-                            </div>
-                            <div
-                                class="col-12 mb-3"
-                                v-for="(t,i) in (_timeline ? _timeline : [])"
-                                :key="i"
-                            >
-                                <div class="card">
-                                    <div class="card-header">
+                                    </el-timeline-item>
+                                    <el-timeline-item>
                                         <div
-                                            class="d-flex justify-content-between align-items-center"
+                                            class="d-flex align-items-center flex-column justify-content-center"
                                         >
-                                            <b>
-                                                <span class="el-icon-info mr-2" />
-                                                <span v-html="t.title" classs="capitalize" />
-                                            </b>
-                                            <div>
-                                                <span class="el-icon-time mr-1" />
-                                                <span v-html="t.datetime" />
-                                            </div>
+                                            <span
+                                                class="el-icon-loading"
+                                                :style="{fontSize:50, color :'#9e6de0'}"
+                                            />
+                                            <small
+                                                :style="{color :'rgba(158, 109, 224, 0.53)'}"
+                                            >Atualizando em tempo real</small>
                                         </div>
-                                    </div>
-                                    <div class="card-body capitalize" v-html="t.description" />
-                                </div>
+                                    </el-timeline-item>
+                                    <el-timeline-item
+                                        :timestamp="t.datetime"
+                                        placement="top"
+                                        v-for="(t,i) in (_timeline ? _timeline : [])"
+                                        :key="i"
+                                    >
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <div
+                                                    class="d-flex justify-content-between align-items-center"
+                                                >
+                                                    <b>
+                                                        <span class="el-icon-info mr-2" />
+                                                        <span v-html="t.title" classs="capitalize" />
+                                                    </b>
+                                                    <div>
+                                                        <span class="el-icon-time mr-1" />
+                                                        <span v-html="t.datetime" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="card-body capitalize"
+                                                v-html="t.description"
+                                            />
+                                        </div>
+                                    </el-timeline-item>
+                                </el-timeline>
                             </div>
                         </div>
                     </div>

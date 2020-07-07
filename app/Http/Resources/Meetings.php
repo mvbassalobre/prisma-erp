@@ -27,7 +27,7 @@ class Meetings extends Resource
 
     public function icon()
     {
-        return "el-icon-data-line";
+        return "el-icon-guide";
     }
 
     public function fields()

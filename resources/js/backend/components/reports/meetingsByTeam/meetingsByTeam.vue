@@ -18,7 +18,7 @@
                                 :teams="teams"
                                 :status="status"
                             />
-                            <result-section ref="result" :checkout_route="checkout_route" />
+                            <result-section ref="result" />
                         </div>
                     </div>
                 </div>
@@ -28,7 +28,7 @@
 </template>
 <script>
 export default {
-    props: ["checkout_route", "teams", "rooms", 'status'],
+    props: ["teams", "rooms", 'status'],
     components: {
         "filter-section": require("./partials/-filter-section.vue").default,
         "result-section": require("./partials/-result-section.vue").default

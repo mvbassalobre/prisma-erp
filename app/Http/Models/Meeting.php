@@ -29,7 +29,6 @@ class Meeting extends DefaultModel
         self::created(function ($model) {
             $model->customer->appendToTimeline(...$model->makeHistoryText("created"));
         });
-
     }
 
     public function makeHistoryText($type)
@@ -41,6 +40,19 @@ class Meeting extends DefaultModel
             }
             return ["Reunião Criada", "A reunião foi criada passada para o status " . $this->status->name . "."];
         }
+    }
+
+    public function updateCustomerTimeline($text)
+    {
+        $model = $this;
+        $model->customer->appendToTimeline(
+            "Reunião Atualizada",
+            "Status: " . $model->status->name .
+                ".</br></br>Descrição da atualização: </br>" .
+                '<blockquote>
+                <p><em>"' . $text . '"</em></p>
+            </blockquote>'
+        );
     }
 
     public function getMeetingTimeText()
@@ -73,13 +85,17 @@ class Meeting extends DefaultModel
         return Event::find($this->google_event_id);
     }
 
-    public function makeEvent(){
+    public function createEvent()
+    {
         $model = $this;
+        if ($model->google_event_id) return $model->event;
         $event = Event::create([
             'name' => $model->subject,
             'startDateTime' => $model->starts_at,
             'endDateTime' => $model->ends_at,
-            'location' => $model->room->f_address
+            'location' => $model->room->f_address,
+            'visibility' => "public"
+            //"attendees" => [["email" => $model->customer->email]],
         ]);
         $model->google_event_id = $event->id;
         $model->saveOrFail();

@@ -14,11 +14,8 @@ class MeetingController extends Controller
         return view("admin.meetings.form");
     }
 
-    public function save(Meeting $meeting, Request $request)
+    private function setMeetingDates(&$meeting)
     {
-        $model = $request->except(["model.starts_at", "model.ends_at"])["model"];
-        $meeting->fill($model);
-
         $starts_at = Carbon::create(request("model.starts_at"))->setTimezone(config("app.timezone"))->startOfDay();
         $ends_at = $starts_at->copy();
         $starts_at->setMinutes(request("time.0") * 60);
@@ -26,18 +23,20 @@ class MeetingController extends Controller
 
         $meeting->starts_at = $starts_at;
         $meeting->ends_at = $ends_at;
-        $meeting->saveOrFail();
-
-        return $meeting;
     }
 
-    private function makeEvent()
+    public function save(Meeting $meeting, Request $request)
     {
-        Event::create([
-            'name' => 'Reunião',
-            'startDateTime' => now(),
-            'endDateTime' => now()->addHour(),
-        ]);
+        $model = $request->except(["model.starts_at", "model.ends_at"])["model"];
+        $meeting->fill($model);
+
+        $this->setMeetingDates($meeting);
+
+        $meeting->saveOrFail();
+        if (request("extra.create_event") === true) {
+            $meeting->createEvent();
+        }
+        return $meeting;
     }
 
     public function prepareConfig($meeting)
@@ -54,5 +53,10 @@ class MeetingController extends Controller
     {
         $data = $this->prepareConfig($meeting);
         return view("admin.meetings.form", $data);
+    }
+
+    public function show(Meeting $meeting)
+    {
+        //dd($meeting->event);
     }
 }

@@ -2,10 +2,13 @@
 
 namespace App\Http\Models;
 
+use App\Mail\MeetingUpdate;
+use App\User;
 use marcusvbda\vstack\Models\DefaultModel;
 use marcusvbda\vstack\Models\Scopes\TenantScope;
 use marcusvbda\vstack\Models\Observers\TenantObserver;
 use Auth;
+use Spatie\CalendarLinks\Link;
 use Spatie\GoogleCalendar\Event;
 
 class Meeting extends DefaultModel
@@ -42,6 +45,11 @@ class Meeting extends DefaultModel
         }
     }
 
+    public function responsible()
+    {
+        return $this->belongsTo(User::class, "user_id");
+    }
+
     public function updateCustomerTimeline($text)
     {
         $model = $this;
@@ -57,7 +65,7 @@ class Meeting extends DefaultModel
 
     public function getMeetingTimeText()
     {
-        return $this->starts_at->format("d/m/Y, \d\e H:s") . " às " .  $this->ends_at->format("H:s");
+        return $this->starts_at->format("d/m/Y, \d\\e H:i") . " até " .  $this->ends_at->format("H:i");
     }
 
     public function status()
@@ -106,5 +114,20 @@ class Meeting extends DefaultModel
     {
         $date = $this->ends_at->createMidnightDate();
         return [$this->starts_at->diffInMinutes($date) / 60, $this->ends_at->diffInMinutes($date) / 60];
+    }
+
+    public function sendUpdateEmail($subject,$appendBody){
+        if(!trim($subject)){
+            $subject = "Reunião: ".$this->subject;
+        }
+        return \Mail::to($this->customer->email)->send(new MeetingUpdate($this,$subject,$appendBody));
+    }
+
+    public function makeEventLink(){
+        $link = Link::create($this->subject, $this->starts_at, $this->ends_at)
+        //->description('Cookies & cocktails!')
+        ->address($this->room->f_address);
+
+        return $link->google();
     }
 }

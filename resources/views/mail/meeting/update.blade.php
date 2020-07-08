@@ -1,12 +1,32 @@
-@component('mail::message')
-# Introduction
+@component('mail::message',["img" => @json_decode($meeting->responsible->getSettings('logo-pequeno'))[0]])
+@slot('header')
+@if($meeting->wasRecentlyCreated)
+Reunião Criada
+@else
+Reunião Atualizada
+@endif
+@endslot
 
-The body of your message.
 
-@component('mail::button', ['url' => ''])
-Button Text
+
+@if(trim($body))
+## Mensagem de atualização:
+{!!$body!!}
+@endif
+
+
+## Status: {{$meeting->status->name}}
+
+## Assunto
+{{$meeting->subject}}
+
+## Data e Horário
+{{$meeting->getMeetingTimeText()}}
+
+## Local
+{{$meeting->room->f_address}}
+
+@component('mail::button', ['url' => $meeting->makeEventLink()])
+Adicionar na Agenda
 @endcomponent
-
-Thanks,<br>
-{{ config('app.name') }}
 @endcomponent

@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Http\Models\Meeting;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -11,14 +12,19 @@ class MeetingUpdate extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $meeting;
+    public $subject;
+    public $body;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Meeting $meeting,$subject,$body)
     {
-        //
+        $this->meeting = $meeting;
+        $this->subject = $subject;
+        $this->body = $body;
     }
 
     /**
@@ -28,6 +34,16 @@ class MeetingUpdate extends Mailable
      */
     public function build()
     {
-        return $this->markdown('mail.meeting.update');
+        $meeting = $this->meeting;
+        $customer = $this->meeting->customer;
+        $data = [
+            "customer" => $customer,
+            "meeting" => $meeting,
+            "responsible" => $meeting->responsible,
+            "body" => $this->body
+        ];
+        
+        //dd($data);
+        return $this->subject($this->subject)->to($customer->email)->markdown('mail.meeting.update', $data);
     }
 }

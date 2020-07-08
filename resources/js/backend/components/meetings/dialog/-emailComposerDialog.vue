@@ -54,9 +54,8 @@ export default {
             this.visible = true
         },
         confirm() {
-            this.$emit("email",{ subject: this.subject,body: this.body })
             this.visible = false
-            this.$emit("send")
+            this.$emit("send",{ subject: this.subject,body: this.body })
         },
         close(done) {
             this.$confirm('Tem certeza que quer fechar esta janela?')

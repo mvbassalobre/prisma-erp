@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Models\Meeting;
+use App\Mail\MeetingUpdate;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Spatie\GoogleCalendar\Event;
@@ -36,6 +37,11 @@ class MeetingController extends Controller
         if (request("extra.create_event") === true) {
             $meeting->createEvent();
         }
+
+        if(request("extra.sendUpdateEmail")){
+            $meeting->sendUpdateEmail(request("extra.email.subject"),request("extra.email.body"));
+        }
+
         return $meeting;
     }
 
@@ -58,5 +64,13 @@ class MeetingController extends Controller
     public function show(Meeting $meeting)
     {
         //dd($meeting->event);
+    }
+
+    
+
+    public function debuug()
+    {
+        $meeting = Meeting::latest()->first();
+        return new MeetingUpdate($meeting,"Olá Mundo","ee");
     }
 }

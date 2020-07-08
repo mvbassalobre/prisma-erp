@@ -20,6 +20,7 @@
         "pusher/pusher-php-server": "^4.1",
         "s-ichikawa/laravel-sendgrid-driver": "^2.1",
         "spatie/browsershot": "^3.34",
+        "spatie/calendar-links": "^1.4",
         "spatie/laravel-google-calendar": "^2.6",
         "spatie/laravel-permission": "^3.3",
         "vinkla/hashids": "^7.0"

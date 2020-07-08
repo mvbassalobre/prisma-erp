@@ -36,6 +36,6 @@ class MeetingRoom extends DefaultModel
 
     public function getFAddressAttribute()
     {
-        return "{$this->zipcode}, {$this->street},{$this->number}, {$this->district}, {$this->city}, {$this->state}";
+        return "{$this->zipcode}, {$this->street}, {$this->number}, {$this->district}, {$this->city}, {$this->state}";
     }
 }

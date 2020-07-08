@@ -1,8 +1,8 @@
 @component('mail::layout')
 {{-- Header --}}
 @slot('header')
-@component('mail::header', ['url' => config('app.url')])
-{{ config('app.name') }}
+@component('mail::header', ['url' => config('app.url'),'img' => @$img])
+{{$header}}
 @endcomponent
 @endslot
 
@@ -21,7 +21,7 @@
 {{-- Footer --}}
 @slot('footer')
 @component('mail::footer')
-© {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
+@lang('Todos direitos reservados.') © {{ date('Y') }} {{ config('app.name') }}
 @endcomponent
 @endslot
 @endcomponent

@@ -38,7 +38,7 @@ export default {
         }
     },
     methods: {
-        send(content = { subject: '',body: '' }) {
+        send(content) {
             this.visible = false
             this.$emit("email",content)
             this.$emit("send")

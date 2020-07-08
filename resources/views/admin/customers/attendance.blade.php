@@ -35,6 +35,7 @@
     :customer="{{json_encode($customer)}}"
     :data="{{json_encode($data)}}"
     :canaddsale="{{json_encode($canAddSale ? true : false)}}"
+    :meetings='@json($formatted_meetings)'
     customer_area_url="{{route('customer_area.index', ['code' => Auth::user()->tenant->code])}}"
 ></customer-attendance>
 @endsection

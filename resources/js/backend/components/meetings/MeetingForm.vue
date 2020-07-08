@@ -46,7 +46,11 @@
             class="col-12 mt-3 justify-content-end d-flex align-items-center flex-wrap"
             v-if="!form.id"
         >
-            <a href="/admin/meetings" class="mr-5 text-danger link d-none d-lg-block">
+            <a
+                v-if="!isModal"
+                href="/admin/meetings"
+                class="mr-5 text-danger link d-none d-lg-block"
+            >
                 <b>Cancelar</b>
             </a>
             <button
@@ -71,7 +75,7 @@ import StatusCard from './-statusCard'
 import BeforeSendDialog from './dialog/-beforeSendDialog'
 export default {
     components: { LocationCard,BeforeSendDialog,StatusCard },
-    props: ["config"],
+    props: ["config","isModal"],
     data() {
         return {
             sending: false,
@@ -111,6 +115,11 @@ export default {
             this.extra.meeting_duration = this.config.meeting_duration
         }
     },
+    computed: {
+        getPostUrl() {
+            return this.isModal ? "/admins/meetings/create" : ""
+        }
+    },
     methods: {
         putEmailContent(content) {
             this.extra.customEmail = true
@@ -144,7 +153,11 @@ export default {
                 .finally(v => this.sending = false)
                 .then(({ data }) => {
                     if (!this.form.id && data.id) {
-                        location.replace("/admin/meetings")
+                        if (!this.isModal) {
+                            location.replace("/admin/meetings")
+                        } else {
+                            location.reload()
+                        }
                     } else if (this.form.id && data.id) {
                         location.reload()
                     }
@@ -173,6 +186,11 @@ export default {
 .el-form {
     .el-select {
         width: 100%;
+    }
+}
+.el-slider__marks {
+    > div {
+        word-break: normal;
     }
 }
 </style>

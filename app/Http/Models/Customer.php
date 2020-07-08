@@ -85,6 +85,11 @@ class Customer extends DefaultModel
         return $this->belongsTo(Tenant::class);
     }
 
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class);
+    }
+
     public function getFCreatedAtAttribute()
     {
         if (!$this->created_at) return;

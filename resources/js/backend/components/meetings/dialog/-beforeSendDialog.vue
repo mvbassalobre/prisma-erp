@@ -62,6 +62,9 @@ export default {
     .el-dialog__header {
         padding: 0px;
     }
+    .el-dialog {
+        width: fit-content !important;
+    }
 }
 .pick-option {
     display: flex;

@@ -125,6 +125,12 @@
                         :active="active"
                         :customer_area="customer_area"
                     />
+                    <comp-meetings
+                        :customer="customer"
+                        :active="active"
+                        :customer_area="customer_area"
+                        :meetings="meetings"
+                    />
                 </div>
             </div>
         </div>
@@ -133,7 +139,7 @@
 <script>
 import VRuntimeTemplate from "v-runtime-template"
 export default {
-    props: ["customer", "data", "canaddsale", "customer_area_url", "customer_area"],
+    props: ["customer", "data", "canaddsale", "customer_area_url", "customer_area","meetings"],
     data() {
         return {
             backup_collapse: null,
@@ -143,6 +149,7 @@ export default {
                 { name: "timeline", label: "Timeline", active: false },
                 { name: "sales", label: "Financeiro", active: false },
                 { name: "flux", label: "Planejamento", active: false },
+                { name: "meetings", label: "Reuniões", active: false },
             ]
         }
     },
@@ -151,6 +158,7 @@ export default {
         "comp-timeline": require("./partials/-timeline").default,
         "comp-sales": require("./partials/-sales").default,
         "comp-flux": require("./partials/-flux").default,
+        "comp-meetings": require("./partials/-meetings").default,
         "v-runtime-template": VRuntimeTemplate,
     },
     computed: {

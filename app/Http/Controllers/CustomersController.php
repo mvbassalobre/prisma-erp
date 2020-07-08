@@ -21,8 +21,28 @@ class CustomersController extends Controller
     {
         $canAddSale = $this->canAddSale();
         $customer = Customer::with("sales", "sales.user", "sales.payment")->findOrFail($code);
+        $formatted_meetings = $this->formatMeetings($customer);
         $data = $this->getViewData($code, $customer);
-        return view("admin.customers.attendance", compact("customer", "data", "canAddSale"));
+        return view("admin.customers.attendance", compact("customer", "data", "canAddSale", "formatted_meetings"));
+    }
+
+    private function formatMeetings($customer)
+    {
+        $res = [];
+        foreach ($customer->meetings()->with("status")->get() as $meeting) {
+            $res[$meeting->id] = [
+                "id" => (string)$meeting->id,
+                "rowId" => "1",
+                "label" => $meeting->subject ." - ". $meeting->status->name,
+                "code" => $meeting->code,
+                "time" => [
+                    "start" => $meeting->starts_at->timestamp * 1000,
+                    "end" => $meeting->ends_at->timestamp * 1000
+                ]
+            ];
+        }
+
+        return $res;
     }
 
     private function canAddSale()

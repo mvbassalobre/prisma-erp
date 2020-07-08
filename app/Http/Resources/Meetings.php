@@ -5,6 +5,9 @@ namespace App\Http\Resources;
 use marcusvbda\vstack\Fields\{Card, Text, BelongsTo, Url};
 use marcusvbda\vstack\Resource;
 use Auth;
+use App\Http\Filters\Meetings\MeetingsByDateRange;
+use App\Http\Filters\Meetings\MeetingsByCustomer;
+use App\Http\Filters\Meetings\MeetingsByRoom;
 
 class Meetings extends Resource
 {
@@ -89,6 +92,8 @@ class Meetings extends Resource
             "subject" => ["label" => "Assunto", "sortable_index" => "subject"],
             "room->name" => ["label" => "Sala", "sortable_index" => "meeting_room_id"],
             "customer_url_attendance" => ["label" => "Cliente", "sortable_index" => "customer_id"],
+            "starts_at" => ["label" => "Inicio", "sortable_index" => "starts_at"],
+            "ends_at" => ["label" => "Término", "sortable_index" => "ends_at"],
         ];
         if (Auth::user()->hasRole(["super-admin"])) {
             $columns["tenant->name"] = ["label" => "Tenant", "sortable_index" => "tenant_id"];
@@ -112,5 +117,14 @@ class Meetings extends Resource
             return Auth::user()->hasRole(["super-admin", "admin"]);
         }
         return false;
+    }
+
+    public function filters()
+    {
+        return [
+            new MeetingsByRoom(),
+            new MeetingsByCustomer(),
+            new MeetingsByDateRange()
+        ];
     }
 }

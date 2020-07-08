@@ -8,6 +8,7 @@ use marcusvbda\vstack\Models\DefaultModel;
 use marcusvbda\vstack\Models\Scopes\TenantScope;
 use marcusvbda\vstack\Models\Observers\TenantObserver;
 use Auth;
+use Carbon\Carbon;
 use Spatie\CalendarLinks\Link;
 use Spatie\GoogleCalendar\Event;
 

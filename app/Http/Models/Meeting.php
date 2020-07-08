@@ -14,7 +14,7 @@ use Spatie\GoogleCalendar\Event;
 class Meeting extends DefaultModel
 {
     protected $table = "meetings";
-    protected $dates = ["created_at", "updated_at", "starts_at", "ends_at"];
+    protected $dates = ["created_at", "updated_at", "starts_at", "ends_at", "customer_url_attendance"];
     public static function boot()
     {
         $user = Auth::user();
@@ -91,6 +91,7 @@ class Meeting extends DefaultModel
         return $this->belongsTo(Customer::class);
     }
 
+
     public static function hasTenant()
     {
         return true;
@@ -153,5 +154,11 @@ class Meeting extends DefaultModel
             ->orWhereBetween('ends_at', [$starts_at, $ends_at])
             ->orWhereRaw('? BETWEEN starts_at and ends_at', [$starts_at])
             ->orWhereRaw('? BETWEEN starts_at and ends_at', [$ends_at]);
+    }
+
+    public function getcustomerUrlAttendanceAttribute()
+    {
+        $customer = $this->customer;
+        return "<a href='/admin/customers/{$customer->code}/attendance#meetings' class='link' target='_BLANK'>{$customer->name}</a>";
     }
 }

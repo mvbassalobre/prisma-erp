@@ -87,7 +87,8 @@ class Meetings extends Resource
     {
         $columns =  [
             "subject" => ["label" => "Assunto", "sortable_index" => "subject"],
-            "room->name" => ["label" => "Sala", "sortable_index" => "meeting_room_id"]
+            "room->name" => ["label" => "Sala", "sortable_index" => "meeting_room_id"],
+            "customer_url_attendance" => ["label" => "Cliente", "sortable_index" => "customer_id"],
         ];
         if (Auth::user()->hasRole(["super-admin"])) {
             $columns["tenant->name"] = ["label" => "Tenant", "sortable_index" => "tenant_id"];

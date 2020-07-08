@@ -38,8 +38,8 @@ class MeetingController extends Controller
             $meeting->createEvent();
         }
 
-        if(request("extra.sendUpdateEmail")){
-            $meeting->sendUpdateEmail(request("extra.email.subject"),request("extra.email.body"));
+        if (request("extra.sendUpdateEmail")) {
+            $meeting->sendUpdateEmail(request("extra.email.subject"), request("extra.email.body"));
         }
 
         return $meeting;
@@ -66,11 +66,11 @@ class MeetingController extends Controller
         //dd($meeting->event);
     }
 
-    
+
 
     public function debuug()
     {
         $meeting = Meeting::latest()->first();
-        return new MeetingUpdate($meeting,"Olá Mundo","ee");
+        return new MeetingUpdate($meeting, "Olá Mundo", "ee");
     }
 }

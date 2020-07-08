@@ -112,21 +112,24 @@ class Meeting extends DefaultModel
 
     public function getFMeetingDurationAttribute()
     {
-        $date = $this->ends_at->createMidnightDate();
-        return [$this->starts_at->diffInMinutes($date) / 60, $this->ends_at->diffInMinutes($date) / 60];
+        $start = $this->starts_at->setTime(0, 0);
+
+        return [$this->starts_at->diffInMinutes($start) / 60, $this->ends_at->diffInMinutes($start) / 60];
     }
 
-    public function sendUpdateEmail($subject,$appendBody){
-        if(!trim($subject)){
-            $subject = "Reunião: ".$this->subject;
+    public function sendUpdateEmail($subject, $appendBody)
+    {
+        if (!trim($subject)) {
+            $subject = "Reunião: " . $this->subject;
         }
-        return \Mail::to($this->customer->email)->send(new MeetingUpdate($this,$subject,$appendBody));
+        return \Mail::to($this->customer->email)->send(new MeetingUpdate($this, $subject, $appendBody));
     }
 
-    public function makeEventLink(){
+    public function makeEventLink()
+    {
         $link = Link::create($this->subject, $this->starts_at, $this->ends_at)
-        //->description('Cookies & cocktails!')
-        ->address($this->room->f_address);
+            //->description('Cookies & cocktails!')
+            ->address($this->room->f_address);
 
         return $link->google();
     }

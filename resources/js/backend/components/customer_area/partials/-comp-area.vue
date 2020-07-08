@@ -15,6 +15,7 @@
                     :customer="customer"
                     :data="data"
                     :customer_area="true"
+                    :meetings="data.meetings"
                 />
             </div>
         </div>
@@ -22,7 +23,7 @@
 </template>
 <script>
 export default {
-    props: ["customer", "logo"],
+    props: ["customer","logo"],
     data() {
         return {
             loaded: false,

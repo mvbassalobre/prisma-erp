@@ -91,7 +91,7 @@ export default {
             this.$refs.content.style.visibility = "visible"
         },
         logByCode(code) {
-            this.$http.post("", { code }).then(res => {
+            this.$http.post("",{ code }).then(res => {
                 let data = res.data
                 if (data.success) {
                     this.logged = true
@@ -111,19 +111,19 @@ export default {
         },
         submit() {
             this.loading = true
-            this.$http.post("", this.frm).then(res => {
+            this.$http.post("",this.frm).then(res => {
                 let data = res.data
                 if (!data.success) {
                     this.logged = false
                     this.customer = {}
-                    this.$message({ showClose: true, message: "Usuário ou senha incorreta", type: "danger" })
+                    this.$message({ showClose: true,message: "Usuário ou senha incorreta",type: "danger" })
                     Cookies.remove("customer_area_user")
                     return this.loading = false
                 } else {
                     this.logged = true
                     this.customer = data.customer
-                    this.$message({ showClose: true, message: "Acesso Permitido", type: "success" })
-                    if (this.frm.remember) Cookies.set("customer_area_user", data.customer.code)
+                    this.$message({ showClose: true,message: "Acesso Permitido",type: "success" })
+                    if (this.frm.remember) Cookies.set("customer_area_user",data.customer.code)
                     return this.loading = false
                 }
             }).catch(er => {

@@ -26,15 +26,17 @@ class CustomersController extends Controller
         return view("admin.customers.attendance", compact("customer", "data", "canAddSale", "formatted_meetings"));
     }
 
-    private function formatMeetings($customer)
+    public function formatMeetings($customer, $clientView = false)
     {
         $res = [];
-        foreach ($customer->meetings()->with("status")->get() as $meeting) {
+        foreach ($customer->meetings()->with("status")->get() as $key => $meeting) {
             $res[$meeting->id] = [
                 "id" => (string) $meeting->id,
-                "rowId" => "1",
+                "rowId" => ($key + 1) % 4,
                 "label" => $meeting->subject . " - " . $meeting->status->name,
                 "code" => $meeting->code,
+                "link" => $clientView ? $meeting->makeEventLink() : route("meeting.edit", $meeting->code),
+                "style" => ["backgroundColor" => $meeting->status->color],
                 "time" => [
                     "start" => $meeting->starts_at->timestamp * 1000,
                     "end" => $meeting->ends_at->timestamp * 1000

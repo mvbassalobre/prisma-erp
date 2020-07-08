@@ -30,6 +30,18 @@ export default {
                         "1": {
                             id: "1",
                             label: "Reuniões"
+                        },
+                        "2": {
+                            id: "2",
+                            label: "Reuniões"
+                        },
+                        "3": {
+                            id: "3",
+                            label: "Reuniões"
+                        },
+                        "4": {
+                            id: "4",
+                            label: "Reuniões"
                         }
                     }
                 },
@@ -54,8 +66,8 @@ export default {
         onState(state) {
             this.state = state
             subs.push(
-                state.subscribe("config.chart.items.1", item => {
-                    console.log("item 1 changed", item)
+                state.subscribe("config.chart.items.1",item => {
+                    console.log("item 1 changed",item)
                 })
             )
         }
@@ -78,10 +90,6 @@ export default {
     }
 }
 .gantt-schedule-timeline-calendar__chart-timeline-items-row-item {
-    &,
-    * {
-        transition: 0.25s;
-    }
     cursor: pointer;
     &:hover {
         width: initial !important;

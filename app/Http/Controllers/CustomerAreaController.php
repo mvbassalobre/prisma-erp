@@ -36,6 +36,8 @@ class CustomersAreaController extends Controller
         $resource = ResourcesHelpers::find("customers");
         $customer = Customer::find(\Hashids::decode($code)[0]);
         $data = (new ResourceController())->makeViewData($code, $resource, $customer);
+        $meetings = app(CustomersController::class)->formatMeetings($customer, true);
+        $data["meetings"] = $meetings;
         return ["success" => true, "data" => $data];
     }
 }

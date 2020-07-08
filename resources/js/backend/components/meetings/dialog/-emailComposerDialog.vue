@@ -7,7 +7,7 @@
             </table>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button size="small" type="danger" @click="$refs.dialog.close()">Voltar</el-button>
+            <el-button size="small" type="danger" @click="visible = false">Voltar</el-button>
             <el-button
                 size="small"
                 type="primary"

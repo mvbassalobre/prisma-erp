@@ -4,8 +4,8 @@
     >
         <div class="collapse navbar-collapse d-flex align-items-center">
             <div class="container-fluid px-0">
-                <ul class="navbar-nav d-none d-none d-lg-block">
-                    <img :src="logo" style="width: 70px;" />
+                <ul class="navbar-nav d-none d-none d-lg-block py-2">
+                    <img :src="logo" style="height: 40px;" />
                 </ul>
                 <ul class="navbar-nav d-none d-none d-lg-block ml-auto">
                     <li class="nav-item dropdown">

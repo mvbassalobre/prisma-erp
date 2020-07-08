@@ -17,7 +17,6 @@
                                         :discrete="true"
                                         height="200px"
                                         :data="data"
-                                        suffix=" %"
                                     />
                                 </template>
                                 <div v-else class="text-center">

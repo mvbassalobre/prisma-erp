@@ -13,7 +13,7 @@
                         <div>
                             <h4>Reuniões</h4>
                         </div>
-                        <div>
+                        <div v-if="!customer_area">
                             <el-button
                                 round
                                 type="primary"
@@ -37,7 +37,7 @@
             title="Nova Reunião"
             class="meeting-form-dialog"
         >
-            <meeting-form :is-modal="true" />
+            <meeting-form :is-modal="true" :customer_id="customer.id" />
         </el-dialog>
     </div>
 </template>
@@ -45,7 +45,7 @@
 import Gantt from "../../meetings/viewer/-gantt"
 export default {
     components: { Gantt },
-    props: ["info","active","customer","meetings"],
+    props: ["info", "active", "customer", "meetings", "customer_area"],
     data() {
         return {
             formVisible: false,

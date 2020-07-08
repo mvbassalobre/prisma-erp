@@ -139,7 +139,7 @@
 <script>
 import VRuntimeTemplate from "v-runtime-template"
 export default {
-    props: ["customer", "data", "canaddsale", "customer_area_url", "customer_area","meetings"],
+    props: ["customer", "data", "canaddsale", "customer_area_url", "customer_area", "meetings"],
     data() {
         return {
             backup_collapse: null,

@@ -28,8 +28,8 @@ class MeetingValidator extends FormRequest
         return [
             "extra.updateMessage" => [function ($attr, $value, $fail) use ($request) {
                 if ($request["model"]["id"]) {
-                    if (strlen((string) $value) <= 30) {
-                        $fail("A mensagem de atualização deve conter pelo menos 30 caracteres.");
+                    if (strlen((string) $value) <= 10) {
+                        $fail("A mensagem de atualização deve conter pelo menos 10 caracteres.");
                     }
                 }
             }]

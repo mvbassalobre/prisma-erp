@@ -55,7 +55,7 @@
 
 <script>
 export default {
-    props: ["form","modelsData","extra"],
+    props: ["form","modelsData","extra","customer_id"],
     data() {
         return {
             meeting_duration_marks: {

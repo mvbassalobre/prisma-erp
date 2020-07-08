@@ -11,9 +11,15 @@
                 <li class="breadcrumb-item">
                     <a href="/admin/meetings" class="link">Reuniões</a>
                 </li>
+                @if(@$meeting)
+                <li class="breadcrumb-item">
+                    <a href="{{route('meeting.edit',$meeting->code)}}" class="link">{{$meeting->subject}}</a>
+                </li>
+                @else
                 <li class="breadcrumb-item">
                     <a href="/admin/meetings/create" class="link">Criar Reunião</a>
                 </li>
+                @endif
             </ol>
         </nav>
     </div>
@@ -24,7 +30,7 @@
     <div class="col-12">
         <div class="d-flex flex-row justify-content-between mb-3">
             <h4 class="mb-1">
-                <span class="el-icon-data-line mr-2"></span> Criar Reunião
+                <span class="el-icon-data-line mr-2"></span> {{@$meeting ? 'Editar': 'Criar'}} Reunião
             </h4>
         </div>
     </div>

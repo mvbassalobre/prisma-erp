@@ -21,6 +21,7 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         "admin/inputs/option_list",
         "admin/dashboard/get_info/*",
-        "/admin/customers/*"
+        "/admin/customers/*",
+        "/admin/inputs/*",
     ];
 }

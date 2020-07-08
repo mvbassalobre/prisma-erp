@@ -31,9 +31,9 @@ class CustomersController extends Controller
         $res = [];
         foreach ($customer->meetings()->with("status")->get() as $meeting) {
             $res[$meeting->id] = [
-                "id" => (string)$meeting->id,
+                "id" => (string) $meeting->id,
                 "rowId" => "1",
-                "label" => $meeting->subject ." - ". $meeting->status->name,
+                "label" => $meeting->subject . " - " . $meeting->status->name,
                 "code" => $meeting->code,
                 "time" => [
                     "start" => $meeting->starts_at->timestamp * 1000,

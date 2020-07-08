@@ -56,7 +56,8 @@ class MeetingController extends Controller
             "config" => [
                 "form" => $meeting->toArray(),
                 "meeting_duration" => $meeting->f_meeting_duration
-            ]
+            ],
+            "meeting" => $meeting
         ];
     }
 

@@ -54,8 +54,8 @@ export default {
         onState(state) {
             this.state = state
             subs.push(
-                state.subscribe("config.chart.items.1",item => {
-                    console.log("item 1 changed",item)
+                state.subscribe("config.chart.items.1", item => {
+                    console.log("item 1 changed", item)
                 })
             )
         }
@@ -77,13 +77,14 @@ export default {
         padding-bottom: 10px;
     }
 }
-.gantt-schedule-timeline-calendar__chart-timeline-items-row-item{
-    &,*{
-        transition:0.25s;
+.gantt-schedule-timeline-calendar__chart-timeline-items-row-item {
+    &,
+    * {
+        transition: 0.25s;
     }
-    cursor:pointer;
-    &:hover{
-        width:initial!important;
+    cursor: pointer;
+    &:hover {
+        width: initial !important;
     }
 }
 </style>

@@ -55,7 +55,7 @@
                 @click.prevent="submit"
             >Cadastrar</button>
         </div>
-        <email-modal
+        <before-send-dialog
             @email="putEmailContent"
             @send="send"
             @no-email="removeEmailContent"
@@ -68,9 +68,9 @@
 <script>
 import LocationCard from './-locationCard'
 import StatusCard from './-statusCard'
-import EmailModal from './-emailModal'
+import BeforeSendDialog from './dialog/-beforeSendDialog'
 export default {
-    components: { LocationCard,EmailModal,StatusCard },
+    components: { LocationCard,BeforeSendDialog,StatusCard },
     props: ["config"],
     data() {
         return {
@@ -91,8 +91,8 @@ export default {
             extra: {
                 meeting_duration: ["12","14"],
                 create_event: true,
-                sendEmail: false,
                 sendUpdateEmail: true,
+                customEmail: false,
                 email: { subject: "",body: "" },
             },
             modelsToLoad: [["Customer","customers"],["MeetingRoom","meetingRooms"],["MeetingStatus","meetingStatuses"]],
@@ -113,11 +113,11 @@ export default {
     },
     methods: {
         putEmailContent(content) {
-            this.extra.sendEmail = true
+            this.extra.customEmail = true
             this.extra.email = content
         },
         removeEmailContent() {
-            this.extra.sendEmail = false
+            this.extra.customEmail = false
             this.extra.email = { subject: "",body: "" }
         },
         loadModelData() {

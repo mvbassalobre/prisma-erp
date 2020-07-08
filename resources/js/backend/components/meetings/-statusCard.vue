@@ -3,31 +3,37 @@
         <div class="card-body">
             <h5 class="d-flex align-items-center">
                 {{cardTitle}}
-                <el-form-item class="mb-0 ml-3" propname="Status" prop="form.status_id" required><el-select
-                    v-model="form.status_id"
-                    class="select-status w-auto"
-                    placeholder="Selecione um status"
-                >
-                    <el-option
-                        v-for="status in modelsData.meetingStatuses"
-                        :key="status.id"
-                        :value="status.id"
-                        :label="status.name"
+                <el-form-item class="mb-0 ml-3" propname="Status" prop="form.status_id" required>
+                    <el-select
+                        v-model="form.status_id"
+                        class="select-status w-auto"
+                        placeholder="Selecione um status"
                     >
-                        <span
-                            is-dot
-                            class="badge badge-pill"
-                            v-text="' '"
-                            :style="{backgroundColor:status.color}"
-                        />
-                        {{status.name}}
-                    </el-option>
-                </el-select></el-form-item>
+                        <el-option
+                            v-for="status in modelsData.meetingStatuses"
+                            :key="status.id"
+                            :value="status.id"
+                            :label="status.name"
+                        >
+                            <span
+                                is-dot
+                                class="badge badge-pill"
+                                v-text="' '"
+                                :style="{backgroundColor:status.color}"
+                            />
+                            {{status.name}}
+                        </el-option>
+                    </el-select>
+                </el-form-item>
             </h5>
             <div class="row">
                 <div class="col-sm-12" v-if="form.id">
-                    <el-form-item label="Descrição da Atualização" required>
-                        <el-input type="textarea" v-model="form.observations" />
+                    <el-form-item
+                        label="Descrição da Atualização"
+                        required
+                        prop="extra.updateMessage"
+                    >
+                        <el-input type="textarea" v-model="extra.updateMessage" />
                     </el-form-item>
                 </div>
                 <div class="col-sm-12 my-3">

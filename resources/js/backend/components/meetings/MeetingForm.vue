@@ -105,6 +105,7 @@ export default {
                 sendUpdateEmail: true,
                 customEmail: false,
                 email: { subject: "",body: "" },
+                updateMessage: ""
             },
             modelsToLoad: [["Customer","customers"],["MeetingRoom","meetingRooms"],["MeetingStatus","meetingStatuses"]],
             modelsData: {
@@ -172,12 +173,9 @@ export default {
 
             notification = this.$message.error({
                 message: el('div',[
-                    el('b',"Erro"),
                     el('p',{ class: "notification-message" },messages)
                 ]),
-                duration: 0,
                 showClose: true,
-                dangerouslyUseHTMLString: true,
                 customClass: "senpai-notice-meee",
                 onClose: v => {
                     bg.remove()

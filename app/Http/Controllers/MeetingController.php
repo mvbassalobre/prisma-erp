@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Models\Meeting;
+use App\Http\Requests\MeetingValidator;
 use App\Mail\MeetingUpdate;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -26,9 +27,9 @@ class MeetingController extends Controller
         $meeting->ends_at = $ends_at;
     }
 
-    public function save(Meeting $meeting, Request $request)
+    public function save(Meeting $meeting, MeetingValidator $request)
     {
-        $model = $request->except(["model.starts_at", "model.ends_at"])["model"];
+        $model = $request->except(["model.starts_at", "model.ends_at", "model.observations"])["model"];
         $meeting->fill($model);
 
         $this->setMeetingDates($meeting);
@@ -36,6 +37,10 @@ class MeetingController extends Controller
         $meeting->saveOrFail();
         if (request("extra.create_event") === true) {
             $meeting->createEvent();
+        }
+
+        if (!$meeting->wasRecentlyCreated) {
+            $meeting->updateCustomerTimeline("extra.updateMessage");
         }
 
         if (request("extra.sendUpdateEmail")) {

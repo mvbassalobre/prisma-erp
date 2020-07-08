@@ -32,6 +32,19 @@ class Meeting extends DefaultModel
         self::created(function ($model) {
             $model->customer->appendToTimeline(...$model->makeHistoryText("created"));
         });
+
+        self::saving(function ($model) {
+            if ($model->getOriginal("starts_at") != $model->starts_at || $model->getOriginal("ends_at") != $model->ends_at) {
+                $blocking = Meeting::byBusy(Meeting::class, $model->starts_at, $model->ends_at)
+                    ->where("id", "!=", $model->id)
+                    ->where("customer_id", $model->customer_id)
+                    ->where("meeting_room_id", $model->meeting_room_id)
+                    ->first();
+                if ($blocking) {
+                    abort(402, "Data e horário já ocupados por " . $blocking->subject);
+                }
+            }
+        });
     }
 
     public function makeHistoryText($type)
@@ -132,5 +145,13 @@ class Meeting extends DefaultModel
             ->address($this->room->f_address);
 
         return $link->google();
+    }
+
+    public function scopeByBusy($query, $starts_at, $ends_at)
+    {
+        return $query->whereBetween('starts_at', [$starts_at, $ends_at])
+            ->orWhereBetween('ends_at', [$starts_at, $ends_at])
+            ->orWhereRaw('? BETWEEN starts_at and ends_at', [$starts_at])
+            ->orWhereRaw('? BETWEEN starts_at and ends_at', [$ends_at]);
     }
 }

@@ -27,18 +27,25 @@ class Meeting extends DefaultModel
         });
 
         self::created(function ($model) {
-            $model->customer->appendToTimeline("Reunião Criada", "A reunião foi criada passada para o status " . $model->status->name . ".");
+            $model->customer->appendToTimeline(...$model->makeHistoryText("created"));
         });
 
-        self::creating(function ($model) {
-            $event = Event::create([
-                'name' => 'A new event',
-                'startDateTime' => $model->starts_at,
-                'endDateTime' => $model->ends_at,
-                'location' => $model->room->f_address
-            ]);
-            $model->google_event_id = $event;
-        });
+    }
+
+    public function makeHistoryText($type)
+    {
+        if ($type == "created") {
+
+            if ($this->google_event_id) {
+                return ["Reunião Criada", "A reunião criada, iniciando "  . $this->getMeetingTimeText()];
+            }
+            return ["Reunião Criada", "A reunião foi criada passada para o status " . $this->status->name . "."];
+        }
+    }
+
+    public function getMeetingTimeText()
+    {
+        return $this->starts_at->format("d/m/Y, \d\e H:s") . " às " .  $this->ends_at->format("H:s");
     }
 
     public function status()
@@ -59,6 +66,24 @@ class Meeting extends DefaultModel
     public function room()
     {
         return $this->belongsTo(MeetingRoom::class, "meeting_room_id");
+    }
+
+    public function getEventAttribute()
+    {
+        return Event::find($this->google_event_id);
+    }
+
+    public function makeEvent(){
+        $model = $this;
+        $event = Event::create([
+            'name' => $model->subject,
+            'startDateTime' => $model->starts_at,
+            'endDateTime' => $model->ends_at,
+            'location' => $model->room->f_address
+        ]);
+        $model->google_event_id = $event->id;
+        $model->saveOrFail();
+        return $event;
     }
 
     public function getFMeetingDurationAttribute()

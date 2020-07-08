@@ -1,17 +1,24 @@
 <template>
-    <el-form ref="form" class="row" label-position="left" :class="{'creating-meeting': !form.id}">
+    <el-form
+        ref="form"
+        :model="{form,extra}"
+        class="row"
+        label-position="left"
+        :class="{'creating-meeting': !form.id}"
+        v-loading.fullscreen.lock="sending"
+    >
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
                     <h4>Informações</h4>
                     <div class="row">
                         <div class="col-sm-6">
-                            <el-form-item label="Assunto da Reunião" required>
+                            <el-form-item label="Assunto da Reunião" prop="form.subject" required>
                                 <el-input v-model="form.subject" placeholder="Assunto" />
                             </el-form-item>
                             <div class="row">
                                 <div class="col-lg-7">
-                                    <el-form-item label="Cliente" required>
+                                    <el-form-item prop="form.customer_id" label="Cliente" required>
                                         <el-select v-model="form.customer_id">
                                             <el-option
                                                 v-for="status in modelsData.customers"
@@ -23,7 +30,7 @@
                                     </el-form-item>
                                 </div>
                                 <div class="col-lg-5">
-                                    <el-form-item label="Tipo" required>
+                                    <el-form-item label="Tipo" required prop="form.type">
                                         <el-input
                                             v-model="form.type"
                                             placeholder="Orçamento, pesquisa etc"
@@ -137,11 +144,45 @@ export default {
             }
         },
         submit() {
-            //this.$refs.form.validate(valid => {
-            //    if (!valid) return
-            this.$refs.modal.open()
-            //this.send()
-            //})
+            this.$refs.form.validate(valid => {
+                if (!valid) return
+
+                if (this.extra.sendUpdateEmail) {
+                    this.$refs.modal.open()
+                } else {
+                    this.send()
+                }
+            })
+        },
+        validationErrors(errors) {
+            let list = []
+            for (let bag of Object.values(errors)) {
+                list.push(...bag)
+            }
+            return list
+        },
+        alertErrors(messages) {
+            let bg = document.createElement("div")
+            bg.setAttribute("id","overlei")
+            document.body.appendChild(bg)
+            let notification = {}
+
+            let el = this.$createElement
+            let closeNotification = v => notification.close()
+
+            notification = this.$message.error({
+                message: el('div',[
+                    el('b',"Erro"),
+                    el('p',{ class: "notification-message" },messages)
+                ]),
+                duration: 0,
+                showClose: true,
+                dangerouslyUseHTMLString: true,
+                customClass: "senpai-notice-meee",
+                onClose: v => {
+                    bg.remove()
+                }
+            })
         },
         send() {
             this.sending = true
@@ -162,8 +203,12 @@ export default {
                         location.reload()
                     }
                 })
-                .catch((response) => {
-                    console.log(response)
+                .catch(({ response }) => {
+                    if (response.status === 422) {
+                        this.alertErrors(this.validationErrors(response.data.errors))
+                    } else {
+                        this.alertErrors(response.data.message)
+                    }
                 })
         }
     }

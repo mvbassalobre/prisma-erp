@@ -3,9 +3,9 @@
         <div class="card-body">
             <h5 class="d-flex align-items-center">
                 {{cardTitle}}
-                <el-select
+                <el-form-item class="mb-0 ml-3" propname="Status" prop="form.status_id" required><el-select
                     v-model="form.status_id"
-                    class="select-status w-auto ml-3"
+                    class="select-status w-auto"
                     placeholder="Selecione um status"
                 >
                     <el-option
@@ -22,7 +22,7 @@
                         />
                         {{status.name}}
                     </el-option>
-                </el-select>
+                </el-select></el-form-item>
             </h5>
             <div class="row">
                 <div class="col-sm-12" v-if="form.id">

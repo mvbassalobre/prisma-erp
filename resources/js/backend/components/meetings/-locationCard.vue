@@ -2,10 +2,13 @@
     <div class="card">
         <div class="card-body">
             <h4 class="mb-3">Local e Horário</h4>
-            <el-form-item required>
+            <el-form-item  required
+                    prop="form.meeting_room_id"
+                    propname="Sala de reunião">
                 <el-select
                     v-model="form.meeting_room_id"
                     placeholder="Selecione o local da Reunião"
+                    
                 >
                     <el-option
                         v-for="status in modelsData.meetingRooms"
@@ -15,8 +18,9 @@
                     />
                 </el-select>
             </el-form-item>
-            <div class="d-flex justify-content-center align-items-center flex-column">
-                <el-form-item required>
+            <div v-show="form.meeting_room_id">
+                <div class="d-flex justify-content-center align-items-center flex-column">
+                <el-form-item required prop="form.starts_at" propname="Data da reunião">
                     <el-date-picker
                         format="dd/MM/yyyy"
                         value-format="yyyy-MM-dd"
@@ -44,6 +48,7 @@
                     />
                 </div>
             </el-form-item>
+            </div>
         </div>
     </div>
 </template>

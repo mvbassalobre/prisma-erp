@@ -33,12 +33,12 @@ class PagseguroController extends Controller
 
     public function generateUrl()
     {
-        $this->pagseguro->setNotificationURL(route("pagseguro.notification"));
+        $this->pagseguro->setNotificationURL(route("admin.pagseguro.notification"));
         $url = $this->pagseguro->gerarURLCompra();
         return $url;
     }
 
-    public function notification($request)
+    public function notification(Request $request)
     {
         $this->setAuth();
         $this->init();

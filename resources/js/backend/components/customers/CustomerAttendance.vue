@@ -131,6 +131,14 @@
                         :customer_area="customer_area"
                         :meetings="meetings"
                     />
+                    <access-component
+                        :sales="customer.sales"
+                        :customer="customer"
+                        :active="active"
+                        :canaddsale="canaddsale"
+                        v-if="customer_area"
+                        :customer_area="customer_area"
+                    />
                 </div>
             </div>
         </div>
@@ -150,6 +158,7 @@ export default {
                 { name: "sales", label: "Financeiro", active: false },
                 { name: "flux", label: "Planejamento", active: false },
                 { name: "meetings", label: "Reuniões", active: false },
+                { name: "access", label: "Acesso", active: false },
             ]
         }
     },
@@ -159,6 +168,7 @@ export default {
         "comp-sales": require("./partials/-sales").default,
         "comp-flux": require("./partials/-flux").default,
         "comp-meetings": require("./partials/-meetings").default,
+        "access-component": require("./partials/-accessComponent").default,
         "v-runtime-template": VRuntimeTemplate,
     },
     computed: {
@@ -172,7 +182,8 @@ export default {
         }
     },
     created() {
-        if (this.customer_area) this.options.splice(2, 1)
+        if (this.customer_area) this.options.splice(this.options.findIndex(x => x.name == "sales"), 1)
+        if (!this.customer_area) this.options.splice(this.options.findIndex(x => x.name == "access"), 1)
         this.$root.sidebarCollapse = true
         this.initHash()
     },
@@ -213,6 +224,7 @@ export default {
             }).then(() => {
                 let loading = this.$loading()
                 this.$http.post(`/admin/customers/${this.customer.code}/remove-area-access`, {}).then(resp => {
+                    Cookies.remove("customer_area_user")
                     window.location.reload()
                 })
             })

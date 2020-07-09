@@ -10,4 +10,5 @@ Route::group(['prefix' => "customers"], function () {
     Route::post('{code}/attendance/save-sections', 'CustomersController@saveSections')->middleware(['hashids:code']);
     Route::post('post_new_sale', 'CustomersController@postNewSale')->name("admin.customers.attendance.new_sale");
     Route::post('destroy_sale', 'CustomersController@destroySale')->name("admin.customers.attendance.destroy_sale");
+    Route::post('change_pass', 'CustomersController@changePass')->name("admin.customers.attendance.change_pass");
 });

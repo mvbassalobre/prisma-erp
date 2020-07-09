@@ -14,12 +14,12 @@ class MeetingRooms extends Resource
 
     public function menu()
     {
-        return "Tabelas";
+        return "Reuniões";
     }
 
     public function menuIcon()
     {
-        return "el-icon-star-on";
+        return "el-icon-notebook-1";
     }
 
     public function icon()

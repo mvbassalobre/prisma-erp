@@ -9,6 +9,7 @@ Route::group(['prefix' => "reports"], function () {
     Route::get('meetings-by-user', 'ReportsController@meetingByUser');
     Route::post('get-data-meetings/{type}', 'ReportsController@getDataMeetings');
 
-    Route::get('sales-report', 'ReportsController@salesReport');
+    Route::get('sales-by-team', 'ReportsController@salesByTeam');
+    Route::get('sales-by-user', 'ReportsController@salesByUser');
     Route::post('get-data-sales/{type}', 'ReportsController@getDataSales');
 });

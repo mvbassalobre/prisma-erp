@@ -6,8 +6,7 @@ use App\Http\Models\Meeting;
 use App\Http\Requests\MeetingValidator;
 use App\Mail\MeetingUpdate;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Spatie\GoogleCalendar\Event;
+use marcusvbda\vstack\Services\Messages;
 
 class MeetingController extends Controller
 {
@@ -46,6 +45,7 @@ class MeetingController extends Controller
         if (request("extra.sendUpdateEmail")) {
             $meeting->sendUpdateEmail(request("extra.email.subject"), request("extra.email.body"));
         }
+        Messages::send("success", 'Reunião Salva com Sucesso !!!!');
 
         return $meeting;
     }

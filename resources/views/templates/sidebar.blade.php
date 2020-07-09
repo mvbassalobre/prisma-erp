@@ -61,9 +61,15 @@ $menu[] = [
             "icon" => "el-icon-guide"
         ],
         [
-            "label" => "Vendas",
-            "active" => isActive('/admin/reports/sales-report'),
-            "url" => "/admin/reports/sales-report",
+            "label" => "Vendas Por Time",
+            "active" => isActive('/admin/reports/sales-by-team'),
+            "url" => "/admin/reports/sales-by-team",
+            "icon" => "el-icon-money"
+        ],
+        [
+            "label" => "Vendas Por Usuário",
+            "active" => isActive('/admin/reports/sales-by-user'),
+            "url" => "/admin/reports/sales-by-user",
             "icon" => "el-icon-money"
         ]
     ]

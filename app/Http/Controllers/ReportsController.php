@@ -236,9 +236,14 @@ class ReportsController extends Controller
         return $data->whereNull("meetings.deleted_at");
     }
 
-    public function salesReport()
+    public function salesByUser()
     {
-        return view("admin.reports.sales_report");
+        return view("admin.reports.sales_by_user");
+    }
+
+    public function salesByTeam()
+    {
+        return view("admin.reports.sales_by_team");
     }
 
     public function getDataSales($type, Request $request)
@@ -324,6 +329,11 @@ class ReportsController extends Controller
         if (@$request["team"]) {
             if ($request["team"] != "all") {
                 $data->where("teams.id", "=", $request["team"]);
+            }
+        }
+        if (@$request["user"]) {
+            if ($request["user"] != "all") {
+                $data->where("sales.user_id", "=", $request["user"]);
             }
         }
         if (@$request["status"]) {

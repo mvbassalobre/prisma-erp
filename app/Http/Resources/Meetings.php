@@ -15,12 +15,17 @@ class Meetings extends Resource
 
     public function label()
     {
-        return "Reuniões";
+        return "Agendamentos";
+    }
+
+    public function singularLabel()
+    {
+        return "Agendamento";
     }
 
     public function menu()
     {
-        return "Agendamentos";
+        return "Reuniões";
     }
 
     public function menuIcon()

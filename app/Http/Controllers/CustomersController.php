@@ -217,4 +217,16 @@ class CustomersController extends Controller
         $sales = Sale::where("customer_id", $id)->with(["user"])->get();
         return ["success" => true, "data" => $sales];
     }
+
+
+    public function changePass(Request $request)
+    {
+        $data = $request->all();
+        $customer = Customer::findOrFail($data["customer_id"]);
+        $customer->password = md5($data["newpass"]);
+        $customer->save();
+        $customer->appendToTimeline("Area do Cliente", "O próprio cliente alterou sua senha");
+        Messages::send("success", 'Senha alterada com sucesso  !!');
+        return ["success" => true];
+    }
 }

@@ -10,6 +10,7 @@
                         </h4>
                     </div>
                 </div>
+                <slot />
                 <customer-attendance
                     v-if="loaded"
                     :customer="customer"
@@ -23,7 +24,7 @@
 </template>
 <script>
 export default {
-    props: ["customer","logo"],
+    props: ["customer", "logo"],
     data() {
         return {
             loaded: false,

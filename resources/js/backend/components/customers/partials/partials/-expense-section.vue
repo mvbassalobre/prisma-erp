@@ -5,12 +5,14 @@
                 <div class="card-header p-1 d-flex flex-row align-items-center">
                     <span class="el-icon-remove mr-2"></span>
                     <div>{{s}}</div>
-                    <a
-                        href="#"
-                        @click.prevent="deleteSection"
-                        class="text-danger f-12 ml-auto"
-                        v-if="!customer_area"
-                    >
+                    <div class="ml-2">
+                        <select v-model="type">
+                            <option value="fixed">Gastos Fixos</option>
+                            <option value="variable">Gastos Varíaveis</option>
+                            <option value="grow">Investimento / Crescimento</option>
+                        </select>
+                    </div>
+                    <a href="#" @click.prevent="deleteSection" class="text-danger f-12 ml-auto">
                         <span class="el-icon-error text-danger mr-2"></span>Excluir Sessão
                     </a>
                 </div>
@@ -35,7 +37,7 @@
                                                     <small>{{year}}</small>
                                                 </th>
                                             </template>
-                                            <th class="blue" v-if="!customer_area"></th>
+                                            <th class="blue"></th>
                                         </tr>
                                         <tr>
                                             <th style="width:350px">
@@ -49,7 +51,7 @@
                                                     :key="`${i}_head_2`"
                                                 >{{total(s,m.value).currency()}}</th>
                                             </template>
-                                            <th class="blue2" v-if="!customer_area"></th>
+                                            <th class="blue2"></th>
                                         </tr>
                                         <tr>
                                             <th style="width:350px">
@@ -63,16 +65,13 @@
                                                     :key="`${i}_head_3`"
                                                 >{{percentage(s,m.value)}} %</th>
                                             </template>
-                                            <th class="blue3" v-if="!customer_area"></th>
+                                            <th class="blue3"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="(q,y) in sections[s]" :key="y">
                                             <td>
-                                                <edit-input
-                                                    v-model="q.name"
-                                                    :can_edit="!customer_area"
-                                                />
+                                                <edit-input v-model="q.name" />
                                             </td>
                                             <template v-for="(m,i) in months">
                                                 <td :key="`${i}_${y}_body`">
@@ -80,11 +79,11 @@
                                                         type="number"
                                                         v-model="q[m.value]"
                                                         :currency="true"
-                                                        :can_edit="!customer_area"
+                                                        @change="changeValue(q,m)"
                                                     />
                                                 </td>
                                             </template>
-                                            <td class="text-center" v-if="!customer_area">
+                                            <td class="text-center">
                                                 <button
                                                     v-loading="loading_expenses"
                                                     class="append-btn"
@@ -95,7 +94,7 @@
                                                 </button>
                                             </td>
                                         </tr>
-                                        <tr v-if="!customer_area">
+                                        <tr>
                                             <td>
                                                 <input class="w-100 mr-1" v-model="form.name" />
                                             </td>
@@ -106,7 +105,7 @@
                                                         v-model.number="form[m.value]"
                                                         type="number"
                                                         step="0.01"
-                                                        @change="setAllValues(m.value)"
+                                                        @change="setAllValues(m)"
                                                     />
                                                 </td>
                                             </template>
@@ -137,15 +136,27 @@ export default {
     data() {
         return {
             loading_expenses: false,
+            type: this.sections[this.s][0] ? this.sections[this.s][0].type : 'fixed',
             form: {
-                name: ""
+                type: "fixed",
+                name: "",
             }
+        }
+    },
+    watch: {
+        type(val) {
+            this.sections[this.s].map(row => this.$set(row, 'type', val))
         }
     },
     created() {
         this.months.map(({ value }) => this.$set(this.form, value, 0))
     },
     methods: {
+        changeValue(row, current_month) {
+            this.months.forEach((month) => {
+                if (month.number > current_month.number) row[month.value] = row[current_month.value]
+            })
+        },
         deleteSection() {
             this.$confirm("Deseja excluir ?", "Confirmação", {
                 confirmButtonText: "Sim",
@@ -179,15 +190,10 @@ export default {
             })
             this.$message.success("Despesa adicionado com sucesso !!")
         },
-        setAllValues(month) {
-            if (month == "jan") {
-                let other_months = this.months.filter(({ value }) => value != "jan").map(({ value }) => value)
-                let emptys = Object.keys(this.form).filter(k => {
-                    if ((other_months.includes(k)) && (!this.form[k])) return true
-                    return false
-                })
-                if (emptys.length == 11) return other_months.map(m => this.form[m] = this.form.jan)
-            }
+        setAllValues(current_month) {
+            this.months.forEach((month) => {
+                if (month.number > current_month.number) this.form[month.value] = this.form[current_month.value]
+            })
         },
         deleteExpense(section, y) {
             this.$confirm("Deseja excluir ?", "Confirmação", {

@@ -13,24 +13,21 @@
                                 <th class="purple">Valor</th>
                                 <th class="purple">Prazo</th>
                                 <th class="purple"></th>
-                                <th class="purple" v-if="!customer_area"></th>
+                                <th class="purple"></th>
                             </tr>
                         </thead>
                         <tbody>
                             <template v-for="(g,i) in goals">
                                 <tr :key="i" class="clickable">
                                     <td>
-                                        <edit-input
-                                            v-model="g.description"
-                                            :can_edit="!customer_area"
-                                        />
+                                        <edit-input v-model="g.description" :can_edit="true" />
                                     </td>
                                     <td>
                                         <edit-input
                                             type="number"
                                             v-model="g.value"
                                             :currency="true"
-                                            :can_edit="!customer_area"
+                                            :can_edit="true"
                                         />
                                     </td>
                                     <td>
@@ -41,10 +38,10 @@
                                             v-model="g.term_type"
                                             type="select"
                                             :options="term_type_options"
-                                            :can_edit="!customer_area"
+                                            :can_edit="true"
                                         />
                                     </td>
-                                    <td class="text-center" v-if="!customer_area">
+                                    <td class="text-center">
                                         <button
                                             v-loading="loading_goals"
                                             class="append-btn"
@@ -57,7 +54,7 @@
                                 </tr>
                             </template>
 
-                            <tr v-if="!customer_area">
+                            <tr>
                                 <td>
                                     <input class="w-100" v-model="form.description" />
                                 </td>

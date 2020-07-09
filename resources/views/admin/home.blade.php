@@ -19,5 +19,6 @@
     :roles="{{json_encode($user->roles)}}"
     :user="{{json_encode($user)}}"
     :params="{{json_encode($_GET)}}"
+    default_range="{{$default_range}}"
 ></home-dashboard>
 @endsection

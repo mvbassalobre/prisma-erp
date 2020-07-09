@@ -46,11 +46,11 @@
 </template>
 <script>
 export default {
-    props: ['roles', 'user', 'params'],
+    props: ['roles', 'user', 'params', 'default_range'],
     data() {
         return {
             filter: {
-                daterange: []
+                daterange: this.default_range.split(",").map(date => new Date(date))
             }
         }
     },

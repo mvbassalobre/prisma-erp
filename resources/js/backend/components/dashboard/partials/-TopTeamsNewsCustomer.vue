@@ -4,7 +4,7 @@
             <div class="card-body d-flex flex-column">
                 <span class="f-12 mb-3">
                     <b>
-                        <span class="el-icon-trophy mr-2"></span> 5 TIMES
+                        <span class="el-icon-trophy mr-2"></span>TOP 5 TIMES
                     </b> / Novos clientes no periodo do filtro
                 </span>
                 <loading-shimmer :loading="loading" :h="50">

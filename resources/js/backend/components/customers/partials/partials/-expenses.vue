@@ -10,10 +10,9 @@
                 :entries="entries"
                 :year="year"
                 :customer="customer"
-                :customer_area="customer_area"
             />
         </template>
-        <div class="row mt-3 mb-2" v-if="!customer_area">
+        <div class="row mt-3 mb-2">
             <div class="col-12 text-left">
                 <span class="el-icon-circle-plus mr-2"></span>
                 <a

@@ -8,7 +8,6 @@ use marcusvbda\vstack\Models\DefaultModel;
 use marcusvbda\vstack\Models\Scopes\TenantScope;
 use marcusvbda\vstack\Models\Observers\TenantObserver;
 use Auth;
-use Carbon\Carbon;
 use Spatie\CalendarLinks\Link;
 use Spatie\GoogleCalendar\Event;
 
@@ -66,9 +65,11 @@ class Meeting extends DefaultModel
 
     public function updateCustomerTimeline($text)
     {
+        $user = Auth::user();
         $model = $this;
         $model->customer->appendToTimeline(
-            "Reunião Atualizada",
+            "Responsável : <b>{$user->name}</b></br>",
+            "Reunião Atualizada pelo Usuário <b>{$user->name}</b>",
             "Status: " . $model->status->name .
                 ".</br></br>Descrição da atualização: </br>" .
                 '<blockquote>

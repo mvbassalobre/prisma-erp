@@ -14,7 +14,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return view("admin.home");
+        $default_range = Carbon::now()->firstOfMonth()->format('Y-m-d') . ' 00:00:00,' . Carbon::now()->format('Y-m-d') . ' 00:00:00';
+        return view("admin.home", compact("default_range"));
     }
 
     public function getInfo($type, Request $request)

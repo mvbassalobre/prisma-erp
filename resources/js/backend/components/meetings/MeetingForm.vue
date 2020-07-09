@@ -19,7 +19,10 @@
                             <div class="row">
                                 <div class="col-lg-7">
                                     <el-form-item prop="form.customer_id" label="Cliente" required>
-                                        <el-select v-model="form.customer_id">
+                                        <el-select
+                                            v-model="form.customer_id"
+                                            :disabled="customer_id"
+                                        >
                                             <el-option
                                                 v-for="status in modelsData.customers"
                                                 :key="status.id"

@@ -48,7 +48,7 @@
                                                         <small>{{year}}</small>
                                                     </th>
                                                 </template>
-                                                <th class="green" v-if="!customer_area"></th>
+                                                <th class="green"></th>
                                             </tr>
                                             <tr>
                                                 <th style="width:350px">
@@ -62,16 +62,13 @@
                                                         :key="`${i}_head_2`"
                                                     >{{total(year,m.value).currency()}}</th>
                                                 </template>
-                                                <th class="green2" v-if="!customer_area"></th>
+                                                <th class="green2"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr v-for="(q,y) in years[year]" :key="y">
                                                 <td>
-                                                    <edit-input
-                                                        v-model="q.name"
-                                                        :can_edit="!customer_area"
-                                                    />
+                                                    <edit-input v-model="q.name" :can_edit="true" />
                                                 </td>
                                                 <template v-for="(m,i) in months">
                                                     <td :key="`${i}_${y}_body`">
@@ -79,11 +76,12 @@
                                                             type="number"
                                                             v-model="q[m.value]"
                                                             :currency="true"
-                                                            :can_edit="!customer_area"
+                                                            :can_edit="true"
+                                                            @change="changeValue(q,m)"
                                                         />
                                                     </td>
                                                 </template>
-                                                <td class="text-center" v-if="!customer_area">
+                                                <td class="text-center">
                                                     <button
                                                         v-loading="loading_entries"
                                                         class="append-btn"
@@ -94,7 +92,7 @@
                                                     </button>
                                                 </td>
                                             </tr>
-                                            <tr v-if="!customer_area">
+                                            <tr>
                                                 <td>
                                                     <input class="w-100 mr-1" v-model="form.name" />
                                                 </td>
@@ -105,7 +103,7 @@
                                                             v-model.number="form[m.value]"
                                                             type="number"
                                                             step="0.01"
-                                                            @change="setAllValues(m.value)"
+                                                            @change="setAllValues(m)"
                                                         />
                                                     </td>
                                                 </template>
@@ -168,6 +166,11 @@ export default {
         }
     },
     methods: {
+        changeValue(row, current_month) {
+            this.months.forEach((month) => {
+                if (month.number > current_month.number) row[month.value] = row[current_month.value]
+            })
+        },
         saveEntries(val) {
             this.loading_entries = true
             this.$http.post(`/admin/customers/${this.customer.code}/attendance/save-flux`, this.years).then(resp => {
@@ -179,7 +182,6 @@ export default {
             })
         },
         deleteEntry(year, y) {
-
             this.$confirm("Deseja excluir ?", "Confirmação", {
                 confirmButtonText: "Sim",
                 cancelButtonText: "Não",
@@ -196,15 +198,10 @@ export default {
         total(year, month) {
             return this.years[year].reduce((a, b) => a + b[month], 0)
         },
-        setAllValues(month) {
-            if (month == "jan") {
-                let other_months = this.months.filter(({ value }) => value != "jan").map(({ value }) => value)
-                let emptys = Object.keys(this.form).filter(k => {
-                    if ((other_months.includes(k)) && (!this.form[k])) return true
-                    return false
-                })
-                if (emptys.length == 11) return other_months.map(m => this.form[m] = this.form.jan)
-            }
+        setAllValues(current_month) {
+            this.months.forEach((month) => {
+                if (month.number > current_month.number) this.form[month.value] = this.form[current_month.value]
+            })
         },
         addYear() {
             this.$prompt('Digite o ano que deseja adicionar', 'Adicionar Ano', {

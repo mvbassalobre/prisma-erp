@@ -168,7 +168,7 @@ class CustomersController extends Controller
         $appName = Config("app.name");
         $html = "
                 <p>Olá {$name},</p>
-                <p>Geramos um accesso para seus usuário em nossa area de cliente </p>
+                <p>Geramos um acesso para seus usuário em nossa area de cliente </p>
                 <p>Clique no link abaixo acessar utilizando as credenciais :</p>
                 <a href='{$link}' target='_BLANK'>{$link}</a>
                 <p><b>Usuário : </b>{$username}</p>

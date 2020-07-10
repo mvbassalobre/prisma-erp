@@ -28,6 +28,7 @@ class CustomersAreaController extends Controller
         $customer = Customer::where("tenant_id", $tenant->id)->where("username", $data["username"])
             ->where("password", md5($data["password"]))->first();
         if (@$customer->id)  $customer->appendToTimeline("Area do Cliente", "Efetuou login na area do cliente");
+        else return ["success" => false, "message" => "Usuário ou senha incorretos"];
         return ["success" => @$customer->id ? true : false, "customer" => $customer->load(["sales"])];
     }
 

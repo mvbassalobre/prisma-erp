@@ -8,7 +8,8 @@
 ?>
 @section('favicon',$smalllogo)
     <customer-area
-        logo="{{$smalllogo}}"
+        small_logo="{{$smalllogo}}"
+        big_logo="{{$big_logo}}"
     >
     <template slot="messages">@include("templates.alerts")</template>
 </customer-area>

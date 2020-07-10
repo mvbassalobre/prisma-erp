@@ -1,6 +1,6 @@
 <template>
     <div style="visibility: hidden;" ref="content">
-        <component-area v-if="logged" :customer="customer" :logo="logo">
+        <component-area v-if="logged" :customer="customer" :logo="small_logo">
             <slot name="messages" />
         </component-area>
         <div v-loading="loading" v-else>
@@ -14,7 +14,7 @@
                                 <div
                                     class="brand-logo d-flex justify-content-center align-items-center mt-3"
                                 >
-                                    <img :src="logo" alt="logo" />
+                                    <img :src="big_logo" alt="logo" />
                                 </div>
                                 <h4>Bem-Vindo !</h4>
                                 <h6
@@ -66,7 +66,7 @@
 </template>
 <script>
 export default {
-    props: ["logo"],
+    props: ["small_logo", "big_logo"],
     data() {
         return {
             loading: false,

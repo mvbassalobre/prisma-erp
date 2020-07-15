@@ -32,7 +32,7 @@ export default {
     methods: {
         initialize() {
             this.attempts++
-            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info/qtyUsers`).then(res => {
+            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info/qtyTeams`).then(res => {
                 setTimeout(() => {
                     res = res.data
                     this.qty = res.qty <= 0 ? "Nenhum" : res.qty

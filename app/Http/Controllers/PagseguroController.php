@@ -59,7 +59,7 @@ class PagseguroController extends Controller
     private function init()
     {
         $this->pagseguro = new PagSeguroCompras(Config::get("pagseguro.email"), Config::get("pagseguro.token"), Config::get("pagseguro.sandbox"));
-        $this->pagseguro->setNotificationURL(route("pagseguro.notification"));
+        $this->pagseguro->setNotificationURL(route("admin.pagseguro.notification"));
     }
 
     public function setAuth()

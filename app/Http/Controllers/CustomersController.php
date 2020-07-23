@@ -115,7 +115,7 @@ class CustomersController extends Controller
         $customer->data = $data;
         $customer->appendToTimeline("Metas e Objetivos", "Adição de Entrada nas metas e objetivos por <b>$user->name</b>");
         $customer->save();
-        return ["success" => true];
+        return ["success" => true, "goals" => $goals];
     }
 
     public function saveFlux($id, Request $request)
@@ -133,7 +133,7 @@ class CustomersController extends Controller
         $customer->data = $data;
         $customer->appendToTimeline("Fluxo de Caixa", "Adição de Entrada no Fluxo de Caixa por <b>$user->name</b>");
         $customer->save();
-        return ["success" => true];
+        return ["success" => true, "years" => $data["entries"]];
     }
 
     public function saveSections($id, Request $request)

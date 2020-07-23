@@ -1,10 +1,11 @@
 <template>
-    <div class="col-md-8 col-sm-12">
+    <div class="col-md-6 col-sm-12">
         <div class="card h-100">
             <div class="card-body d-flex flex-column">
                 <span class="f-12 mb-3">
                     <b>
-                        <span class="el-icon-money mr-2"></span>VENDAS
+                        <span class="el-icon-money mr-2"></span>
+                        {{ withPayment == undefined ? 'PRODUTOS' : 'ANÁLISES'}}
                     </b> /
                     <template v-if="filter.daterange.length>0">No periodo do filtro</template>
                     <template v-else>Nos últimos 7 dias</template>
@@ -13,17 +14,6 @@
                     <template v-if="!loading">
                         <h3>
                             <b>{{data.total_amount}}</b>
-                            <small class="f-12">
-                                ({{data.total_amount_without_link}})
-                                <small
-                                    class="f-10"
-                                >Sem link de Pagamento</small>
-                                /
-                                ({{data.total_amount_with_link}})
-                                <small
-                                    class="f-10"
-                                >Com link de Pagamento</small>
-                            </small>
                         </h3>
                     </template>
                 </loading-shimmer>
@@ -38,10 +28,10 @@
                 <loading-shimmer :loading="loading" :h="200" class="dashboard-chart-area">
                     <template v-if="!loading">
                         <area-chart
-                            legend="bottom"
                             :discrete="true"
                             height="200px"
                             :data="data.chart_data"
+                            :legend="false"
                             prefix="R$ "
                         />
                     </template>
@@ -52,7 +42,7 @@
 </template>
 <script>
 export default {
-    props: ["filter"],
+    props: ["filter", "withPayment"],
     data() {
         return {
             loading: true,
@@ -79,7 +69,7 @@ export default {
     methods: {
         init() {
             this.attempts++
-            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info/sold`, { ...this.filter }).then(resp => {
+            this.$http.post(`${laravel.general.root_url}/admin/dashboard/get_info/sold`, { ...this.filter, withPayment: (this.withPayment == undefined ? false : true) }).then(resp => {
                 setTimeout(() => {
                     resp = resp.data
                     this.data = resp

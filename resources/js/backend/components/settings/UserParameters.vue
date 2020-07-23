@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <section-settings :settings="settings" />
-    </div>
+    <section-settings :settings="settings" />
 </template>
 <script>
 export default {

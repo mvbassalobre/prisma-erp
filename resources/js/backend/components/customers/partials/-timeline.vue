@@ -43,7 +43,9 @@
                                                                 :key="i"
                                                                 :label="item"
                                                                 :value="item"
-                                                            />
+                                                            >
+                                                                <div v-html="item"></div>
+                                                            </el-option>
                                                         </el-select>
                                                     </div>
                                                     <div class="col-md-4 col-sm-12">
@@ -150,7 +152,7 @@ export default {
     },
     computed: {
         types() {
-            return this.customer.timeline.map(({ title }) => title)
+            return Array.from(new Set(this.customer.timeline.map(({ title }) => title)))
         },
         _timeline() {
             let _timeline = this.customer.timeline

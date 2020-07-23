@@ -278,7 +278,7 @@ export default {
                     return false
                 })
             }
-            return _sales
+            return (_sales ? _sales : []).reverse()
         }
     },
     created() {

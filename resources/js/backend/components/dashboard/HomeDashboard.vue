@@ -29,17 +29,22 @@
             </div>
             <div class="row d-flex flex-row flex-wrap cards mt-3">
                 <comp-sales :user="user" :roles="roles" :filter="filter" />
-                <sales-payment :user="user" :roles="roles" :filter="filter" />
+                <comp-sales :user="user" :roles="roles" :filter="filter" withPayment />
             </div>
             <div class="row mt-3 d-flex flex-row flex-wrap">
+                <sales-payment :user="user" :roles="roles" :filter="filter" />
                 <top-teams-new-customers :user="user" :roles="roles" :filter="filter" />
                 <top-users-new-customers :user="user" :roles="roles" :filter="filter" />
-                <meeting-statuses :user="user" :roles="roles" :filter="filter" />
             </div>
             <div class="row mt-3 d-flex flex-row flex-wrap">
+                <meeting-statuses :user="user" :roles="roles" :filter="filter" />
                 <top-teams-new-meeting :user="user" :roles="roles" :filter="filter" />
                 <top-users-new-meeting :user="user" :roles="roles" :filter="filter" />
+            </div>
+            <div class="row mt-3 d-flex flex-row flex-wrap">
                 <meeting-team :user="user" :roles="roles" :filter="filter" />
+                <top-teams-with-payment :user="user" :roles="roles" :filter="filter" />
+                <top-users-with-payment :user="user" :roles="roles" :filter="filter" />
             </div>
         </div>
     </div>

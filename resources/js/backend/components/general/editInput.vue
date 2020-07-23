@@ -64,6 +64,11 @@ export default {
             value: this.$attrs.value ? this.$attrs.value : this.$props.value
         }
     },
+    watch: {
+        "$attrs.value"(val) {
+            this.value = val
+        }
+    },
     methods: {
         changeInput(value) {
             this.editing = false

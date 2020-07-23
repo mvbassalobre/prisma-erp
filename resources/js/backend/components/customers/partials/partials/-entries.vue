@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="row mb-2" v-loading="loading_entries">
-            <div class="col-12 text-right" v-if="!customer_area">
+        <div class="row mb-2">
+            <div class="col-12 text-right">
                 <span class="el-icon-circle-plus mr-2"></span>
                 <a href="#" class="link" @click.prevent="addYear">Adicionar Ano</a>
             </div>
@@ -14,10 +14,10 @@
             @tab-remove="removeYear"
         >
             <el-tab-pane
-                v-for="(year,i) in Object.keys(years).sort()"
+                v-for="(year,y) in Object.keys(years).sort()"
                 :label="`${year}`"
-                :name="`${i}`"
-                :key="i"
+                :name="`${y}`"
+                :key="y"
                 :closable="!customer_area"
             >
                 <div class="row f-12">
@@ -30,7 +30,6 @@
                                 <div class="table-responsive">
                                     <table
                                         class="table table-striped table-sm mb-0 f-12 table-hover"
-                                        v-if="!loading_entries"
                                     >
                                         <thead>
                                             <tr>
@@ -66,9 +65,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="(q,y) in years[year]" :key="y">
+                                            <tr v-for="(q,y) in years[year]" :key="q.name">
                                                 <td>
-                                                    <edit-input v-model="q.name" :can_edit="true" />
+                                                    <edit-input
+                                                        v-model="q.name"
+                                                        :can_edit="true"
+                                                        @change="changeValue"
+                                                    />
                                                 </td>
                                                 <template v-for="(m,i) in months">
                                                     <td :key="`${i}_${y}_body`">
@@ -83,7 +86,6 @@
                                                 </template>
                                                 <td class="text-center">
                                                     <button
-                                                        v-loading="loading_entries"
                                                         class="append-btn"
                                                         type="button"
                                                         @click.prevent="deleteEntry(year,y)"
@@ -109,7 +111,6 @@
                                                 </template>
                                                 <td class="text-center">
                                                     <button
-                                                        v-loading="loading_entries"
                                                         class="append-btn"
                                                         type="button"
                                                         @click.prevent="addEntry(year)"
@@ -143,7 +144,6 @@ export default {
     props: ['customer', 'months', 'customer_area'],
     data() {
         return {
-            loading_entries: false,
             years: this.customer.data ? (this.customer.data.entries ? this.customer.data.entries : {}) : {},
             sections: this.customer.data ? (this.customer.data.sections ? this.customer.data.sections : {}) : {},
             form: {
@@ -157,28 +157,25 @@ export default {
     created() {
         this.months.map(({ value }) => this.$set(this.form, value, 0))
     },
-    watch: {
-        years: {
-            handler(val) {
-                this.saveEntries()
-            },
-            deep: true
-        }
-    },
     methods: {
         changeValue(row, current_month) {
-            this.months.forEach((month) => {
-                if (month.number > current_month.number) row[month.value] = row[current_month.value]
-            })
+            if (row && current_month) {
+                let months = this.months.filter(m => m.number > current_month.number)
+                months.forEach((month) => {
+                    let value = row[current_month.value]
+                    let index = month.value
+                    console.log(row, index, value)
+                    this.$set(row, index, value)
+                })
+            }
+            this.saveEntries()
         },
-        saveEntries(val) {
-            this.loading_entries = true
+        saveEntries() {
             this.$http.post(`/admin/customers/${this.customer.code}/attendance/save-flux`, this.years).then(resp => {
                 resp = resp.data
-                this.loading_entries = false
+                this.years = resp.years
             }).catch(er => {
                 console.log(er)
-                this.loading_entries = false
             })
         },
         deleteEntry(year, y) {
@@ -187,11 +184,10 @@ export default {
                 cancelButtonText: "Não",
                 type: 'warning'
             }).then(() => {
-                this.loading_entries = true
                 setTimeout(() => {
                     this.years[year].splice(y, 1)
+                    this.saveEntries()
                     this.$message.success('Entrada excluido !!!')
-                    this.loading_entries = false
                 }, 500)
             })
         },
@@ -233,6 +229,7 @@ export default {
                 if (months_values.includes(k)) return this.$set(this.form, k, 0)
                 return this.$set(this.form, k, null)
             })
+            this.saveEntries()
             this.$message.success("Entrada adicionado com sucesso !!")
         },
         removeYear(name) {

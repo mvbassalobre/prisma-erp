@@ -3,10 +3,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="table-responsive">
-                    <table
-                        class="table table-striped table-sm sheet mb-0 f-12 table-hover"
-                        v-if="!loading_goals"
-                    >
+                    <table class="table table-striped table-sm sheet mb-0 f-12 table-hover">
                         <thead>
                             <tr>
                                 <th class="purple">Objetivo</th>
@@ -18,20 +15,25 @@
                         </thead>
                         <tbody>
                             <template v-for="(g,i) in goals">
-                                <tr :key="i" class="clickable">
+                                <tr :key="g.description" class="clickable">
                                     <td>
-                                        <edit-input v-model="g.description" :can_edit="true" />
+                                        <edit-input
+                                            @change="changeGoal"
+                                            v-model="g.description"
+                                            :can_edit="true"
+                                        />
                                     </td>
                                     <td>
                                         <edit-input
                                             type="number"
                                             v-model="g.value"
+                                            @change="changeGoal"
                                             :currency="true"
                                             :can_edit="true"
                                         />
                                     </td>
                                     <td>
-                                        <edit-input v-model="g.term" />
+                                        <edit-input @change="changeGoal" v-model="g.term" />
                                     </td>
                                     <td>
                                         <edit-input
@@ -39,6 +41,7 @@
                                             type="select"
                                             :options="term_type_options"
                                             :can_edit="true"
+                                            @change="changeGoal"
                                         />
                                     </td>
                                     <td class="text-center">
@@ -123,19 +126,13 @@ export default {
             ]
         }
     },
-    watch: {
-        goals: {
-            handler(val) {
-                this.hide = true
-                this.saveGoals(val)
-            },
-            deep: true
-        }
-    },
     created() {
         this.refreshForm()
     },
     methods: {
+        changeGoal() {
+            this.saveGoals(this.goals)
+        },
         deleteGoal(i) {
             this.$confirm("Deseja excluir ?", "Confirmação", {
                 confirmButtonText: "Sim",
@@ -143,6 +140,7 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.goals.splice(i, 1)
+                this.saveGoals(this.goals)
                 this.$message.success('Objetivo excluido !!!')
             })
         },
@@ -152,17 +150,15 @@ export default {
         appendGoal() {
             if (!this.form.description) return this.$message.error('Defina ao menos uma descrição')
             this.goals.push(Object.assign({}, this.form))
-            this.refreshForm()
-            this.adding = false
+            this.saveGoals(this.goals)
         },
         saveGoals(values) {
-            this.loading_goals = true
             this.$http.post(`/admin/customers/${this.customer.code}/attendance/add-goal`, values).then(resp => {
                 resp = resp.data
-                this.loading_goals = false
+                this.goals = resp.goals
+                this.refreshForm()
             }).catch(er => {
                 console.log(er)
-                this.loading_goals = false
             })
         }
 

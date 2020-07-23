@@ -142,6 +142,67 @@ class HomeController extends Controller
         return $data;
     }
 
+    public function TopUsersWithPayment($user, $filter)
+    {
+        $query = DB::table('sales')->join("users", "users.id", "=", "sales.user_id")->where("sales.tenant_id", $user->tenant_id);
+        $link_ids = SalePayment::where("tenant_id", $user->tenant_id);
+        if (@$filter["daterange"]) {
+            $dates = array_map(function ($date) {
+                return Carbon::create($date)->format("Y-m-d");
+            }, $filter["daterange"]);
+
+            $link_ids = $link_ids->whereRaw("DATE(created_at) >=  DATE('{$dates[0]}') and DATE(created_at) <=  DATE('{$dates[1]}')");
+
+            $query = $query->whereRaw("DATE(sales.created_at) >='{$dates[0]}' and DATE(sales.created_at) <='{$dates[1]}'");
+        }
+
+        $link_ids = $link_ids->get()->pluck("sale_id")->toArray();
+        $query = $query->whereIn("sales.id", $link_ids);
+
+        $data = $query->groupBy("users.id")
+            ->selectRaw("count(*) as qty, (users.name) as user")
+            ->groupBy("users.id")
+            ->orderBy("qty", "desc")
+            ->limit(5)
+            ->pluck('qty', 'user')
+            ->all();
+
+        return $data;
+    }
+
+
+    public function TopTeamsWithPayment($user, $filter)
+    {
+        $query = DB::table('sales')->join("users", "users.id", "=", "sales.user_id")
+            ->leftJoin("user_team", "user_team.user_id", "=", "users.id")
+            ->leftJoin("teams", "teams.id", "=", "user_team.team_id")
+            ->where("sales.tenant_id", $user->tenant_id);
+        $link_ids = SalePayment::where("tenant_id", $user->tenant_id);
+        if (@$filter["daterange"]) {
+            $dates = array_map(function ($date) {
+                return Carbon::create($date)->format("Y-m-d");
+            }, $filter["daterange"]);
+
+            $link_ids = $link_ids->whereRaw("DATE(created_at) >=  DATE('{$dates[0]}') and DATE(created_at) <=  DATE('{$dates[1]}')");
+
+            $query = $query->whereRaw("DATE(sales.created_at) >='{$dates[0]}' and DATE(sales.created_at) <='{$dates[1]}'");
+        }
+
+        $link_ids = $link_ids->get()->pluck("sale_id")->toArray();
+        $query = $query->whereIn("sales.id", $link_ids);
+
+        $data = $query->groupBy("teams.id")
+            ->selectRaw("count(*) as qty, if(teams.name is null,'Sem Time',teams.name)  as name")
+            ->groupBy("teams.id")
+            ->orderBy("qty", "desc")
+            ->limit(5)
+            ->pluck('qty', 'name')
+            ->all();
+
+        return $data;
+    }
+
+
     public function meetingPerStatus($user, $filter)
     {
         $data = DB::table("meetings")
@@ -216,15 +277,10 @@ class HomeController extends Controller
     public function sold($user, $filter)
     {
         $today = @$filter['daterange'][1]  ? Carbon::create($filter['daterange'][1]) : Carbon::now();
-
-        $totalAmountWithLink = 0;
-        $totalAmountWithoutLink = 0;
+        $subtotal = 0;
         $totalQty = 0;
         $totalAmount = 0;
-
         $chartData = [];
-        $chartDataWithLink = [];
-        $chartDataWithoutLink = [];
 
         $diff = 5;
         if (@$filter['daterange'][1] && @$filter['daterange'][0]) $diff = Carbon::create($filter['daterange'][1])->diffInDays(Carbon::create($filter["daterange"][0]));
@@ -236,32 +292,22 @@ class HomeController extends Controller
             $link_ids = SalePayment::where("tenant_id", $user->tenant_id)
                 ->whereRaw("DATE(created_at) =  DATE('{$date->format('Y-m-d')}')")->get()->pluck("sale_id")->toArray();
 
-            $totalAmountWithLink += (clone $query)->whereIn("id", $link_ids)->sum('subtotal');
-            $totalAmountWithoutLink += (clone $query)->whereNotIn("id", $link_ids)->sum('subtotal');
+            if (@$filter["withPayment"]) $query = $query->whereIn("id", $link_ids);
+            else $query = $query->whereNotIn("id", $link_ids);
+
+            $subtotal += (clone $query)->sum('subtotal');
             $totalQty += (clone $query)->count();
             $amount = (clone $query)->sum('subtotal');
-            $amountWithLink = (clone $query)->whereIn("id", $link_ids)->sum('subtotal');
-            $amountWithoutLink = (clone $query)->whereNotIn("id", $link_ids)->sum('subtotal');
             $totalAmount += $amount;
             $chartData[$date->format("d/m")] = round($amount, 2);
-            $chartDataWithoutLink[$date->format("d/m")] = round($amountWithoutLink, 2);
-            $chartDataWithLink[$date->format("d/m")] = round($amountWithLink, 2);
         }
 
         return [
             "total_amount" => $this->amountFormat($totalAmount),
-            "total_amount_without_link" => $this->amountFormat($totalAmountWithoutLink),
-            "total_amount_with_link" => $this->amountFormat($totalAmountWithLink),
             "qty" => $totalQty,
-            "chart_data" => [
-                ["name" => "Todos", "data" => $chartData],
-                ["name" => "Sem Link de Pagamento", "data" => $chartDataWithoutLink],
-                ["name" => "Com Link de Pagamento", "data" => $chartDataWithLink],
-            ]
+            "chart_data" =>  $chartData
         ];
     }
-
-
 
     private function amountFormat($amount)
     {

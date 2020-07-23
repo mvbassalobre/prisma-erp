@@ -164,7 +164,6 @@ export default {
                 months.forEach((month) => {
                     let value = row[current_month.value]
                     let index = month.value
-                    console.log(row, index, value)
                     this.$set(row, index, value)
                 })
             }

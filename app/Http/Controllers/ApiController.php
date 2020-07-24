@@ -25,7 +25,7 @@ class ApiController extends Controller
 
     public function customerYearSections(Request $request)
     {
-        return CustomerFluxYearSection::where("year_id", $request["id"])->get();
+        return CustomerFluxYearSection::where("year_id", $request["id"])->with(["expenses"])->get();
     }
 
     public function sectionExpenses(Request $request)

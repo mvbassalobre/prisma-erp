@@ -17,13 +17,7 @@
                 >Adicionar Nova Sessão de despesa em {{year.value}}</a>
             </div>
         </div>
-        <!-- <cash-flow
-            :months="months"
-            :year="year"
-            :sections="sections"
-            v-if="!loading_expenses"
-            :entries="entries"
-        />-->
+        <cash-flow :year="year" :sections="sections" />
     </div>
 </template>
 <script>

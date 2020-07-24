@@ -22,12 +22,23 @@
                                                 class="orange"
                                             >
                                                 {{ m.value }} /
-                                                <small>{{year}}</small>
+                                                <small>{{year.value}}</small>
                                             </th>
                                         </template>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr>
+                                        <td>
+                                            <b>Entradas</b>
+                                        </td>
+                                        <template v-for="(m,i) in months">
+                                            <td
+                                                style="width:100px;background-color:#56587e;color:white;"
+                                                :key="`${i}_body`"
+                                            >{{(entries(m)).currency()}}</td>
+                                        </template>
+                                    </tr>
                                     <tr>
                                         <td>
                                             <b>Geração de Caixa</b>
@@ -82,30 +93,32 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Receita</td>
-                                        <td>{{model_amount.currency()}}</td>
-                                        <td>100%</td>
+                                        <td class="colored4">Receita</td>
+                                        <td class="colored4">{{model_amount.currency()}}</td>
+                                        <td class="colored4">100%</td>
                                         <td class="bdl">{{model_amount.currency()}}</td>
                                         <td>100%</td>
                                     </tr>
                                     <tr>
-                                        <td>Gastos Fixos</td>
-                                        <td>{{amoutByPercentage(50).currency()}}</td>
-                                        <td>50%</td>
+                                        <td class="flow fixed">Gastos Fixos</td>
+                                        <td class="flow fixed">{{amoutByPercentage(50).currency()}}</td>
+                                        <td class="flow fixed">50%</td>
                                         <td class="bdl">{{getSumByType('fixed').currency()}}</td>
                                         <td v-html="percentageSumByType('fixed',50)" />
                                     </tr>
                                     <tr>
-                                        <td>Gastos Variáveis</td>
-                                        <td>{{amoutByPercentage(30).currency()}}</td>
-                                        <td>30%</td>
+                                        <td class="flow variable">Gastos Variáveis</td>
+                                        <td
+                                            class="flow variable"
+                                        >{{amoutByPercentage(30).currency()}}</td>
+                                        <td class="flow variable">30%</td>
                                         <td class="bdl">{{getSumByType('variable').currency()}}</td>
                                         <td v-html="percentageSumByType('variable',30)" />
                                     </tr>
                                     <tr>
-                                        <td>Investimento / Crescimento</td>
-                                        <td>{{amoutByPercentage(20).currency()}}</td>
-                                        <td>20%</td>
+                                        <td class="flow grow">Investimento</td>
+                                        <td class="flow grow">{{amoutByPercentage(20).currency()}}</td>
+                                        <td class="flow grow">20%</td>
                                         <td class="bdl">{{getSumByType('grow').currency()}}</td>
                                         <td v-html="percentageSumByType('grow',20)" />
                                     </tr>
@@ -120,13 +133,18 @@
 </template>
 <script>
 export default {
-    props: ["months", "year", "sections", "entries"],
+    props: ["year", "sections"],
+    data() {
+        return {
+            months: this.$getMoths(),
+        }
+    },
     computed: {
         model_amount() {
-            let sum = this.entries.map(row => {
+            let sum = this.year.entries.map(row => {
                 let value = 0
                 this.months.forEach(month => {
-                    value += row[month.value]
+                    value += Number(row[month.value])
                 })
                 return value
             }).reduce((a, b) => a + b, 0)
@@ -134,14 +152,18 @@ export default {
         }
     },
     methods: {
+        entries(month) {
+            if (this.year.entries.length <= 0) return
+            return this.year.entries.map(e => Number(e[month.value])).reduce((a, b) => a + b, 0)
+        },
         amoutByPercentage(percentage) {
             return ((this.model_amount * percentage) / 100).toFixed(2)
         },
         getSumByType(_type) {
-            let _sum = Object.keys(this.sections).map(section => {
+            let _sum = this.sections.filter(x => x.type == _type).map(section => {
                 let sum = 0
-                this.sections[section].forEach(row => {
-                    if (row.type == _type) sum += this.months.map(m => row[m.value]).reduce((a, b) => a + b, 0)
+                section.expenses.forEach(row => {
+                    sum += this.months.map(m => Number(row[m.value])).reduce((a, b) => a + b, 0)
                 })
                 return sum
             })
@@ -154,13 +176,12 @@ export default {
             return `<span class="${is_red ? 'text-danger' : 'text-success'}">${percentage.toFixed(2)}%</span>`
         },
         cash(month) {
-            let result = Object.keys(this.sections).map(sec => {
-                return this.sections[sec].map(x => x[month.value]).reduce((a, b) => a + b, 0)
-            }).reduce((a, b) => a + b, 0)
-            return result
+            if (this.sections.length <= 0) return 0
+            return this.sections.map(sec => sec.expenses.map(x => Number(x[month.value])).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0)
         },
         income(month) {
-            return this.entries.map(x => x[month.value]).reduce((a, b) => a + b, 0)
+            if (this.year.entries <= 0) return 0
+            return (this.year.entries.map(e => Number(e[month.value])).reduce((a, b) => a + b, 0))
         },
         patrimony(month) {
             let cash = this.cash(month)
@@ -176,3 +197,22 @@ export default {
     }
 }
 </script>
+<style lang="scss" scoped>
+.flow {
+    &.fixed {
+        background-color: #a55656;
+        color: white;
+        border-bottom-color: black;
+    }
+    &.variable {
+        background-color: #c6b387;
+        color: white;
+        border-bottom-color: black;
+    }
+    &.grow {
+        background-color: #56587e;
+        color: white;
+        border-bottom-color: black;
+    }
+}
+</style>

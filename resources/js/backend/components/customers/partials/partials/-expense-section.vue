@@ -43,6 +43,20 @@
                                         </tr>
                                         <tr>
                                             <th style="width:350px">
+                                                <b>Receita</b>
+                                                <small>Entradas</small>
+                                            </th>
+                                            <template v-for="(m,i) in months">
+                                                <th
+                                                    style="width:150px"
+                                                    class="f-10 colored4"
+                                                    :key="`${i}_head_3`"
+                                                >{{entries(m.value).currency()}}</th>
+                                            </template>
+                                            <th class="colored4"></th>
+                                        </tr>
+                                        <tr>
+                                            <th style="width:350px">
                                                 Despesa
                                                 <small>Consumo</small>
                                             </th>
@@ -158,6 +172,9 @@ export default {
         this.init()
     },
     methods: {
+        entries(m) {
+            return this.year.entries.map(e => Number(e[m])).reduce((a, b) => a + b, 0)
+        },
         init() {
             this.loadExpenses()
         },

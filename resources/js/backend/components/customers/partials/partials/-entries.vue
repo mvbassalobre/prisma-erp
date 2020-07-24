@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-loading="loading">
         <div class="row mb-2">
             <div class="col-12 text-right">
                 <span class="el-icon-circle-plus mr-2"></span>
@@ -9,16 +9,15 @@
         <el-tabs
             type="border-card"
             ref="tabs"
-            v-if="Object.keys(years).length>0"
+            v-if="years.length>0"
             :closable="!customer_area"
             @tab-remove="removeYear"
         >
             <el-tab-pane
-                v-for="(year,y) in Object.keys(years).sort()"
-                :label="`${year}`"
+                v-for="(year,y) in years"
+                :label="`${year.value}`"
                 :name="`${y}`"
-                :key="y"
-                :closable="!customer_area"
+                :key="year.id"
             >
                 <div class="row f-12">
                     <div class="col-12">
@@ -44,7 +43,7 @@
                                                         class="green"
                                                     >
                                                         {{ m.value }} /
-                                                        <small>{{year}}</small>
+                                                        <small>{{year.value}}</small>
                                                     </th>
                                                 </template>
                                                 <th class="green"></th>
@@ -59,18 +58,18 @@
                                                         style="width:150px"
                                                         class="f-10 green2"
                                                         :key="`${i}_head_2`"
-                                                    >{{total(year,m.value).currency()}}</th>
+                                                    >{{total(year.entries,m).currency()}}</th>
                                                 </template>
                                                 <th class="green2"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="(q,y) in years[year]" :key="q.name">
+                                            <tr v-for="(q,y) in year.entries" :key="q.id">
                                                 <td>
                                                     <edit-input
                                                         v-model="q.name"
                                                         :can_edit="true"
-                                                        @change="changeValue"
+                                                        @change="changeValue(q)"
                                                     />
                                                 </td>
                                                 <template v-for="(m,i) in months">
@@ -88,7 +87,7 @@
                                                     <button
                                                         class="append-btn"
                                                         type="button"
-                                                        @click.prevent="deleteEntry(year,y)"
+                                                        @click.prevent="deleteEntry(q)"
                                                     >
                                                         <span class="el-icon-error text-danger"></span>
                                                     </button>
@@ -126,14 +125,14 @@
                         </div>
                     </div>
                 </div>
-                <comp-expenses
+                <!-- <comp-expenses
                     :year="year"
                     :months="months"
                     :customer="customer"
                     :_sections="sections[year] ? sections[year] : {}"
                     :entries="years[year]"
                     :customer_area="customer_area"
-                />
+                />-->
             </el-tab-pane>
         </el-tabs>
         <template v-else>Nenhum lançamento realizado</template>
@@ -141,11 +140,15 @@
 </template>
 <script>
 export default {
-    props: ['customer', 'months', 'customer_area'],
+    props: ['customer', 'customer_area'],
     data() {
         return {
-            years: this.customer.data ? (this.customer.data.entries ? this.customer.data.entries : {}) : {},
-            sections: this.customer.data ? (this.customer.data.sections ? this.customer.data.sections : {}) : {},
+            attempts: 0,
+            loading: true,
+            years: [],
+            sections: {},
+            // sections: this.customer.data ? (this.customer.data.sections ? this.customer.data.sections : {}) : {},
+            months: this.$getMoths(),
             form: {
                 name: null
             }
@@ -156,42 +159,63 @@ export default {
     },
     created() {
         this.months.map(({ value }) => this.$set(this.form, value, 0))
+        this.init()
     },
     methods: {
-        changeValue(row, current_month) {
-            if (row && current_month) {
-                let months = this.months.filter(m => m.number > current_month.number)
-                months.forEach((month) => {
-                    let value = row[current_month.value]
-                    let index = month.value
-                    this.$set(row, index, value)
-                })
-            }
-            this.saveEntries()
+        init() {
+            this.loadYears()
         },
-        saveEntries() {
-            this.$http.post(`/admin/customers/${this.customer.code}/attendance/save-flux`, this.years).then(resp => {
+        loadYears() {
+            this.attempts++
+            this.loading = true
+            this.$http.post("/admin/api/get-data/customerFluxYears", { customer_id: this.customer.id }).then(resp => {
                 resp = resp.data
-                this.years = resp.years
+                this.loading = false
+                this.years = resp
             }).catch(er => {
-                console.log(er)
+                if (this.attempts <= 3) return this.loadYears()
+                this.loading = false
+                return console.log(er)
             })
         },
-        deleteEntry(year, y) {
+        changeValue(entry, current_month = null) {
+            if (current_month) {
+                let months = this.months.filter(m => m.number > current_month.number)
+                months.forEach((month) => {
+                    let value = entry[current_month.value]
+                    let index = month.value
+                    this.$set(entry, index, value)
+                })
+            }
+            this.loading = true
+            this.$http.put(`/admin/customers/${this.customer.code}/attendance/edit-flux-entry`, entry).then(resp => {
+                resp = resp.data
+                this.years = resp.years
+                this.loading = false
+            }).catch(er => {
+                console.log(er)
+                this.loading = false
+            })
+        },
+        deleteEntry(entry) {
             this.$confirm("Deseja excluir ?", "Confirmação", {
                 confirmButtonText: "Sim",
                 cancelButtonText: "Não",
                 type: 'warning'
             }).then(() => {
-                setTimeout(() => {
-                    this.years[year].splice(y, 1)
-                    this.saveEntries()
-                    this.$message.success('Entrada excluido !!!')
-                }, 500)
+                this.loading = true
+                this.$http.delete(`/admin/customers/attendance/delete-flux-entry/${entry.id}`).then(resp => {
+                    resp = resp.data
+                    this.years = resp.years
+                    this.loading = false
+                }).catch(er => {
+                    console.log(er)
+                    this.loading = false
+                })
             })
         },
-        total(year, month) {
-            return this.years[year].reduce((a, b) => a + b[month], 0)
+        total(entries, month) {
+            return entries.map(e => Number(e[month.value])).reduce((a, b) => a + b, 0)
         },
         setAllValues(current_month) {
             this.months.forEach((month) => {
@@ -206,14 +230,19 @@ export default {
                 inputErrorMessage: 'Ano Inválido'
             }).then(({ value }) => {
                 let year = parseInt(value)
-                if (this.years[year]) {
+                if (this.years.find(y => y.value == year)) {
                     this.setYearTab(year)
                     return this.$message.warning("Este ano já foi adicionado !!")
                 }
-                this.$set(this.years, `${String(year)}`, [])
-                this.$message.success("Ano adicionado com sucesso !!")
-                this.$nextTick(() => {
+                this.loading = true
+                this.$http.post(`/admin/customers/${this.customer.code}/attendance/add-flux-year`, { value: year }).then(resp => {
+                    resp = resp.data
+                    this.years = resp.years
                     this.setYearTab(year)
+                    this.loading = false
+                }).catch(er => {
+                    console.log(er)
+                    this.loading = false
                 })
             })
         },
@@ -222,31 +251,33 @@ export default {
         },
         addEntry(year) {
             if (!this.form.name) return this.$message.warning("De um nome a esta entrada !!")
-            this.$set(this.years[year], this.years[year].length, Object.assign({}, this.form))
-            let months_values = this.months.map(({ value }) => value)
-            Object.keys(this.form).map(k => {
-                if (months_values.includes(k)) return this.$set(this.form, k, 0)
-                return this.$set(this.form, k, null)
+            this.loading = true
+            this.$http.post(`/admin/customers/${this.customer.code}/attendance/add-year-entry`, { year, ...this.form }).then(resp => {
+                resp = resp.data
+                this.years = resp.years
+                this.loading = false
+            }).catch(er => {
+                console.log(er)
+                this.loading = false
             })
-            this.saveEntries()
-            this.$message.success("Entrada adicionado com sucesso !!")
         },
-        removeYear(name) {
+        removeYear(y) {
+            let year = this.years[y]
             this.$confirm("Você deseja remover este mês ?", "Confirmação", {
                 confirmButtonText: "Sim",
                 cancelButtonText: "Não",
                 type: 'warning'
             }).then(() => {
-                let years = Object.assign({}, this.years)
-                let index = Number(name)
-                let keys = Object.keys(this.years)
-                delete years[keys[index]]
-                this.years = years
-                keys = Object.keys(this.years)
-                if (keys.length > 0) {
-                    this.$refs.tabs.currentName = String(keys.length - 1)
-                }
-                this.$message.success('Mês excluido com sucesso !!!')
+                this.loading = true
+                this.$http.delete(`/admin/customers/attendance/delete-flux-year/${year.id}`).then(resp => {
+                    resp = resp.data
+                    this.years = resp.years
+                    this.setYearTab(this.years.length - 1)
+                    this.loading = false
+                }).catch(er => {
+                    console.log(er)
+                    this.loading = false
+                })
             })
         }
     }

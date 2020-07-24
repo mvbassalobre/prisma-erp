@@ -13,12 +13,7 @@
                         <comp-goals :customer="customer" :customer_area="customer_area" />
                     </el-tab-pane>
                     <el-tab-pane label="Fluxo de Caixa">
-                        <comp-entries
-                            :customer="customer"
-                            :months="months"
-                            v-loading="loading"
-                            :customer_area="customer_area"
-                        />
+                        <comp-entries :customer="customer" :customer_area="customer_area" />
                     </el-tab-pane>
                 </el-tabs>
             </div>

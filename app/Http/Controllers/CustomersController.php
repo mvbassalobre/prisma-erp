@@ -8,12 +8,15 @@ use marcusvbda\vstack\Controllers\ResourceController;
 use Illuminate\Http\Request;
 use App\Http\Models\{
     Customer,
+    CustomerFluxYearEntries,
     Sale,
     SalePayment
 };
 use Auth;
 use marcusvbda\vstack\Services\Messages;
 use marcusvbda\vstack\Services\SendMail;
+use App\Http\Models\{CustomerGoal, CustomerFluxYear};
+
 
 class CustomersController extends Controller
 {
@@ -107,15 +110,71 @@ class CustomersController extends Controller
 
     public function addGoal($id, Request $request)
     {
-        $user = Auth::user();
+        $customer = Customer::findOrFail($request["customer_id"]);
+        CustomerGoal::create($request->all());
+        $customer->appendToTimeline("Metas e Objetivos", "Adição de Entrada nas metas e objetivos");
+        return ["success" => true, "goals" => CustomerGoal::where("customer_id", $customer->id)->get()];
+    }
+
+    public function addYearEntry($id, Request $request)
+    {
+        $year = CustomerFluxYear::findOrFail($request["year"]["id"]);
+        $data = $request->except("year");
+        $data["year_id"] = $year->id;
+        CustomerFluxYearEntries::create($data);
+        return ["success" => true, "years" => $this->getYears($year->customer_id)];
+    }
+
+    private function getYears($customer_id)
+    {
+        return CustomerFluxYear::where("customer_id", $customer_id)->with(["entries"])->get();
+    }
+
+    public function editFluxEntry($id, Request $request)
+    {
+        CustomerFluxYearEntries::where("id", $request["id"])->update($request->except("id"));
+        return ["success" => true, "years" => $this->getYears($id)];
+    }
+
+    public function editGoal($id, Request $request)
+    {
+        CustomerGoal::where("id", $request["id"])->update($request->except("id"));
+        return ["success" => true, "goals" => CustomerGoal::where("customer_id", $request["customer_id"])->get()];
+    }
+
+    public function deleteFluxEntry($id)
+    {
+        $entry = CustomerFluxYearEntries::findOrFail($id);
+        $customer_id = $entry->year->customer_id;
+        $entry->delete();
+        return ["success" => true, "years" => $this->getYears($customer_id)];
+    }
+
+    public function deleteGoal($id)
+    {
+        $goal = CustomerGoal::findOrFail($id);
+        $customer_id = $goal->customer_id;
+        $goal->delete();
+        return ["success" => true, "goals" => CustomerGoal::where("customer_id", $customer_id)->get()];
+    }
+
+    public function deleteFluxYear($id)
+    {
+        $year = CustomerFluxYear::findOrFail($id);
+        $customer_id = $year->customer_id;
+        $year->delete();
+        return ["success" => true, "years" => $this->getYears($customer_id)];
+    }
+
+    public function addFluxYear($id, Request $request)
+    {
         $customer = Customer::findOrFail($id);
-        $data = @$customer->data ? $customer->data : [];
-        $goals = $request->all();
-        $data["goals"] = $goals;
-        $customer->data = $data;
-        $customer->appendToTimeline("Metas e Objetivos", "Adição de Entrada nas metas e objetivos por <b>$user->name</b>");
-        $customer->save();
-        return ["success" => true, "goals" => $goals];
+        CustomerFluxYear::create([
+            "value" => $request["value"],
+            "customer_id" => $customer->id
+        ]);
+        $customer->appendToTimeline("Fluxo de Caixa", "Novo ano adicionado no fluxo de caixa");
+        return ["success" => true, "years" => $this->getYears($customer->id)];
     }
 
     public function saveFlux($id, Request $request)

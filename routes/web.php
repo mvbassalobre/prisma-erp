@@ -13,6 +13,7 @@ Route::group(['prefix' => "admin"], function () {
         require "partials/customers.php";
         require "partials/pagseguro.php";
         require "partials/meetings.php";
+        require "partials/api.php";
     });
 });
 Route::post('pagseguro/notification', 'PagseguroController@notification')->name("admin.pagseguro.notification");

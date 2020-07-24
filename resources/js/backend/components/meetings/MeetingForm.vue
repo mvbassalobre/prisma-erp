@@ -6,6 +6,7 @@
         label-position="left"
         :class="{'creating-meeting': !form.id}"
         v-loading.fullscreen.lock="sending"
+        :element-loading-text="sendingText"
     >
         <div class="col-sm-12">
             <div class="card">
@@ -34,10 +35,14 @@
                                 </div>
                                 <div class="col-lg-5">
                                     <el-form-item label="Tipo" required prop="form.type">
-                                        <el-input
+                                        <el-select
                                             v-model="form.type"
                                             placeholder="Orçamento, pesquisa etc"
-                                        />
+                                        >
+                                        <el-option label="Análise" value="analise" />
+                                        <el-option label="Consultoria" value="consultoria" />
+                                        <el-option label="Serviço" value="servico" />
+                                        </el-select>
                                     </el-form-item>
                                 </div>
                             </div>
@@ -104,6 +109,7 @@ export default {
             },
             extra: {
                 meeting_duration: ["12", "14"],
+                scheduleLinkButton: true,
                 create_event: true,
                 sendUpdateEmail: true,
                 customEmail: false,
@@ -135,6 +141,12 @@ export default {
     computed: {
         getPostUrl() {
             return this.isModal ? "/admin/meetings/create" : ""
+        },
+        sendingText(){
+            let exists = !this.form.id ? "Criando reunião" : "Atualizando reunião ",
+            sending = this.extra.sendUpdateEmail ? " e enviando Email" : ""
+            
+            return exists + sending + "..."
         }
     },
     methods: {

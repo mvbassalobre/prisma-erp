@@ -26,7 +26,10 @@ Reunião Atualizada
 ## Local
 {{$meeting->room->f_address}}
 
+@if(@$config["link_button"])
 @component('mail::button', ['url' => $meeting->makeEventLink()])
 Adicionar na Agenda
 @endcomponent
+@endif
+
 @endcomponent

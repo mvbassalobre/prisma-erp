@@ -43,7 +43,7 @@ class MeetingController extends Controller
         }
 
         if (request("extra.sendUpdateEmail")) {
-            $meeting->sendUpdateEmail(request("extra.email.subject"), request("extra.email.body"));
+            $meeting->sendUpdateEmail(request("extra.email.subject"), request("extra.email.body"), ["link_button" => request("extra.scheduleLinkButton",false)]);
         }
         Messages::send("success", 'Reunião Salva com Sucesso !!!!');
 

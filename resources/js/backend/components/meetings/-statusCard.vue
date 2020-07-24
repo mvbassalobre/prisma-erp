@@ -39,6 +39,12 @@
                 <div class="col-sm-12 my-3">
                     <el-switch v-model="extra.sendUpdateEmail" :active-text="sendEmailSwitchText"></el-switch>
                 </div>
+                <transition name="el-fade-in">
+                    <div class="col-sm-12 mb-3" v-if="extra.sendUpdateEmail">
+                    <el-switch v-model="extra.scheduleLinkButton" active-text="Email com link de agendamento"></el-switch>
+                </div>
+
+                </transition>
                 <div class="col-sm-12" v-if="form.id">
                     <el-button class="w-100 btn-primary" @click="$emit('send')">Salvar atualizações</el-button>
                 </div>

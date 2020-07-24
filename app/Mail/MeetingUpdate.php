@@ -15,16 +15,18 @@ class MeetingUpdate extends Mailable
     public $meeting;
     public $subject;
     public $body;
+    public $config;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Meeting $meeting,$subject,$body)
+    public function __construct(Meeting $meeting,$subject,$body,$config = [])
     {
         $this->meeting = $meeting;
         $this->subject = $subject;
         $this->body = $body;
+        $this->config = $config;
     }
 
     /**
@@ -40,7 +42,8 @@ class MeetingUpdate extends Mailable
             "customer" => $customer,
             "meeting" => $meeting,
             "responsible" => $meeting->responsible,
-            "body" => $this->body
+            "body" => $this->body,
+            "config" => $this->config
         ];
         
         //dd($data);

@@ -133,12 +133,12 @@ class Meeting extends DefaultModel
         return [$this->starts_at->diffInMinutes($start) / 60, $this->ends_at->diffInMinutes($start) / 60];
     }
 
-    public function sendUpdateEmail($subject, $appendBody)
+    public function sendUpdateEmail($subject, $appendBody,$config = [])
     {
         if (!trim($subject)) {
             $subject = "Reunião: " . $this->subject;
         }
-        return \Mail::to($this->customer->email)->send(new MeetingUpdate($this, $subject, $appendBody));
+        return \Mail::to($this->responsible->email)->bcc($this->customer->email)->send(new MeetingUpdate($this, $subject, $appendBody,$config));
     }
 
     public function makeEventLink()

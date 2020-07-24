@@ -10,7 +10,7 @@
             type="border-card"
             ref="tabs"
             v-if="years.length>0"
-            :closable="!customer_area"
+            :closable="true"
             @tab-remove="removeYear"
         >
             <el-tab-pane

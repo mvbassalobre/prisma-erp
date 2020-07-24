@@ -138,7 +138,7 @@ class CustomersController extends Controller
 
     public function editSection($id, Request $request)
     {
-        CustomerFluxSectionExpense::where("id", $request["id"])->update($request->except(["id", "expenses"]));
+        CustomerFluxYearSection::where("id", $request["id"])->update($request->except(["id", "expenses"]));
         return ["success" => true, "section" => CustomerFluxYearSection::findOrFail($request["id"])->with(["expenses"])];
     }
 

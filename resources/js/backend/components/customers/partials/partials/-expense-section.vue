@@ -195,7 +195,6 @@ export default {
             this.loading_expenses = true
             this.$http.put(`/admin/customers/${this.customer.code}/attendance/edit-section`, this.section).then(resp => {
                 resp = resp.data
-                this.section.name = resp.section.name
                 this.loading_expenses = false
             }).catch(er => {
                 console.log(er)

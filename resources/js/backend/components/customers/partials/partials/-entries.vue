@@ -125,14 +125,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- <comp-expenses
-                    :year="year"
-                    :months="months"
-                    :customer="customer"
-                    :_sections="sections[year] ? sections[year] : {}"
-                    :entries="years[year]"
-                    :customer_area="customer_area"
-                />-->
+                <expenses :year="year" :customer="customer" :customer_area="customer_area" />
             </el-tab-pane>
         </el-tabs>
         <template v-else>Nenhum lançamento realizado</template>
@@ -147,7 +140,6 @@ export default {
             loading: true,
             years: [],
             sections: {},
-            // sections: this.customer.data ? (this.customer.data.sections ? this.customer.data.sections : {}) : {},
             months: this.$getMoths(),
             form: {
                 name: null
@@ -155,7 +147,7 @@ export default {
         }
     },
     components: {
-        'comp-expenses': require("./-expenses.vue").default,
+        'expenses': require("./-expenses.vue").default,
     },
     created() {
         this.months.map(({ value }) => this.$set(this.form, value, 0))
@@ -249,6 +241,14 @@ export default {
         setYearTab(year) {
             this.$refs.tabs.currentName = String(Object.keys(this.years).indexOf(`${String(year)}`))
         },
+        refreshForm() {
+            this.form.name = null
+            let months_values = this.months.map(({ value }) => value)
+            Object.keys(this.form).map(k => {
+                if (months_values.includes(k)) return this.$set(this.form, k, 0)
+                return this.$set(this.form, k, null)
+            })
+        },
         addEntry(year) {
             if (!this.form.name) return this.$message.warning("De um nome a esta entrada !!")
             this.loading = true
@@ -256,6 +256,7 @@ export default {
                 resp = resp.data
                 this.years = resp.years
                 this.loading = false
+                this.refreshForm()
             }).catch(er => {
                 console.log(er)
                 this.loading = false

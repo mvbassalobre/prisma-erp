@@ -1,12 +1,14 @@
 <template>
     <div class="row mb-2">
         <div class="col-12">
-            <div class="card f-12">
+            <div :class="`card f-12 ${section.type}`">
                 <div class="card-header p-1 d-flex flex-row align-items-center">
                     <span class="el-icon-remove mr-2"></span>
-                    <div>{{s}}</div>
+                    <div>
+                        <edit-input v-model="section.name" :can_edit="true" @change="change" />
+                    </div>
                     <div class="ml-2">
-                        <select v-model="type">
+                        <select v-model="section.type" @change="change">
                             <option value="fixed">Gastos Fixos</option>
                             <option value="variable">Gastos Varíaveis</option>
                             <option value="grow">Investimento / Crescimento</option>
@@ -31,13 +33,13 @@
                                                 <th
                                                     style="width:100px"
                                                     :key="`${i}_head`"
-                                                    class="blue"
+                                                    class="colored"
                                                 >
                                                     {{ m.value }} /
-                                                    <small>{{year}}</small>
+                                                    <small>{{year.value}}</small>
                                                 </th>
                                             </template>
-                                            <th class="blue"></th>
+                                            <th class="colored"></th>
                                         </tr>
                                         <tr>
                                             <th style="width:350px">
@@ -47,11 +49,11 @@
                                             <template v-for="(m,i) in months">
                                                 <th
                                                     style="width:150px"
-                                                    class="f-10 blue2"
+                                                    class="f-10 colored2"
                                                     :key="`${i}_head_2`"
-                                                >{{total(s,m.value).currency()}}</th>
+                                                >{{total(m.value).currency()}}</th>
                                             </template>
-                                            <th class="blue2"></th>
+                                            <th class="colored2"></th>
                                         </tr>
                                         <tr>
                                             <th style="width:350px">
@@ -61,17 +63,20 @@
                                             <template v-for="(m,i) in months">
                                                 <th
                                                     style="width:150px"
-                                                    class="f-10 blue3"
+                                                    class="f-10 colored3"
                                                     :key="`${i}_head_3`"
-                                                >{{percentage(s,m.value)}} %</th>
+                                                >{{percentage(m.value)}} %</th>
                                             </template>
-                                            <th class="blue3"></th>
+                                            <th class="colored3"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(q,y) in sections[s]" :key="y">
+                                        <tr v-for="(q,y) in section.expenses" :key="q.id">
                                             <td>
-                                                <edit-input v-model="q.name" />
+                                                <edit-input
+                                                    @change="changeValue(q,m)"
+                                                    v-model="q.name"
+                                                />
                                             </td>
                                             <template v-for="(m,i) in months">
                                                 <td :key="`${i}_${y}_body`">
@@ -88,7 +93,7 @@
                                                     v-loading="loading_expenses"
                                                     class="append-btn"
                                                     type="button"
-                                                    @click="deleteExpense(s,y)"
+                                                    @click="deleteExpense(q)"
                                                 >
                                                     <span class="el-icon-error text-danger"></span>
                                                 </button>
@@ -114,7 +119,7 @@
                                                     v-loading="loading_expenses"
                                                     class="append-btn"
                                                     type="button"
-                                                    @click.prevent="addExpense(s)"
+                                                    @click.prevent="addExpense"
                                                 >
                                                     <span class="el-icon-success text-success"></span>
                                                 </button>
@@ -132,13 +137,13 @@
 </template>
 <script>
 export default {
-    props: ["sections", "s", "months", "entries", "year", "customer", "customer_area"],
+    props: ["section", "year", "customer", "customer_area"],
     data() {
         return {
-            loading_expenses: false,
-            type: this.sections[this.s][0] ? this.sections[this.s][0].type : 'fixed',
+            loading_expenses: true,
+            attempts: 0,
+            months: this.$getMoths(),
             form: {
-                type: "fixed",
                 name: "",
             }
         }
@@ -150,11 +155,53 @@ export default {
     },
     created() {
         this.months.map(({ value }) => this.$set(this.form, value, 0))
+        this.init()
     },
     methods: {
-        changeValue(row, current_month) {
-            this.months.forEach((month) => {
-                if (month.number > current_month.number) row[month.value] = row[current_month.value]
+        init() {
+            this.loadExpenses()
+        },
+        loadExpenses() {
+            this.attempts++
+            this.loading_expenses = true
+            this.$http.post("/admin/api/get-data/sectionExpenses", this.section).then(resp => {
+                resp = resp.data
+                this.loading_expenses = false
+                this.section.expenses = resp
+            }).catch(er => {
+                if (this.attempts <= 3) return this.loadExpenses()
+                this.loading_expenses = false
+                return console.log(er)
+            })
+        },
+        change() {
+            this.loading_expenses = true
+            this.$http.put(`/admin/customers/${this.customer.code}/attendance/edit-section`, this.section).then(resp => {
+                resp = resp.data
+                this.section.name = resp.section.name
+                this.loading_expenses = false
+            }).catch(er => {
+                console.log(er)
+                this.loading_expenses = false
+            })
+        },
+        changeValue(expense, current_month = null) {
+            if (current_month) {
+                let months = this.months.filter(m => m.number > current_month.number)
+                months.forEach((month) => {
+                    let value = expense[current_month.value]
+                    let index = month.value
+                    this.$set(expense, index, value)
+                })
+            }
+            this.loading_expenses = true
+            this.$http.put(`/admin/customers/${this.customer.code}/attendance/edit-expense`, expense).then(resp => {
+                resp = resp.data
+                this.$parent.sections = resp.sections
+                this.loading_expenses = false
+            }).catch(er => {
+                console.log(er)
+                this.loading_expenses = false
             })
         },
         deleteSection() {
@@ -163,53 +210,118 @@ export default {
                 cancelButtonText: "Não",
                 type: 'warning'
             }).then(() => {
-                setTimeout(() => {
-                    delete this.sections[this.s]
-                    this.$parent.saveSections()
-                    this.$message.success('Sessão excluida !!!')
-                }, 500)
+                this.loading_expenses = true
+                this.$http.delete(`/admin/customers/attendance/delete-section/${this.section.id}`).then(resp => {
+                    resp = resp.data
+                    this.$parent.sections = resp.sections
+                    this.loading_expenses = false
+                }).catch(er => {
+                    console.log(er)
+                    this.loading_expenses = false
+                })
             })
         },
-        percentage(label, month) {
-            let total_entry = this.entries.reduce((a, b) => a + b[month], 0)
-            let total_expense = this.sections[label].reduce((a, b) => a + b[month], 0)
+        percentage(month) {
+            let total_entry = this.year.entries.map(e => Number(e[month])).reduce((a, b) => a + b, 0)
+            let total_expense = this.total(month)
             if (!total_entry || !total_expense) return 0
             return ((total_expense * 100) / total_entry).toFixed(2)
             return 0
         },
-        total(label, month) {
-            return this.sections[label].reduce((a, b) => a + b[month], 0)
+        total(month) {
+            return this.section.expenses.map(e => Number(e[month])).reduce((a, b) => a + b, 0)
         },
-        addExpense(section) {
-            if (!this.form.name) return this.$message.warning("De um nome a esta despesa !!")
-            this.$set(this.sections[section], this.sections[section].length, Object.assign({}, this.form))
+        refreshForm() {
+            this.form.name = null
             let months_values = this.months.map(({ value }) => value)
             Object.keys(this.form).map(k => {
                 if (months_values.includes(k)) return this.$set(this.form, k, 0)
                 return this.$set(this.form, k, null)
             })
-            this.$message.success("Despesa adicionado com sucesso !!")
+        },
+        addExpense(section) {
+            if (!this.form.name) return this.$message.warning("De um nome a esta despesa !!")
+            this.$http.post(`/admin/customers/${this.customer.code}/attendance/add-expense`, { ...this.form, section_id: this.section.id }).then(resp => {
+                resp = resp.data
+                this.section.expenses = resp.expenses
+                this.refreshForm()
+            }).catch(er => {
+                console.log(er)
+            })
         },
         setAllValues(current_month) {
             this.months.forEach((month) => {
                 if (month.number > current_month.number) this.form[month.value] = this.form[current_month.value]
             })
         },
-        deleteExpense(section, y) {
+        deleteExpense(expense) {
             this.$confirm("Deseja excluir ?", "Confirmação", {
                 confirmButtonText: "Sim",
                 cancelButtonText: "Não",
                 type: 'warning'
             }).then(() => {
-                this.loading_expenses = true
-                setTimeout(() => {
-                    this.sections[section].splice(y, 1)
-                    this.$message.success('Despesa excluido !!!')
-                    this.loading_expenses = false
-                }, 500)
+                this.$http.delete(`/admin/customers/attendance/delete-expense/${expense.id}`).then(resp => {
+                    resp = resp.data
+                    this.$parent.sections = resp.sections
+                    this.refreshForm()
+                }).catch(er => {
+                    console.log(er)
+                })
             })
         },
 
     }
 }
 </script>
+<style lang="scss" scoped>
+.card {
+    &.fixed {
+        .colored {
+            background-color: #a55656;
+            color: white;
+            border-bottom-color: black;
+        }
+        .colored2 {
+            background-color: #b08181;
+            color: white;
+        }
+        .colored3 {
+            background-color: #ffd7d7;
+            color: black;
+            border-bottom-color: #a9a9b4;
+        }
+    }
+    &.variable {
+        .colored {
+            background-color: #8b7542;
+            color: white;
+            border-bottom-color: black;
+        }
+        .colored2 {
+            background-color: #c6b387;
+            color: white;
+        }
+        .colored3 {
+            background-color: #ebe2cc;
+            color: black;
+            border-bottom-color: #a9a9b4;
+        }
+    }
+    &.grow {
+        .colored {
+            background-color: #56587e;
+            color: white;
+            border-bottom-color: black;
+        }
+        .colored2 {
+            background-color: #7f81b4;
+            color: white;
+        }
+        .colored3 {
+            background-color: #a9a9b4;
+            color: white;
+            border-bottom-color: #a9a9b4;
+        }
+    }
+}
+</style>

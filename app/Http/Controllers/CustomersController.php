@@ -15,7 +15,7 @@ use App\Http\Models\{
 use Auth;
 use marcusvbda\vstack\Services\Messages;
 use marcusvbda\vstack\Services\SendMail;
-use App\Http\Models\{CustomerGoal, CustomerFluxYear};
+use App\Http\Models\{CustomerGoal, CustomerFluxYear, CustomerFluxYearSection, CustomerFluxSectionExpense};
 
 
 class CustomersController extends Controller
@@ -127,7 +127,7 @@ class CustomersController extends Controller
 
     private function getYears($customer_id)
     {
-        return CustomerFluxYear::where("customer_id", $customer_id)->with(["entries"])->get();
+        return CustomerFluxYear::where("customer_id", $customer_id)->with(["entries", "sections", "sections.expenses"])->get();
     }
 
     public function editFluxEntry($id, Request $request)
@@ -136,10 +136,24 @@ class CustomersController extends Controller
         return ["success" => true, "years" => $this->getYears($id)];
     }
 
+    public function editSection($id, Request $request)
+    {
+        CustomerFluxSectionExpense::where("id", $request["id"])->update($request->except(["id", "expenses"]));
+        return ["success" => true, "section" => CustomerFluxYearSection::findOrFail($request["id"])->with(["expenses"])];
+    }
+
     public function editGoal($id, Request $request)
     {
         CustomerGoal::where("id", $request["id"])->update($request->except("id"));
         return ["success" => true, "goals" => CustomerGoal::where("customer_id", $request["customer_id"])->get()];
+    }
+
+    public function deleteSection($id)
+    {
+        $section = CustomerFluxYearSection::findOrFail($id);
+        $year_id = $section->year_id;
+        $section->delete();
+        return ["success" => true, "sections" => CustomerFluxYearSection::where("year_id", $year_id)->with(["expenses"])->get()];
     }
 
     public function deleteFluxEntry($id)
@@ -148,6 +162,22 @@ class CustomersController extends Controller
         $customer_id = $entry->year->customer_id;
         $entry->delete();
         return ["success" => true, "years" => $this->getYears($customer_id)];
+    }
+
+    public function editExpense($id, Request $request)
+    {
+        CustomerFluxSectionExpense::where("id", $request["id"])->update($request->except("id"));
+        $expense = CustomerFluxSectionExpense::findOrFail($request["id"]);
+        $year_id = $expense->section->year_id;
+        return ["success" => true, "sections" => CustomerFluxYearSection::where("year_id", $year_id)->with(["expenses"])->get()];
+    }
+
+    public function deleteExpense($id)
+    {
+        $expense = CustomerFluxSectionExpense::findOrFail($id);
+        $year_id = $expense->section->year_id;
+        $expense->delete();
+        return ["success" => true, "sections" => CustomerFluxYearSection::where("year_id", $year_id)->with(["expenses"])->get()];
     }
 
     public function deleteGoal($id)
@@ -177,34 +207,38 @@ class CustomersController extends Controller
         return ["success" => true, "years" => $this->getYears($customer->id)];
     }
 
-    public function saveFlux($id, Request $request)
+    public function addExpense($id, Request $request)
     {
-        $user = Auth::user();
         $customer = Customer::findOrFail($id);
-        $data = @$customer->data ? $customer->data : [];
-        $entries = $request->all();
-        $data["entries"] = (object) @$entries;
-        $sections = [];
-        foreach ($data["entries"] as $key => $value) {
-            $sections[(string) $key] =  @$data["sections"][(string) $key] ?  $data["sections"][(string) $key] : [];
-        }
-        $data["sections"] = $sections;
-        $customer->data = $data;
-        $customer->appendToTimeline("Fluxo de Caixa", "Adição de Entrada no Fluxo de Caixa por <b>$user->name</b>");
-        $customer->save();
-        return ["success" => true, "years" => $data["entries"]];
+        CustomerFluxSectionExpense::create($request->all());
+        $customer->appendToTimeline("Fluxo de Caixa", "Nova despesa adicionada no fluxo de caixa");
+        return ["success" => true, "expenses" => CustomerFluxSectionExpense::where("section_id", $request["section_id"])->get()];
     }
 
-    public function saveSections($id, Request $request)
+    // public function saveFlux($id, Request $request)
+    // {
+    //     $user = Auth::user();
+    //     $customer = Customer::findOrFail($id);
+    //     $data = @$customer->data ? $customer->data : [];
+    //     $entries = $request->all();
+    //     $data["entries"] = (object) @$entries;
+    //     $sections = [];
+    //     foreach ($data["entries"] as $key => $value) {
+    //         $sections[(string) $key] =  @$data["sections"][(string) $key] ?  $data["sections"][(string) $key] : [];
+    //     }
+    //     $data["sections"] = $sections;
+    //     $customer->data = $data;
+    //     $customer->appendToTimeline("Fluxo de Caixa", "Adição de Entrada no Fluxo de Caixa por <b>$user->name</b>");
+    //     $customer->save();
+    //     return ["success" => true, "years" => $data["entries"]];
+    // }
+
+    public function addSections($id, Request $request)
     {
-        $user = Auth::user();
-        $customer = Customer::findOrFail($id);
-        $data = @$customer->data ? $customer->data : [];
-        $data["sections"][$request["year"]] = (object) @$request["section"] ? $request["section"] : [];
-        $customer->data = $data;
-        $customer->save();
-        $customer->appendToTimeline("Fluxo de Caixa", "Salva section de fluxo de caixa <b>$user->name</b>");
-        return ["success" => true];
+        $year = CustomerFluxYear::findOrFail($request["year"]["id"]);
+        $name = $request["section"];
+        CustomerFluxYearSection::create(["name" => $name, "year_id" => $year->id]);
+        return ["success" => true, "sections" => CustomerFluxYearSection::where("year_id", $year->id)->get()];
     }
 
     public function createAreaAccess($id)

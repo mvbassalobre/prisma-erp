@@ -16,8 +16,13 @@ Route::group(['prefix' => "customers"], function () {
     Route::put('{code}/attendance/edit-flux-entry', 'CustomersController@editFluxEntry')->middleware(['hashids:code']);
     Route::delete('/attendance/delete-flux-entry/{id}', 'CustomersController@deleteFluxEntry');
 
-    // Route::post('{code}/attendance/save-flux', 'CustomersController@saveFlux')->middleware(['hashids:code']);
-    // Route::post('{code}/attendance/save-sections', 'CustomersController@saveSections')->middleware(['hashids:code']);
+    Route::put('{code}/attendance/edit-section', 'CustomersController@editSection')->middleware(['hashids:code']);
+
+    Route::post('{code}/attendance/add-sections', 'CustomersController@addSections')->middleware(['hashids:code']);
+    Route::delete('/attendance/delete-section/{id}', 'CustomersController@deleteSection');
+    Route::post('{code}/attendance/add-expense', 'CustomersController@addExpense')->middleware(['hashids:code']);
+    Route::delete('/attendance/delete-expense/{id}', 'CustomersController@deleteExpense');
+    Route::put('{code}/attendance/edit-expense', 'CustomersController@editExpense')->middleware(['hashids:code']);
 
     Route::post('post_new_sale', 'CustomersController@postNewSale')->name("admin.customers.attendance.new_sale");
     Route::post('destroy_sale', 'CustomersController@destroySale')->name("admin.customers.attendance.destroy_sale");

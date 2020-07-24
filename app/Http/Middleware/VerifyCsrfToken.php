@@ -23,5 +23,6 @@ class VerifyCsrfToken extends Middleware
         "admin/dashboard/get_info/*",
         "/admin/customers/*",
         "/admin/inputs/*",
+        "/admin/api/*",
     ];
 }

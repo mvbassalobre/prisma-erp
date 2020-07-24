@@ -66,8 +66,9 @@ export default {
         onState(state) {
             this.state = state
             subs.push(
-                state.subscribe("config.chart.items.1",item => {
-                    console.log("item 1 changed",item)
+                state.subscribe("config.chart.items.1", item => {
+                    // console.log("item 1 changed",item)
+                    item
                 })
             )
         }

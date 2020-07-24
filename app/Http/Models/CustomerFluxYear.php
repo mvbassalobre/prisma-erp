@@ -21,4 +21,9 @@ class CustomerFluxYear extends DefaultModel
     {
         return $this->hasMany(\App\Http\Models\CustomerFluxYearEntries::class, "year_id");
     }
+
+    public function sections()
+    {
+        return $this->hasMany(\App\Http\Models\CustomerFluxYearSection::class, "year_id");
+    }
 }

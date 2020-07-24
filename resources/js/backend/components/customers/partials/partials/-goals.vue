@@ -177,6 +177,17 @@ export default {
         refreshForm() {
             (Object.keys(this.default_form)).map(k => this.$set(this.form, k, this.default_form[k]))
         },
+        appendGoal() {
+            if (!this.form.description) return this.$message.error('Defina ao menos uma descrição')
+            this.$http.post(`/admin/customers/${this.customer.code}/attendance/add-goal`, { ...this.form, customer_id: this.customer.id }).then(resp => {
+                resp = resp.data
+                this.goals = resp.goals
+                this.refreshForm()
+                this.$message.success('Objetivo cadastrado com sucesso !!')
+            }).catch(er => {
+                console.log(er)
+            })
+        },
     }
 }
 </script>

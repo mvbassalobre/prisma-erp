@@ -19,18 +19,18 @@ class CreateCustomerFluxEntries extends Migration
             $table->engine = 'InnoDB';
             $table->bigIncrements('id');
             $table->string('name');
-            $table->decimal('jan')->default(0);
-            $table->decimal('fev')->default(0);
-            $table->decimal('mar')->default(0);
-            $table->decimal('abr')->default(0);
-            $table->decimal('mai')->default(0);
-            $table->decimal('jun')->default(0);
-            $table->decimal('jul')->default(0);
-            $table->decimal('ago')->default(0);
-            $table->decimal('set')->default(0);
-            $table->decimal('out')->default(0);
-            $table->decimal('nov')->default(0);
-            $table->decimal('dez')->default(0);
+            $table->double('jan')->default(0);
+            $table->double('fev')->default(0);
+            $table->double('mar')->default(0);
+            $table->double('abr')->default(0);
+            $table->double('mai')->default(0);
+            $table->double('jun')->default(0);
+            $table->double('jul')->default(0);
+            $table->double('ago')->default(0);
+            $table->double('set')->default(0);
+            $table->double('out')->default(0);
+            $table->double('nov')->default(0);
+            $table->double('dez')->default(0);
             $table->unsignedBigInteger('year_id');
             $table->foreign('year_id')
                 ->references('id')

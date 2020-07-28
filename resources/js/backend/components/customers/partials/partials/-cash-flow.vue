@@ -83,11 +83,14 @@
                             <table class="table table-striped table-sm mb-0 f-12 table-hover">
                                 <thead>
                                     <tr>
-                                        <th colspan="3">
-                                            <b>Base</b>
+                                        <th>
+                                            <b>Receita & Distribuição de Despesas</b>
                                         </th>
-                                        <th class="bdl" colspan="3">
-                                            <b>Atual</b>
+                                        <th class="text-center" colspan="2">
+                                            <b>Cenário Ideal</b>
+                                        </th>
+                                        <th class="text-center" colspan="3">
+                                            <b>Resultado & Comparação com Cenário Ideal</b>
                                         </th>
                                     </tr>
                                 </thead>

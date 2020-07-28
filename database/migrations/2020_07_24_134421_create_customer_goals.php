@@ -19,7 +19,7 @@ class CreateCustomerGoals extends Migration
             $table->engine = 'InnoDB';
             $table->bigIncrements('id');
             $table->string('description');
-            $table->decimal('value')->default(0);
+            $table->double('value')->default(0);
             $table->string('term');
             $table->string('term_type');
             $table->unsignedBigInteger('customer_id');

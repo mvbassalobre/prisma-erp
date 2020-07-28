@@ -41,7 +41,7 @@
                                             </template>
                                             <th class="colored"></th>
                                         </tr>
-                                        <tr>
+                                        <!-- <tr>
                                             <th style="width:350px">
                                                 <b>Receita</b>
                                                 <small>Entradas</small>
@@ -54,7 +54,7 @@
                                                 >{{entries(m.value).currency()}}</th>
                                             </template>
                                             <th class="colored4"></th>
-                                        </tr>
+                                        </tr>-->
                                         <tr>
                                             <th style="width:350px">
                                                 Despesa

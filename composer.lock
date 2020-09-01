@@ -1748,7 +1748,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcusvbda/vstack.git",
-                "reference": "947687ff6e3ca44398c5d1e2e712cc17f9b0f2b6"
+                "reference": "f5324cb098fefac67bd11cf882564a91b936e36d"
             },
             "require": {
                 "spatie/laravel-permission": "^3.3",
@@ -1773,7 +1773,7 @@
                     "email": "bassalobre.vinicius@gmail.com"
                 }
             ],
-            "time": "2020-09-01T19:36:57+00:00"
+            "time": "2020-09-01T22:16:36+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -6102,6 +6102,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2019-09-17T06:23:10+00:00"
         },
         {

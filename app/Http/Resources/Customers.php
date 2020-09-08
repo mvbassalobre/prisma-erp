@@ -49,6 +49,16 @@ class Customers extends Resource
         return ["name", "email", "cpfcnpj", "ierg"];
     }
 
+    public function canImport()
+    {
+        return false;
+    }
+
+    public function canExport()
+    {
+        return false;
+    }
+
     public function table()
     {
         $user = Auth::user();

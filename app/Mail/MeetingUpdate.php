@@ -21,7 +21,7 @@ class MeetingUpdate extends Mailable
      *
      * @return void
      */
-    public function __construct(Meeting $meeting,$subject,$body,$config = [])
+    public function __construct(Meeting $meeting, $subject, $body, $config = [])
     {
         $this->meeting = $meeting;
         $this->subject = $subject;
@@ -45,8 +45,10 @@ class MeetingUpdate extends Mailable
             "body" => $this->body,
             "config" => $this->config
         ];
-        
+
         //dd($data);
-        return $this->subject($this->subject)->to($customer->email)->markdown('mail.meeting.update', $data);
+        return $this->subject($this->subject)
+            // ->to($customer->email)
+            ->markdown('mail.meeting.update', $data);
     }
 }

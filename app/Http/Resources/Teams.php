@@ -130,6 +130,6 @@ class Teams extends Resource
 
     public function canExport()
     {
-        return true;
+        return false;
     }
 }

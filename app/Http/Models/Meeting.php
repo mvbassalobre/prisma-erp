@@ -15,6 +15,8 @@ class Meeting extends DefaultModel
 {
     protected $table = "meetings";
     protected $dates = ["created_at", "updated_at", "starts_at", "ends_at", "customer_url_attendance"];
+    public $appends = ["f_starts_at", "f_ends_at"];
+
     public static function boot()
     {
         $user = Auth::user();
@@ -46,6 +48,17 @@ class Meeting extends DefaultModel
         //     }
         // });
     }
+
+    public function getFStartsAtAttribute()
+    {
+        return $this->starts_at->format("d/m/Y - H:i:s");
+    }
+
+    public function getFEndsAtAttribute()
+    {
+        return $this->ends_at->format("d/m/Y - H:i:s");
+    }
+
 
     public function makeHistoryText($type)
     {
@@ -133,12 +146,12 @@ class Meeting extends DefaultModel
         return [$this->starts_at->diffInMinutes($start) / 60, $this->ends_at->diffInMinutes($start) / 60];
     }
 
-    public function sendUpdateEmail($subject, $appendBody,$config = [])
+    public function sendUpdateEmail($subject, $appendBody, $config = [])
     {
         if (!trim($subject)) {
             $subject = "Reunião: " . $this->subject;
         }
-        return \Mail::to($this->responsible->email)->bcc($this->customer->email)->send(new MeetingUpdate($this, $subject, $appendBody,$config));
+        return \Mail::to($this->responsible->email)->bcc($this->customer->email)->send(new MeetingUpdate($this, $subject, $appendBody, $config));
     }
 
     public function makeEventLink()

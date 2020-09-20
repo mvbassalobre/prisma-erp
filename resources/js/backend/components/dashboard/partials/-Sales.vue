@@ -19,10 +19,7 @@
                 </loading-shimmer>
                 <loading-shimmer :loading="loading" :h="16">
                     <template v-if="!loading">
-                        <small>
-                            {{data.qty}} venda{{data.qty>1 ? 's':''}}
-                            <b>realizada{{data.qty>1 ? 's':''}}</b>
-                        </small>
+                        <small>{{data.qty}} {{data.qty>1 ? 'lançamentos':'lançamento'}}</small>
                     </template>
                 </loading-shimmer>
                 <loading-shimmer :loading="loading" :h="200" class="dashboard-chart-area">

@@ -23,6 +23,7 @@
                                         <el-select
                                             v-model="form.customer_id"
                                             :disabled="customer_id"
+                                            filterable
                                         >
                                             <el-option
                                                 v-for="status in modelsData.customers"
@@ -38,10 +39,11 @@
                                         <el-select
                                             v-model="form.type"
                                             placeholder="Orçamento, pesquisa etc"
+                                            filterable
                                         >
-                                        <el-option label="Análise" value="analise" />
-                                        <el-option label="Consultoria" value="consultoria" />
-                                        <el-option label="Serviço" value="servico" />
+                                            <el-option label="Análise" value="analise" />
+                                            <el-option label="Consultoria" value="consultoria" />
+                                            <el-option label="Serviço" value="servico" />
                                         </el-select>
                                     </el-form-item>
                                 </div>
@@ -142,10 +144,10 @@ export default {
         getPostUrl() {
             return this.isModal ? "/admin/meetings/create" : ""
         },
-        sendingText(){
+        sendingText() {
             let exists = !this.form.id ? "Criando reunião" : "Atualizando reunião ",
-            sending = this.extra.sendUpdateEmail ? " e enviando Email" : ""
-            
+                sending = this.extra.sendUpdateEmail ? " e enviando Email" : ""
+
             return exists + sending + "..."
         }
     },

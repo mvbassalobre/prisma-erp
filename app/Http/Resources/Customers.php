@@ -9,6 +9,11 @@ use marcusvbda\vstack\Fields\{
     BelongsTo,
 };
 use Auth;
+use App\Http\Filters\Customers\{
+    CustomersByUser,
+    CustomerByDateRange,
+    CustomersByTeam
+};
 
 class Customers extends Resource
 {
@@ -68,6 +73,7 @@ class Customers extends Resource
         $columns["phones"] = ["label" => "Telefones", "sortable" => false];
         if ($user->hasRole(["super-admin"])) $columns["tenant->name"] = ["label" => "Tenant", "sortable_index" => "tenant_id"];
         if ($user->hasRole(["super-admin", "admin"])) $columns["user->name"] = ["label" => "Responsável", "sortable_index" => "user_id"];
+        $columns["f_created_at"] = ["label" => "Data de Cadastro", "sortable_index" => "created_at"];
         $columns["actions"] = ["label" => "Ações", "sortable" => false];
         return $columns;
     }
@@ -263,5 +269,14 @@ class Customers extends Resource
     public function canCustomizeMetrics()
     {
         return false;
+    }
+
+    public function filters()
+    {
+        return [
+            new CustomersByTeam(),
+            new CustomersByUser(),
+            new CustomerByDateRange(),
+        ];
     }
 }

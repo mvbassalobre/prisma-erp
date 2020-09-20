@@ -97,8 +97,8 @@ class Meetings extends Resource
             "subject" => ["label" => "Assunto", "sortable_index" => "subject"],
             "room->name" => ["label" => "Sala", "sortable_index" => "meeting_room_id"],
             "customer_url_attendance" => ["label" => "Cliente", "sortable_index" => "customer_id"],
-            "starts_at" => ["label" => "Inicio", "sortable_index" => "starts_at"],
-            "ends_at" => ["label" => "Término", "sortable_index" => "ends_at"],
+            "f_starts_at" => ["label" => "Inicio", "sortable_index" => "starts_at"],
+            "f_ends_at" => ["label" => "Término", "sortable_index" => "ends_at"],
         ];
         if (Auth::user()->hasRole(["super-admin"])) {
             $columns["tenant->name"] = ["label" => "Tenant", "sortable_index" => "tenant_id"];

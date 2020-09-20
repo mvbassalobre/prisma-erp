@@ -55,6 +55,7 @@ class Team extends DefaultModel
     public function getFFlagAttribute()
     {
         if (!$this->flag) return;
+        if (!$this->flag[0] == "null") return;
         return "<img class='avatar-rounded ' src='" . $this->flag[0] . "' />";
     }
 

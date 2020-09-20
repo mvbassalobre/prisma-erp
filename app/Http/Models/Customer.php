@@ -15,7 +15,7 @@ class Customer extends DefaultModel
     protected $table = "customers";
     public $cascadeDeletes = ["sales"];
     // public $restrictDeletes = [];
-    protected $appends = ['code', 'f_created_at', 'last_update', 'phones', 'actions'];
+    protected $appends = ['code', 'f_created_at', 'last_update', 'phones', 'actions', 'team_name'];
 
     public $casts = [
         "timeline" => "Array",
@@ -124,5 +124,10 @@ class Customer extends DefaultModel
     public function sales()
     {
         return $this->hasMany(Sale::class);
+    }
+
+    public function getTeamNameAttribute()
+    {
+        return @$this->user->team->name;
     }
 }

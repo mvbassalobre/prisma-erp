@@ -11822,6 +11822,11 @@ h5 {
   border-bottom-color: black;
 }
 
+.pink {
+  background-color: pink;
+  border-bottom-color: black;
+}
+
 .green4 {
   background-color: #b4ffd9;
   border-bottom-color: black;
@@ -11839,5 +11844,9 @@ h5 {
   background-color: #b6ebd0;
   color: black;
   border-bottom-color: #a9a9b4;
+}
+
+a {
+  color: #9e6de0;
 }
 

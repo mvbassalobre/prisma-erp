@@ -11,7 +11,7 @@
                             <table class="table table-striped table-sm mb-0 f-12 table-hover">
                                 <thead>
                                     <tr>
-                                        <th style="width:350px">
+                                        <th class="w-25">
                                             Título /
                                             <small>Ano</small>
                                         </th>
@@ -41,7 +41,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <b>Geração de Caixa</b>
+                                            <b>Consumo</b>
                                             <small>Despesas</small>
                                         </td>
                                         <template v-for="(m,i) in months">
@@ -50,6 +50,18 @@
                                                 :key="`${i}_body`"
                                                 class="orange2"
                                             >{{(cash(m)).currency()}}</td>
+                                        </template>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <b>Geração de Caixa</b>
+                                        </td>
+                                        <template v-for="(m,i) in months">
+                                            <td
+                                                style="width:100px"
+                                                :key="`${i}_body`"
+                                                class="pink"
+                                            >{{(entries(m) - cash(m)).currency()}}</td>
                                         </template>
                                     </tr>
                                     <tr>

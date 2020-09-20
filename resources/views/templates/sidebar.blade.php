@@ -37,30 +37,6 @@ $menu[] = [
     "icon" => "el-icon-document-copy",
     "items" => [
         [
-            "label" => "Clientes Por Time",
-            "active" => isActive('/admin/reports/customer-by-team'),
-            "url" => "/admin/reports/customer-by-team",
-            "icon" => "el-icon-s-custom"
-        ],
-        [
-            "label" => "Clientes Por Usuário",
-            "active" => isActive('/admin/reports/customer-by-user'),
-            "url" => "/admin/reports/customer-by-user",
-            "icon" => "el-icon-s-custom"
-        ],
-        [
-            "label" => "Reuniões Por Time",
-            "active" => isActive('/admin/reports/meetings-by-team'),
-            "url" => "/admin/reports/meetings-by-team",
-            "icon" => "el-icon-guide"
-        ],
-        [
-            "label" => "Reuniões Por Usuário",
-            "active" => isActive('/admin/reports/meetings-by-user'),
-            "url" => "/admin/reports/meetings-by-user",
-            "icon" => "el-icon-guide"
-        ],
-        [
             "label" => "Vendas Por Time",
             "active" => isActive('/admin/reports/sales-by-team'),
             "url" => "/admin/reports/sales-by-team",
@@ -79,4 +55,5 @@ $big_logo = @json_decode($user->getSettings("logo-grande"))[0];
 $logo = ["src"=> $big_logo ? $big_logo : asset('assets/images/big_logo.png'),"href"=>route('admin.home')];
 $smalllogo = ["src"=> $small_logo ? $small_logo : asset('assets/images/logo.png'),"href"=>route('admin.home')];
 ?>
-<template-sidebar  :logo="{{json_encode($logo)}}"  :smalllogo="{{json_encode($smalllogo)}}" :menu="{{json_encode($menu)}}"></template-sidebar>
+<template-sidebar :logo="{{json_encode($logo)}}" :smalllogo="{{json_encode($smalllogo)}}"
+    :menu="{{json_encode($menu)}}"></template-sidebar>

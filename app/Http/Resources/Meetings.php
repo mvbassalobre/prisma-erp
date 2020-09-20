@@ -5,9 +5,12 @@ namespace App\Http\Resources;
 use marcusvbda\vstack\Fields\{Card, Text, BelongsTo, Url};
 use marcusvbda\vstack\Resource;
 use Auth;
-use App\Http\Filters\Meetings\MeetingsByDateRange;
-use App\Http\Filters\Meetings\MeetingsByCustomer;
-use App\Http\Filters\Meetings\MeetingsByRoom;
+use App\Http\Filters\Meetings\{
+    MeetingsByDateRange,
+    MeetingsByCustomer,
+    MeetingsByRoom,
+    MeetingsByTeam
+};
 
 class Meetings extends Resource
 {
@@ -16,6 +19,11 @@ class Meetings extends Resource
     public function label()
     {
         return "Agendamentos";
+    }
+
+    public function search()
+    {
+        return ["subject"];
     }
 
     public function singularLabel()
@@ -111,11 +119,6 @@ class Meetings extends Resource
         return false;
     }
 
-    public function canExport()
-    {
-        return false;
-    }
-
     public function canDelete()
     {
         if (Auth::check()) {
@@ -128,8 +131,39 @@ class Meetings extends Resource
     {
         return [
             new MeetingsByRoom(),
+            new MeetingsByTeam(),
             new MeetingsByCustomer(),
             new MeetingsByDateRange()
+        ];
+    }
+
+    public function beforeListSlot()
+    {
+        return view('admin.meetings.metrics');
+    }
+
+    public function canExport()
+    {
+        return true;
+    }
+
+    public function maxRowsExportSync()
+    {
+        return 99999;
+    }
+
+    public function export_columns()
+    {
+        return [
+            "code"  => ["label" => "Código"],
+            "room->name"  => ["label" => "Sala de Reunião"],
+            "status->name" => ["label" => "Status"],
+            "customer->name" => ["label" => "Cliente"],
+            "customer->email" => ["label" => "Email"],
+            "customer->phone" => ["label" => "Telefone"],
+            "customer->cellphone " => ["label" => "Celular"],
+            "f_start_at" => ["label" => "Início"],
+            "f_end_at" => ["label" => "Término"],
         ];
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Filters\Meetings;
 
 use  marcusvbda\vstack\Filter;
-use Carbon\Carbon;
 
 class MeetingsByDateRange extends Filter
 {

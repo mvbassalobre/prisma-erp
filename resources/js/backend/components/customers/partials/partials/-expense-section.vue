@@ -25,7 +25,7 @@
                                 <table class="table table-striped table-sm mb-0">
                                     <thead>
                                         <tr>
-                                            <th style="width:350px">
+                                            <th class="w-25">
                                                 Conta
                                                 <small>Mês</small>
                                             </th>
@@ -56,7 +56,7 @@
                                             <th class="colored4"></th>
                                         </tr>-->
                                         <tr>
-                                            <th style="width:350px">
+                                            <th class="w-25">
                                                 Despesa
                                                 <small>Consumo</small>
                                             </th>
@@ -70,7 +70,7 @@
                                             <th class="colored2"></th>
                                         </tr>
                                         <tr>
-                                            <th style="width:350px">
+                                            <th class="w-25">
                                                 <b>%</b>
                                                 <small>Sobre a Receita</small>
                                             </th>

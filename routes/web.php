@@ -13,6 +13,7 @@ Route::group(['prefix' => "admin"], function () {
         require "partials/customers.php";
         require "partials/pagseguro.php";
         require "partials/meetings.php";
+        require "partials/sales.php";
         require "partials/api.php";
     });
 });

@@ -1,5 +1,7 @@
 <?php
 Route::group(['prefix' => "customers"], function () {
+    Route::post('metrics/{type}', 'CustomersController@getMetrics');
+
     Route::post('{code}/create-area-access', 'CustomersController@createAreaAccess')->middleware(['hashids:code']);
     Route::post('{code}/remove-area-access', 'CustomersController@removeAreaAccess')->middleware(['hashids:code']);
     Route::post('{code}/get-timeline', 'CustomersController@getTimeline')->middleware(['hashids:code']);
@@ -25,6 +27,7 @@ Route::group(['prefix' => "customers"], function () {
     Route::put('{code}/attendance/edit-expense', 'CustomersController@editExpense')->middleware(['hashids:code']);
 
     Route::post('post_new_sale', 'CustomersController@postNewSale')->name("admin.customers.attendance.new_sale");
+    Route::post('baixa', 'CustomersController@baixa')->name("admin.customers.attendance.baixa");
     Route::post('destroy_sale', 'CustomersController@destroySale')->name("admin.customers.attendance.destroy_sale");
     Route::post('change_pass', 'CustomersController@changePass')->name("admin.customers.attendance.change_pass");
 });

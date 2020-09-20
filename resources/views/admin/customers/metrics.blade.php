@@ -1,0 +1,1 @@
+<customer-metric-section :get_params="{{json_encode($_GET)}}"></customer-metric-section>

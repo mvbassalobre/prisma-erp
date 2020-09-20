@@ -59,11 +59,6 @@ class Customers extends Resource
         return false;
     }
 
-    public function canExport()
-    {
-        return false;
-    }
-
     public function table()
     {
         $user = Auth::user();
@@ -271,12 +266,40 @@ class Customers extends Resource
         return false;
     }
 
+    public function beforeListSlot()
+    {
+        return view('admin.customers.metrics');
+    }
+
     public function filters()
     {
         return [
             new CustomersByTeam(),
             new CustomersByUser(),
             new CustomerByDateRange(),
+        ];
+    }
+
+    public function canExport()
+    {
+        return true;
+    }
+
+    public function maxRowsExportSync()
+    {
+        return 99999;
+    }
+
+    public function export_columns()
+    {
+        return [
+            "code"  => ["label" => "Código"],
+            "name"  => ["label" => "Nome"],
+            "email" => ["label" => "Email"],
+            "phone" => ["label" => "Telefone"],
+            "cellphone" => ["label" => "Celular"],
+            "f_created_at" => ["label" => "Data de Criação"],
+            "last_update " => ["label" => "Última Atualização"],
         ];
     }
 }

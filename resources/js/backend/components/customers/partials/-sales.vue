@@ -123,17 +123,43 @@
                                                                 >{{s.f_code}}</a>
                                                             </span>
                                                         </b>
-                                                        <div class="d-flex flex-row">
+                                                        <div
+                                                            class="d-flex flex-row align-items-center"
+                                                        >
                                                             <div>
                                                                 <span class="el-icon-time mr-1" />
                                                                 <span v-html="s.f_created_at" />
                                                             </div>
                                                             <div v-if="!customer_area">
-                                                                <a
-                                                                    href="#"
-                                                                    class="ml-3 text-danger"
-                                                                    @click.prevent="destroy(s)"
-                                                                >Excluir Lançamento</a>
+                                                                <div class="dropdown">
+                                                                    <button
+                                                                        class="btn btn-secondary dropdown-toggle btn-sm ml-3"
+                                                                        type="button"
+                                                                        id="dropdownMenuButton"
+                                                                        data-toggle="dropdown"
+                                                                        aria-haspopup="true"
+                                                                        aria-expanded="false"
+                                                                    >Ações</button>
+                                                                    <div
+                                                                        class="dropdown-menu dropdown-menu-right"
+                                                                        aria-labelledby="dropdownMenuButton"
+                                                                    >
+                                                                        <a
+                                                                            v-if="s.payment"
+                                                                            class="dropdown-item text-success"
+                                                                            href="#"
+                                                                            @click.prevent="baixa(s)"
+                                                                        >Dar baixa no lançamento</a>
+                                                                        <div
+                                                                            class="dropdown-divider"
+                                                                        />
+                                                                        <a
+                                                                            class="dropdown-item text-danger"
+                                                                            href="#"
+                                                                            @click.prevent="destroy(s)"
+                                                                        >Excluir lançamento</a>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -305,6 +331,22 @@ export default {
     methods: {
         showDetail(s) {
             this.$refs.modal_detail.showModal(s)
+        },
+        baixa(p) {
+            this.$confirm(`Confirma baixa desse lançamento ?`, "Confirmação", {
+                confirmButtonText: "Sim",
+                cancelButtonText: "Não",
+                type: 'warning'
+            }).then(() => {
+                this.loading = this.$loading()
+                this.$http.post(laravel.general.root_url + "/admin/customers/baixa", { customer_id: this.customer.id, sale: p }).then(res => {
+                    window.location.reload()
+                }).catch(er => {
+                    this.loading.close()
+                    console.log(er)
+                    this.$message({ showClose: true, message: "Erro ao excluir", type: "error" })
+                })
+            })
         },
         destroy(p) {
             this.$confirm(`Confirma exclusão ?`, "Confirmação", {

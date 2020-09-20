@@ -65,7 +65,7 @@
                                         </thead>
                                         <tbody>
                                             <tr v-for="(q,y) in year.entries" :key="q.id">
-                                                <td>
+                                                <td class="w-25">
                                                     <edit-input
                                                         v-model="q.name"
                                                         :can_edit="true"

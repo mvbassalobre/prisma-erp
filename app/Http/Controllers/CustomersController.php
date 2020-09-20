@@ -215,24 +215,6 @@ class CustomersController extends Controller
         return ["success" => true, "expenses" => CustomerFluxSectionExpense::where("section_id", $request["section_id"])->get()];
     }
 
-    // public function saveFlux($id, Request $request)
-    // {
-    //     $user = Auth::user();
-    //     $customer = Customer::findOrFail($id);
-    //     $data = @$customer->data ? $customer->data : [];
-    //     $entries = $request->all();
-    //     $data["entries"] = (object) @$entries;
-    //     $sections = [];
-    //     foreach ($data["entries"] as $key => $value) {
-    //         $sections[(string) $key] =  @$data["sections"][(string) $key] ?  $data["sections"][(string) $key] : [];
-    //     }
-    //     $data["sections"] = $sections;
-    //     $customer->data = $data;
-    //     $customer->appendToTimeline("Fluxo de Caixa", "Adição de Entrada no Fluxo de Caixa por <b>$user->name</b>");
-    //     $customer->save();
-    //     return ["success" => true, "years" => $data["entries"]];
-    // }
-
     public function addSections($id, Request $request)
     {
         $year = CustomerFluxYear::findOrFail($request["year"]["id"]);
@@ -321,5 +303,53 @@ class CustomersController extends Controller
         $customer->appendToTimeline("Area do Cliente", "O próprio cliente alterou sua senha");
         Messages::send("success", 'Senha alterada com sucesso  !!');
         return ["success" => true];
+    }
+
+    public function baixa(Request $request)
+    {
+        $customer = Customer::findOrFail($request["customer_id"]);
+        $user = Auth::user();
+        $sale = Sale::where("id", $request["sale"]["id"])->firstOrFail();
+        $payment = $sale->payment;
+        $payment->status = "Pagamento Aprovado";
+        $payment->save();
+        $customer->appendToTimeline("Baixa de Lançamento", "O lançamento <b>" . $request["sale"]["f_code"] . "</b> foi baixado pelo usuario <b>" . $user->name . "</b>");
+        Messages::send("success", "Lançamento baixado com sucesso !!");
+        return ["success" => true];
+    }
+
+    public function getMetrics($type, Request $request)
+    {
+        $resource = ResourcesHelpers::find("customers");
+        $resourceController = new ResourceController();
+        $data = $resourceController->getData($resource, $request);
+        return $this->{"getMetric" . ucfirst($type)}($data);
+    }
+
+    protected function getmetricTotal($data)
+    {
+        return  $data->count();
+    }
+
+    protected function getmetricTeams($data)
+    {
+        return $data->selectRaw("count(*) as qty,  if(teams.name is null, 'Sem Time', teams.name)  as team_name")
+            ->join("users", "users.id", "=", "customers.user_id")
+            ->join("user_team", "user_team.user_id", "=", "customers.user_id")
+            ->join("teams", "user_team.team_id", "=", "teams.id")
+            ->groupBy("teams.id")
+            ->orderBy("qty", "desc")
+            ->pluck('qty', 'team_name')
+            ->all();
+    }
+
+    protected function getmetricUsers($data)
+    {
+        return $data->selectRaw("count(*) as qty,  if(users.name is null, 'Sem Responsável', users.name)  as user_name")
+            ->join("users", "users.id", "=", "customers.user_id")
+            ->groupBy("customers.user_id")
+            ->orderBy("qty", "desc")
+            ->pluck('qty', 'user_name')
+            ->all();
     }
 }

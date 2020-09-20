@@ -23,6 +23,6 @@ class MeetingsByTeam extends Filter
 
     public function apply($query, $value)
     {
-        return $query->whereIn("user_id", Team::find($value)->users->pluck("id")->toArray());
+        return $query->whereIn("meetings.user_id", Team::find($value)->users->pluck("id")->toArray());
     }
 }

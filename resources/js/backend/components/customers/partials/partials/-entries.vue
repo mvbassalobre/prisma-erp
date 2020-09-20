@@ -31,8 +31,8 @@
                                         class="table table-striped table-sm mb-0 f-12 table-hover"
                                     >
                                         <thead>
-                                            <tr>
-                                                <th style="width:350px">
+                                            <tr class="w-25">
+                                                <th>
                                                     Conta
                                                     <small>Mês</small>
                                                 </th>
@@ -48,8 +48,8 @@
                                                 </template>
                                                 <th class="green"></th>
                                             </tr>
-                                            <tr>
-                                                <th style="width:350px">
+                                            <tr class="w-25">
+                                                <th>
                                                     Entradas
                                                     <small>Receitas</small>
                                                 </th>

@@ -32,24 +32,6 @@ foreach(ResourcesHelpers::all() as $group=>$resources)
     }
     $menu[] = $groups;
 }
-$menu[] = [
-    "label" => "Relatórios",
-    "icon" => "el-icon-document-copy",
-    "items" => [
-        [
-            "label" => "Vendas Por Time",
-            "active" => isActive('/admin/reports/sales-by-team'),
-            "url" => "/admin/reports/sales-by-team",
-            "icon" => "el-icon-money"
-        ],
-        [
-            "label" => "Vendas Por Usuário",
-            "active" => isActive('/admin/reports/sales-by-user'),
-            "url" => "/admin/reports/sales-by-user",
-            "icon" => "el-icon-money"
-        ]
-    ]
-];
 $small_logo = @json_decode($user->getSettings("logo-pequeno"))[0];
 $big_logo = @json_decode($user->getSettings("logo-grande"))[0];
 $logo = ["src"=> $big_logo ? $big_logo : asset('assets/images/big_logo.png'),"href"=>route('admin.home')];

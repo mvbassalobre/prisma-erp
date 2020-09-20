@@ -5,7 +5,6 @@ Route::get('/', function () {
 Route::group(['prefix' => "admin"], function () {
     require "partials/auth.php";
     Route::group(['middleware' => 'auth'], function () {
-        require "partials/reports.php";
         require "partials/home.php";
         require "partials/account.php";
         require "partials/users.php";

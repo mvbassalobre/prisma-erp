@@ -9,7 +9,10 @@
                     <a href="/admin" class="link">Dashboard</a>
                 </li>
                 <li class="breadcrumb-item active">
-                    <a href="/admin/sales/create" class="link">Lançamento de Vendas</a>
+                    <a href="/admin/sales" class="link">Vendas</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <a href="/admin/sales/create" class="link">Seleção de Cliente para Vendas</a>
                 </li>
             </ol>
         </nav>

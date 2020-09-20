@@ -1,0 +1,1 @@
+<sales-metric-section :get_params="{{json_encode($_GET)}}"></sales-metric-section>

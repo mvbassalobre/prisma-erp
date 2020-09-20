@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Filters\Customers;
+namespace App\Http\Filters\Sales;
 
 use App\Http\Models\Team;
 use  marcusvbda\vstack\Filter;
 
-class CustomersByTeam extends Filter
+class SalesByTeam extends Filter
 {
 
     public $component   = "select-filter";
     public $label       = "Time";
     public $placeholder = "";
-    public $index = "customers_by_team";
+    public $index = "Sales_by_team";
 
     public function __construct()
     {
@@ -23,6 +23,6 @@ class CustomersByTeam extends Filter
 
     public function apply($query, $value)
     {
-        return $query->whereIn("customers.user_id", Team::find($value)->users->pluck("id")->toArray());
+        return $query->whereIn("sales.user_id", Team::find($value)->users->pluck("id")->toArray());
     }
 }

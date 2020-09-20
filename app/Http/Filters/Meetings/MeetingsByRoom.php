@@ -23,6 +23,6 @@ class MeetingsByRoom extends Filter
 
     public function apply($query, $value)
     {
-        return $query->where("meeting_room_id", $value);
+        return $query->where("meetings.meeting_room_id", $value);
     }
 }

@@ -23,6 +23,6 @@ class CustomersByUser extends Filter
 
     public function apply($query, $value)
     {
-        return $query->where("user_id", $value);
+        return $query->where("customers.user_id", $value);
     }
 }

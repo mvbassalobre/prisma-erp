@@ -23,6 +23,6 @@ class MeetingsByCustomer extends Filter
 
     public function apply($query, $value)
     {
-        return $query->where("customer_id", $value);
+        return $query->where("meetings.customer_id", $value);
     }
 }

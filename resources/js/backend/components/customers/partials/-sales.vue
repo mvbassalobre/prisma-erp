@@ -144,15 +144,16 @@
                                                                         class="dropdown-menu dropdown-menu-right"
                                                                         aria-labelledby="dropdownMenuButton"
                                                                     >
-                                                                        <a
-                                                                            v-if="s.payment"
-                                                                            class="dropdown-item text-success"
-                                                                            href="#"
-                                                                            @click.prevent="baixa(s)"
-                                                                        >Dar baixa no lançamento</a>
-                                                                        <div
-                                                                            class="dropdown-divider"
-                                                                        />
+                                                                        <template v-if="s.payment">
+                                                                            <a
+                                                                                class="dropdown-item text-success"
+                                                                                href="#"
+                                                                                @click.prevent="baixa(s)"
+                                                                            >Dar baixa no lançamento</a>
+                                                                            <div
+                                                                                class="dropdown-divider"
+                                                                            />
+                                                                        </template>
                                                                         <a
                                                                             class="dropdown-item text-danger"
                                                                             href="#"

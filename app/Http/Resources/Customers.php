@@ -24,6 +24,11 @@ class Customers extends Resource
         return true;
     }
 
+    public function resultsPerPage()
+    {
+        return 50;
+    }
+
     public function menu()
     {
         return "Cadastros";
@@ -67,7 +72,7 @@ class Customers extends Resource
         $columns["email"] = ["label" => "Email"];
         $columns["phones"] = ["label" => "Telefones", "sortable" => false];
         if ($user->hasRole(["super-admin"])) $columns["tenant->name"] = ["label" => "Tenant", "sortable_index" => "tenant_id"];
-        if ($user->hasRole(["super-admin", "admin"])) $columns["user->name"] = ["label" => "Responsável", "sortable_index" => "user_id"];
+        $columns["f_user"] = ["label" => "Responsável", "sortable_index" => "user_id"];
         $columns["f_created_at"] = ["label" => "Data de Cadastro", "sortable_index" => "created_at"];
         $columns["actions"] = ["label" => "Ações", "sortable" => false];
         return $columns;

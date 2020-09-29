@@ -15,7 +15,10 @@
                         </thead>
                         <tbody>
                             <template v-for="g in goals">
-                                <tr :key="g.id" class="clickable">
+                                <tr
+                                    :key="g.id"
+                                    class="clickable"
+                                >
                                     <td>
                                         <edit-input
                                             @change="changeGoal(g)"
@@ -33,7 +36,10 @@
                                         />
                                     </td>
                                     <td>
-                                        <edit-input @change="changeGoal(g)" v-model="g.term" />
+                                        <edit-input
+                                            @change="changeGoal(g)"
+                                            v-model="g.term"
+                                        />
                                     </td>
                                     <td>
                                         <edit-input
@@ -58,7 +64,10 @@
 
                             <tr>
                                 <td>
-                                    <input class="w-100" v-model="form.description" />
+                                    <input
+                                        class="w-100"
+                                        v-model="form.description"
+                                    />
                                 </td>
                                 <td>
                                     <currency-input
@@ -77,7 +86,10 @@
                                     />
                                 </td>
                                 <td>
-                                    <select class="w-100" v-model="form.term_type">
+                                    <select
+                                        class="w-100"
+                                        v-model="form.term_type"
+                                    >
                                         <option
                                             v-for="(o,i) in term_type_options"
                                             :value="o.value"
@@ -119,10 +131,10 @@ export default {
             },
             form: {},
             term_type_options: [
-                { value: 'Dia(s)', label: 'Dia(s)' },
-                { value: 'Me(es)', label: 'Me(es)' },
-                { value: 'Ano(s)', label: 'Ano(s)' },
-            ]
+                { value: "Dia(s)", label: "Dia(s)" },
+                { value: "Mes(es)", label: "Mes(es)" },
+                { value: "Ano(s)", label: "Ano(s)" },
+            ],
         }
     },
     created() {
@@ -136,58 +148,83 @@ export default {
         loadGoals() {
             this.attempts++
             this.loading_goals = true
-            this.$http.post("/admin/api/get-data/customerGoals", { customer_id: this.customer.id }).then(resp => {
-                resp = resp.data
-                this.loading_goals = false
-                this.goals = resp
-            }).catch(er => {
-                if (this.attempts <= 3) return this.loadGoals()
-                this.loading_goals = false
-                return console.log(er)
-            })
+            this.$http
+                .post("/admin/api/get-data/customerGoals", {
+                    customer_id: this.customer.id,
+                })
+                .then((resp) => {
+                    resp = resp.data
+                    this.loading_goals = false
+                    this.goals = resp
+                })
+                .catch((er) => {
+                    if (this.attempts <= 3) return this.loadGoals()
+                    this.loading_goals = false
+                    return console.log(er)
+                })
         },
         changeGoal(goal) {
             this.loading_goals = true
-            this.$http.put(`/admin/customers/${this.customer.code}/attendance/edit-goal`, goal).then(resp => {
-                resp = resp.data
-                this.goals = resp.goals
-                this.loading_goals = false
-            }).catch(er => {
-                console.log(er)
-                this.loading_goals = false
-            })
+            this.$http
+                .put(
+                    `/admin/customers/${this.customer.code}/attendance/edit-goal`,
+                    goal
+                )
+                .then((resp) => {
+                    resp = resp.data
+                    this.goals = resp.goals
+                    this.loading_goals = false
+                })
+                .catch((er) => {
+                    console.log(er)
+                    this.loading_goals = false
+                })
         },
         deleteGoal(goal) {
             this.$confirm("Deseja excluir ?", "Confirmação", {
                 confirmButtonText: "Sim",
                 cancelButtonText: "Não",
-                type: 'warning'
+                type: "warning",
             }).then(() => {
                 this.loading_goals = true
-                this.$http.delete(`/admin/customers/attendance/delete-goal/${goal.id}`).then(resp => {
-                    resp = resp.data
-                    this.goals = resp.goals
-                    this.loading_goals = false
-                }).catch(er => {
-                    console.log(er)
-                    this.loading_goals = false
-                })
+                this.$http
+                    .delete(
+                        `/admin/customers/attendance/delete-goal/${goal.id}`
+                    )
+                    .then((resp) => {
+                        resp = resp.data
+                        this.goals = resp.goals
+                        this.loading_goals = false
+                    })
+                    .catch((er) => {
+                        console.log(er)
+                        this.loading_goals = false
+                    })
             })
         },
         refreshForm() {
-            (Object.keys(this.default_form)).map(k => this.$set(this.form, k, this.default_form[k]))
+            Object.keys(this.default_form).map((k) =>
+                this.$set(this.form, k, this.default_form[k])
+            )
         },
         appendGoal() {
-            if (!this.form.description) return this.$message.error('Defina ao menos uma descrição')
-            this.$http.post(`/admin/customers/${this.customer.code}/attendance/add-goal`, { ...this.form, customer_id: this.customer.id }).then(resp => {
-                resp = resp.data
-                this.goals = resp.goals
-                this.refreshForm()
-                this.$message.success('Objetivo cadastrado com sucesso !!')
-            }).catch(er => {
-                console.log(er)
-            })
+            if (!this.form.description)
+                return this.$message.error("Defina ao menos uma descrição")
+            this.$http
+                .post(
+                    `/admin/customers/${this.customer.code}/attendance/add-goal`,
+                    { ...this.form, customer_id: this.customer.id }
+                )
+                .then((resp) => {
+                    resp = resp.data
+                    this.goals = resp.goals
+                    this.refreshForm()
+                    this.$message.success("Objetivo cadastrado com sucesso !!")
+                })
+                .catch((er) => {
+                    console.log(er)
+                })
         },
-    }
+    },
 }
 </script>

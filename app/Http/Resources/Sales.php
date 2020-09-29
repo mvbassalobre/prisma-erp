@@ -19,6 +19,11 @@ class Sales extends Resource
         return "Vendas";
     }
 
+    public function resultsPerPage()
+    {
+        return 50;
+    }
+
     public function singularLabel()
     {
         return "Venda";
@@ -66,7 +71,8 @@ class Sales extends Resource
             "f_customer" => ["label" => "Cliente", "sortable_index" => "customer_id"],
             "f_pagto" => ["label" => "Pagto", "sortable" => false],
             "f_items" => ["label" => "Items", "sortable" => false],
-            "f_user" => ["label" => "Responsável", "sortable_index" => "user_id"],
+            "f_user" => ["label" => "Responsável Pelo Cliente", "sortable_index" => "user_id"],
+            "f_user_sale" => ["label" => "Responsável Pelo Lançamento", "sortable_index" => "user_id"],
             "f_created_at" => ["label" => "Data de Lançamento", "sortable_index" => "created_at"],
         ];
     }

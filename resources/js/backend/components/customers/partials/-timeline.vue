@@ -15,9 +15,7 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <div
-                            class="d-flex flex-column row justify-content-center align-items-center"
-                        >
+                        <div class="d-flex flex-column row justify-content-center align-items-center">
                             <div class="col-12 mb-3">
                                 <el-timeline class="pl-0">
                                     <el-timeline-item>
@@ -75,19 +73,6 @@
                                             </div>
                                         </div>
                                     </el-timeline-item>
-                                    <el-timeline-item>
-                                        <div
-                                            class="d-flex align-items-center flex-column justify-content-center"
-                                        >
-                                            <span
-                                                class="el-icon-loading mt-3"
-                                                :style="{fontSize:50, color :'#9e6de0'}"
-                                            />
-                                            <small
-                                                :style="{color :'rgba(158, 109, 224, 0.53)'}"
-                                            >Atualizando em tempo real</small>
-                                        </div>
-                                    </el-timeline-item>
                                     <el-timeline-item
                                         :timestamp="t.datetime"
                                         placement="top"
@@ -96,12 +81,13 @@
                                     >
                                         <div class="card">
                                             <div class="card-header">
-                                                <div
-                                                    class="d-flex justify-content-between align-items-center"
-                                                >
+                                                <div class="d-flex justify-content-between align-items-center">
                                                     <b>
                                                         <span class="el-icon-info mr-2" />
-                                                        <span v-html="t.title" classs="capitalize" />
+                                                        <span
+                                                            v-html="t.title"
+                                                            classs="capitalize"
+                                                        />
                                                     </b>
                                                     <div>
                                                         <span class="el-icon-time mr-1" />
@@ -129,16 +115,16 @@ export default {
     props: {
         customer: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
         activeOption: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
         active: {
             type: String,
-            default: null
-        }
+            default: null,
+        },
     },
     data() {
         return {
@@ -146,33 +132,45 @@ export default {
             filter: {
                 type: [],
                 range_data: [],
-                description: null
-            }
+                description: null,
+            },
         }
     },
     computed: {
         types() {
-            return Array.from(new Set(this.customer.timeline.map(({ title }) => title)))
+            return Array.from(
+                new Set(this.customer.timeline.map(({ title }) => title))
+            )
         },
         _timeline() {
             let _timeline = this.customer.timeline
-            if (this.filter.type.length > 0) _timeline = _timeline.filter(row => this.filter.type.includes(row["title"]))
-            if (this.filter.description != null) _timeline = _timeline.filter(row => row.description.toLowerCase().indexOf(this.filter.description.toLowerCase()) >= 0)
+            if (this.filter.type.length > 0)
+                _timeline = _timeline.filter((row) =>
+                    this.filter.type.includes(row["title"])
+                )
+            if (this.filter.description != null)
+                _timeline = _timeline.filter(
+                    (row) =>
+                        row.description
+                            .toLowerCase()
+                            .indexOf(this.filter.description.toLowerCase()) >= 0
+                )
             if (this.filter.range_data) {
-                if (this.filter.range_data.length >= 2) _timeline = _timeline.filter(row => {
-                    let date_1 = new Date(this.filter.range_data[0])
-                    let date_2 = new Date(this.filter.range_data[1])
-                    let date = row.datetime.split(" - ")
-                    let day = date[0].substring(0, 2)
-                    let month = date[0].substring(3, 5)
-                    let year = date[0].substring(6, 10)
-                    date = new Date(`${year}-${month}-${day} ${date[1]}`)
-                    if ((date >= date_1) && (date <= date_2)) return true
-                    return false
-                })
+                if (this.filter.range_data.length >= 2)
+                    _timeline = _timeline.filter((row) => {
+                        let date_1 = new Date(this.filter.range_data[0])
+                        let date_2 = new Date(this.filter.range_data[1])
+                        let date = row.datetime.split(" - ")
+                        let day = date[0].substring(0, 2)
+                        let month = date[0].substring(3, 5)
+                        let year = date[0].substring(6, 10)
+                        date = new Date(`${year}-${month}-${day} ${date[1]}`)
+                        if (date >= date_1 && date <= date_2) return true
+                        return false
+                    })
             }
             return _timeline
-        }
+        },
     },
     created() {
         setInterval(() => {
@@ -181,17 +179,19 @@ export default {
     },
     methods: {
         getTimeline() {
-            this.$http.post(`/admin/customers/${this.customer.code}/get-timeline`, {}).then(resp => {
-                resp = resp.data
-                if (!resp.data.isEqual(this.customer.timeline)) {
-                    this.loading = true
-                    setTimeout(() => {
-                        this.customer.timeline = resp.data
-                        this.loading = false
-                    }, 1000)
-                }
-            })
-        }
-    }
+            this.$http
+                .post(`/admin/customers/${this.customer.code}/get-timeline`, {})
+                .then((resp) => {
+                    resp = resp.data
+                    if (!resp.data.isEqual(this.customer.timeline)) {
+                        this.loading = true
+                        setTimeout(() => {
+                            this.customer.timeline = resp.data
+                            this.loading = false
+                        }, 1000)
+                    }
+                })
+        },
+    },
 }
 </script>

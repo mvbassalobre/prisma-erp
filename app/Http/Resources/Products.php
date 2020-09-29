@@ -20,6 +20,11 @@ class Products extends Resource
         return "Produtos";
     }
 
+    public function resultsPerPage()
+    {
+        return 50;
+    }
+
     public function singularLabel()
     {
         return "Produto";

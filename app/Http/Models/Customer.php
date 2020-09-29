@@ -15,7 +15,7 @@ class Customer extends DefaultModel
     protected $table = "customers";
     public $cascadeDeletes = ["sales"];
     // public $restrictDeletes = [];
-    protected $appends = ['code', 'f_created_at', 'last_update', 'phones', 'actions', 'team_name'];
+    protected $appends = ['code', 'f_created_at', 'last_update', 'phones', 'actions', 'team_name','f_user'];
 
     public $casts = [
         "timeline" => "Array",
@@ -25,6 +25,12 @@ class Customer extends DefaultModel
     public static function hasTenant()
     {
         return false;
+    }
+
+    public function getFUserAttribute()
+    {
+        $user = $this->user;
+        return "<a href='/admin/users/" . $user->code . "'>" . $user->name . "</a>";
     }
 
     public static function boot()

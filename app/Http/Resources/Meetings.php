@@ -21,6 +21,11 @@ class Meetings extends Resource
         return "Agendamentos";
     }
 
+    public function resultsPerPage()
+    {
+        return 50;
+    }
+
     public function search()
     {
         return ["subject"];

@@ -24,16 +24,12 @@
                         <div class="row">
                             <div class="col-12">
                                 <template v-if="sales.length<=0">
-                                    <div
-                                        class="h-100 d-flex align-items-center justify-content-center flex-column pb-4"
-                                    >
+                                    <div class="h-100 d-flex align-items-center justify-content-center flex-column pb-4">
                                         <h1 class="mt-4">
                                             <span class="el-icon-s-finance mr-2"></span>
                                         </h1>
                                         <h5>Cliente não possui lançamentos</h5>
-                                        <small
-                                            v-if="canaddsale"
-                                        >Adicione um lançamento clicando no botão abaixo</small>
+                                        <small v-if="canaddsale">Adicione um lançamento clicando no botão abaixo</small>
                                         <button
                                             v-if="canaddsale"
                                             class="btn btn-primary mb-4 mt-3"
@@ -88,19 +84,6 @@
                                                 </div>
                                             </div>
                                         </el-timeline-item>
-                                        <el-timeline-item>
-                                            <div
-                                                class="d-flex align-items-center flex-column justify-content-center"
-                                            >
-                                                <span
-                                                    class="el-icon-loading mt-3"
-                                                    :style="{fontSize:50, color :'#9e6de0'}"
-                                                />
-                                                <small
-                                                    :style="{color :'rgba(158, 109, 224, 0.53)'}"
-                                                >Atualizando em tempo real</small>
-                                            </div>
-                                        </el-timeline-item>
                                         <el-timeline-item
                                             :timestamp="s.f_created_at"
                                             placement="top"
@@ -109,9 +92,7 @@
                                         >
                                             <div class="card">
                                                 <div class="card-header">
-                                                    <div
-                                                        class="d-flex justify-content-between align-items-center"
-                                                    >
+                                                    <div class="d-flex justify-content-between align-items-center">
                                                         <b>
                                                             <span class="el-icon-info mr-2" />
                                                             <span classs="capitalize">
@@ -123,9 +104,7 @@
                                                                 >{{s.f_code}}</a>
                                                             </span>
                                                         </b>
-                                                        <div
-                                                            class="d-flex flex-row align-items-center"
-                                                        >
+                                                        <div class="d-flex flex-row align-items-center">
                                                             <div>
                                                                 <span class="el-icon-time mr-1" />
                                                                 <span v-html="s.f_created_at" />
@@ -150,9 +129,7 @@
                                                                                 href="#"
                                                                                 @click.prevent="baixa(s)"
                                                                             >Dar baixa no lançamento</a>
-                                                                            <div
-                                                                                class="dropdown-divider"
-                                                                            />
+                                                                            <div class="dropdown-divider" />
                                                                         </template>
                                                                         <a
                                                                             class="dropdown-item text-danger"
@@ -168,9 +145,7 @@
                                                 <div class="card-body">
                                                     <div class="row">
                                                         <div class="col-md-8 col-sm-12">
-                                                            <table
-                                                                class="table table-striped table-sm hovered resource-table table-hover mb-0"
-                                                            >
+                                                            <table class="table table-striped table-sm hovered resource-table table-hover mb-0">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>Produto</th>
@@ -185,13 +160,9 @@
                                                                         :key="i"
                                                                     >
                                                                         <td v-html="item.name" />
-                                                                        <td
-                                                                            v-html="item.price.currency()"
-                                                                        />
+                                                                        <td v-html="item.price.currency()" />
                                                                         <td v-html="item.qty" />
-                                                                        <td
-                                                                            v-html="item.total.currency()"
-                                                                        />
+                                                                        <td v-html="item.total.currency()" />
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -218,32 +189,22 @@
                                                                     />
                                                                 </div>
                                                                 <div>
-                                                                    <b
-                                                                        class="mr-1"
-                                                                    >Data do Lançamento :</b>
+                                                                    <b class="mr-1">Data do Lançamento :</b>
                                                                     {{s.f_created_at.split(" - ")[0]}}
                                                                 </div>
                                                                 <div>
-                                                                    <b
-                                                                        class="mr-1"
-                                                                    >Hora do Lançamento :</b>
+                                                                    <b class="mr-1">Hora do Lançamento :</b>
                                                                     {{s.f_created_at.split(" - ")[1]}}
                                                                 </div>
                                                                 <div v-if="!s.payment">
-                                                                    <b
-                                                                        class="text-danger"
-                                                                    >Sem Link de Pagto</b>
+                                                                    <b class="text-danger">Sem Link de Pagto</b>
                                                                 </div>
                                                                 <template v-else>
                                                                     <div>
-                                                                        <b
-                                                                            class="text-success"
-                                                                        >Com Link de Pagto</b>
+                                                                        <b class="text-success">Com Link de Pagto</b>
                                                                     </div>
                                                                     <div>
-                                                                        <b
-                                                                            class="mr-1"
-                                                                        >Status de Pagto :</b>
+                                                                        <b class="mr-1">Status de Pagto :</b>
                                                                         {{s.payment.status}}
                                                                     </div>
                                                                 </template>
@@ -261,8 +222,15 @@
                 </div>
             </div>
         </div>
-        <modal-sales ref="modal_sales" :customer="customer" />
-        <modal-detail ref="modal_detail" :customer="customer" :customer_area="customer_area" />
+        <modal-sales
+            ref="modal_sales"
+            :customer="customer"
+        />
+        <modal-detail
+            ref="modal_detail"
+            :customer="customer"
+            :customer_area="customer_area"
+        />
     </div>
 </template>
 <script>
@@ -270,43 +238,60 @@ export default {
     props: {
         customer_area: {
             type: Boolean,
-            default: false
+            default: false,
         },
         sales: {
             type: Array,
-            default: () => ([])
+            default: () => [],
         },
         customer: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
         active: {
             type: String,
-            default: () => null
+            default: () => null,
         },
         canaddsale: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     computed: {
         __sales() {
             let _sales = this._sales
-            if (this.filter.code != null) _sales = this.sales.filter(row => row.f_code.toLowerCase().indexOf(this.filter.code.toLowerCase()) >= 0)
+            if (this.filter.code != null)
+                _sales = this.sales.filter(
+                    (row) =>
+                        row.f_code
+                            .toLowerCase()
+                            .indexOf(this.filter.code.toLowerCase()) >= 0
+                )
             if (this.filter.product != null) {
-                _sales = _sales.filter(row => row.items.filter(item => item.name.toLowerCase().indexOf(this.filter.product.toLowerCase()) >= 0).length > 0)
+                _sales = _sales.filter(
+                    (row) =>
+                        row.items.filter(
+                            (item) =>
+                                item.name
+                                    .toLowerCase()
+                                    .indexOf(
+                                        this.filter.product.toLowerCase()
+                                    ) >= 0
+                        ).length > 0
+                )
             }
             if (this.filter.range_data) {
-                if (this.filter.range_data.length >= 2) _sales = _sales.filter(row => {
-                    let date_1 = new Date(this.filter.range_data[0])
-                    let date_2 = new Date(this.filter.range_data[1])
-                    let date = new Date(row.created_at)
-                    if ((date >= date_1) && (date <= date_2)) return true
-                    return false
-                })
+                if (this.filter.range_data.length >= 2)
+                    _sales = _sales.filter((row) => {
+                        let date_1 = new Date(this.filter.range_data[0])
+                        let date_2 = new Date(this.filter.range_data[1])
+                        let date = new Date(row.created_at)
+                        if (date >= date_1 && date <= date_2) return true
+                        return false
+                    })
             }
             return (_sales ? _sales : []).reverse()
-        }
+        },
     },
     created() {
         this._sales = this.sales
@@ -321,8 +306,8 @@ export default {
             filter: {
                 range_data: [],
                 code: null,
-                product: null
-            }
+                product: null,
+            },
         }
     },
     components: {
@@ -337,49 +322,72 @@ export default {
             this.$confirm(`Confirma baixa desse lançamento ?`, "Confirmação", {
                 confirmButtonText: "Sim",
                 cancelButtonText: "Não",
-                type: 'warning'
+                type: "warning",
             }).then(() => {
                 this.loading = this.$loading()
-                this.$http.post(laravel.general.root_url + "/admin/customers/baixa", { customer_id: this.customer.id, sale: p }).then(res => {
-                    window.location.reload()
-                }).catch(er => {
-                    this.loading.close()
-                    console.log(er)
-                    this.$message({ showClose: true, message: "Erro ao excluir", type: "error" })
-                })
+                this.$http
+                    .post(laravel.general.root_url + "/admin/customers/baixa", {
+                        customer_id: this.customer.id,
+                        sale: p,
+                    })
+                    .then((res) => {
+                        window.location.reload()
+                    })
+                    .catch((er) => {
+                        this.loading.close()
+                        console.log(er)
+                        this.$message({
+                            showClose: true,
+                            message: "Erro ao excluir",
+                            type: "error",
+                        })
+                    })
             })
         },
         destroy(p) {
             this.$confirm(`Confirma exclusão ?`, "Confirmação", {
                 confirmButtonText: "Sim",
                 cancelButtonText: "Não",
-                type: 'warning'
+                type: "warning",
             }).then(() => {
                 this.loading = this.$loading()
-                this.$http.post(laravel.general.root_url + "/admin/customers/destroy_sale", { customer_id: this.customer.id, sale: p }).then(res => {
-                    window.location.reload()
-                }).catch(er => {
-                    this.loading.close()
-                    console.log(er)
-                    this.$message({ showClose: true, message: "Erro ao excluir", type: "error" })
-                })
+                this.$http
+                    .post(
+                        laravel.general.root_url +
+                            "/admin/customers/destroy_sale",
+                        { customer_id: this.customer.id, sale: p }
+                    )
+                    .then((res) => {
+                        window.location.reload()
+                    })
+                    .catch((er) => {
+                        this.loading.close()
+                        console.log(er)
+                        this.$message({
+                            showClose: true,
+                            message: "Erro ao excluir",
+                            type: "error",
+                        })
+                    })
             })
         },
         addSale() {
             this.$refs.modal_sales.showModal()
         },
         getSales() {
-            this.$http.post(`/admin/customers/${this.customer.code}/get-sales`, {}).then(resp => {
-                resp = resp.data
-                if (!resp.data.isEqual(this._sales)) {
-                    this.loading = true
-                    setTimeout(() => {
-                        this._sales = resp.data
-                        this.loading = false
-                    }, 1000)
-                }
-            })
-        }
-    }
+            this.$http
+                .post(`/admin/customers/${this.customer.code}/get-sales`, {})
+                .then((resp) => {
+                    resp = resp.data
+                    if (!resp.data.isEqual(this._sales)) {
+                        this.loading = true
+                        setTimeout(() => {
+                            this._sales = resp.data
+                            this.loading = false
+                        }, 1000)
+                    }
+                })
+        },
+    },
 }
 </script>

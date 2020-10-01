@@ -6,7 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Http\Traits\hasCode;
+use marcusvbda\vstack\Models\Traits\hasCode;
 use Spatie\Permission\Traits\HasRoles;
 use Auth;
 use App\Http\Models\Tenant;

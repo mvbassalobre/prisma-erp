@@ -22,7 +22,7 @@ class Products extends Resource
 
     public function resultsPerPage()
     {
-        return 50;
+        return [20, 50, 100, 200];
     }
 
     public function singularLabel()

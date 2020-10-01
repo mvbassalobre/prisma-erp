@@ -21,7 +21,7 @@ class Sales extends Resource
 
     public function resultsPerPage()
     {
-        return 50;
+        return [20, 50, 100, 200];
     }
 
     public function singularLabel()
@@ -85,11 +85,6 @@ class Sales extends Resource
     public function canExport()
     {
         return true;
-    }
-
-    public function maxRowsExportSync()
-    {
-        return 99999;
     }
 
     public function export_columns()

@@ -264,7 +264,7 @@ class HomeController extends Controller
                 ->whereRaw("DATE(sale_payment.created_at) >='{$dates[0]}'" . " and " . "DATE(sale_payment.created_at) <='{$dates[1]}'");
         }
 
-        $data = $data->selectRaw("count(*) as qty, if(sale_payment.sale_id is null, 'Sem link de Pagto','Com link de pagto') as name")
+        $data = $data->selectRaw("count(*) as qty, if(sale_payment.sale_id is null, 'Transferência Bancária','Com link de pagto') as name")
             ->groupBy("sale_payment.sale_id")
             ->orderBy("qty", "desc")
             ->limit(5)

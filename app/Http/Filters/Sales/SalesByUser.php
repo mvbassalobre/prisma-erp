@@ -23,6 +23,6 @@ class SalesByUser extends Filter
 
     public function apply($query, $value)
     {
-        return $query->where("sales.user_id", $value);
+        return $query->join("customers as c1", "sales.customer_id", "c1.id")->where("c1.user_id", $value);
     }
 }

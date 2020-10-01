@@ -197,7 +197,7 @@
                                                                     {{s.f_created_at.split(" - ")[1]}}
                                                                 </div>
                                                                 <div v-if="!s.payment">
-                                                                    <b class="text-danger">Sem Link de Pagto</b>
+                                                                    <b class="text-danger">Transferência Bancária</b>
                                                                 </div>
                                                                 <template v-else>
                                                                     <div>
@@ -354,7 +354,7 @@ export default {
                 this.$http
                     .post(
                         laravel.general.root_url +
-                            "/admin/customers/destroy_sale",
+                        "/admin/customers/destroy_sale",
                         { customer_id: this.customer.id, sale: p }
                     )
                     .then((res) => {

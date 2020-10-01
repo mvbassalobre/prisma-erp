@@ -99,11 +99,6 @@ class Genders extends Resource
         return Auth::user()->hasRole(["super-admin", "admin"]);
     }
 
-    public function canCustomizeMetrics()
-    {
-        return false;
-    }
-
     public function canImport()
     {
         return false;

@@ -23,6 +23,6 @@ class SalesByTeam extends Filter
 
     public function apply($query, $value)
     {
-        return $query->whereIn("sales.user_id", Team::find($value)->users->pluck("id")->toArray());
+        return $query->join("customers as c2", "sales.customer_id", "c2.id")->whereIn("c2.user_id", Team::find($value)->users->pluck("id")->toArray());
     }
 }

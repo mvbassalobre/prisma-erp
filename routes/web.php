@@ -1,4 +1,7 @@
 <?php
+
+use App\Http\Controllers\PagseguroController;
+
 Route::get('/', function () {
     return redirect("/admin"); //temporario
 });
@@ -16,6 +19,6 @@ Route::group(['prefix' => "admin"], function () {
         require "partials/api.php";
     });
 });
-Route::post('pagseguro/notification', 'PagseguroController@notification')->name("admin.pagseguro.notification");
+Route::post('pagseguro/notification', [PagseguroController::class, 'notification'])->name("admin.pagseguro.notification");
 
 require "partials/areaDoCliente.php";

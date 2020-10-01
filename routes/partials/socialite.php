@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
+
 Route::group(['prefix' => "social"], function () {
-    Route::get('{provider}', 'Auth\LoginController@redirectToProvider')->name("login_social");
-    Route::get('{provider}/callback', 'Auth\LoginController@handleProviderCallback')->name("login_social.callback");
+    Route::get('{provider}', [LoginController::class, 'redirectToProvider'])->name("login_social");
+    Route::get('{provider}/callback', [LoginController::class, 'handleProviderCallback'])->name("login_social.callback");
 });

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\AppController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => "app"], function () {
     Route::group(['middleware' => 'api_basic_auth'], function () {
-        Route::post('login', 'AppController@login');
+        Route::post('login', [AppController::class, 'login']);
     });
 });

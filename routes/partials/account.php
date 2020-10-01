@@ -1,7 +1,10 @@
 <?php
+
+use App\Http\Controllers\Auth\UsersController;
+
 Route::group(['prefix' => "account"], function () {
     Route::group(['prefix' => "profile"], function () {
-        Route::get('', 'Auth\UsersController@profile')->name("admin.account.profile");
-        Route::post('', 'Auth\UsersController@editProfile')->name("admin.account.profile.edit");
+        Route::get('', [UsersController::class, 'profile'])->name("admin.account.profile");
+        Route::post('', [UsersController::class, 'editProfile'])->name("admin.account.profile.edit");
     });
 });

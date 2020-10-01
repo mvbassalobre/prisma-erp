@@ -10,6 +10,7 @@ class ApiController extends Controller
 {
     public function getData($type, Request $request)
     {
+        // 
         return $this->{$type}($request);
     }
 

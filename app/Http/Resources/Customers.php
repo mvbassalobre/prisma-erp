@@ -127,14 +127,15 @@ class Customers extends Resource
                     "required" => true
                 ]);
             }
-            if (Auth::user()->hasRole(["super-admin", "admin"])) {
-                $fields[] = new BelongsTo([
-                    "label" => "Responsável",
-                    "field" => "user_id",
-                    "model" => \App\User::class,
-                    "rules" => "required"
-                ]);
-            }
+        }
+        if (Auth::user()->hasRole(["super-admin", "admin"])) {
+            $fields[] = new BelongsTo([
+                "label" => "Responsável",
+                "field" => "user_id",
+                "model" => \App\User::class,
+                "rules" => "required",
+                "default" => Auth::user()->name
+            ]);
         }
         $cards =  [new Card("Informações", $fields)];
         $cards[] =  new Card("Documentos", [

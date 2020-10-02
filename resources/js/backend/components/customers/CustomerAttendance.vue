@@ -20,7 +20,10 @@
                     <div class="col-12">
                         <div class="row f-12">
                             <div class="col-12">
-                                <div class="card mb-3" :id="`${infoData.label}`">
+                                <div
+                                    class="card mb-3"
+                                    :id="`${infoData.label}`"
+                                >
                                     <div class="card-body p-0">
                                         <div class="row">
                                             <div class="col-md-12">
@@ -47,7 +50,10 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <div class="row" v-if="!customer_area">
+                                        <div
+                                            class="row"
+                                            v-if="!customer_area"
+                                        >
                                             <div class="col-12">
                                                 <table class="table table-striped mb-0">
                                                     <thead>
@@ -94,9 +100,7 @@
                                                                     type="button"
                                                                     @click.prevent="deleteAccess"
                                                                 >
-                                                                    <span
-                                                                        class="el-icon-error text-danger"
-                                                                    ></span>
+                                                                    <span class="el-icon-error text-danger"></span>
                                                                 </button>
                                                             </td>
                                                         </tr>
@@ -110,9 +114,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-content" id="v-pills-tabContent">
-                    <comp-info :info="data" :active="active" :customer="customer" />
-                    <comp-timeline :customer="customer" :active="active" />
+                <div
+                    class="tab-content"
+                    id="v-pills-tabContent"
+                >
+                    <comp-info
+                        :info="data"
+                        :active="active"
+                        :customer="customer"
+                    />
+                    <comp-timeline
+                        :customer="customer"
+                        :active="active"
+                    />
                     <comp-sales
                         :sales="customer.sales"
                         :customer="customer"

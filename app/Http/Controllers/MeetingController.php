@@ -31,7 +31,7 @@ class MeetingController extends Controller
 
     public function save(Meeting $meeting, MeetingValidator $request)
     {
-        $model = $request->except(["model.starts_at", "model.ends_at", "model.observations"])["model"];
+        $model = $request->except(["model.starts_at", "model.ends_at", "model.observations", "model.f_starts_at", "model.f_ends_at"])["model"];
         $meeting->fill($model);
 
         $this->setMeetingDates($meeting);

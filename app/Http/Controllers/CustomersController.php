@@ -243,13 +243,14 @@ class CustomersController extends Controller
         $appName = Config("app.name");
         $html = "
                 <p>Olá {$name},</p>
-                <p>Geramos um acesso para seus usuário em nossa area de cliente </p>
-                <p>Clique no link abaixo acessar utilizando as credenciais :</p>
+                <p>Geramos um acesso para seus usuário em nossa area de cliente</p>
+                <p>Clique no link abaixo para acessar a area de cliente :</p>
                 <a href='{$link}' target='_BLANK'>{$link}</a>
+                <p>Efetue o acesso utilizando as credenciais abaixo :</p>
                 <p><b>Usuário : </b>{$username}</p>
                 <p><b>Senha : </b>{$password}</p>
                 <p style='margin-top:30px'>Obrigado, {$appName}";
-        SendMail::to($email, "Seu Acesso a area do cliente", $html);
+        SendMail::to($email, "Seu Acesso a area do cliente " . $appName, $html);
     }
 
     public function removeAreaAccess($id)

@@ -151,7 +151,9 @@ class Meeting extends DefaultModel
         if (!trim($subject)) {
             $subject = "Reunião: " . $this->subject;
         }
-        return \Mail::to($this->responsible->email)->bcc($this->customer->email)->send(new MeetingUpdate($this, $subject, $appendBody, $config));
+        return \Mail::to($this->responsible->email)
+            // ->bcc($this->customer->email)
+            ->send(new MeetingUpdate($this, $subject, $appendBody, $config));
     }
 
     public function makeEventLink()

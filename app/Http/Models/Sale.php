@@ -34,7 +34,7 @@ class Sale extends DefaultModel
 
     public function getAttendanceUrlAttribute()
     {
-        return "<a href='/admin/customers/" . $this->customer->code . "/attendance#sales'>#" . str_pad($this->id, 8, 0, STR_PAD_LEFT)  . "</a>";
+        return "<a href='/admin/customers/" . $this->customer->code . "/attendance#sales'>" . $this->f_code  . "</a>";
     }
 
     public function payment()

@@ -3,7 +3,11 @@
         <div class="row mb-2">
             <div class="col-12 text-right">
                 <span class="el-icon-circle-plus mr-2"></span>
-                <a href="#" class="link" @click.prevent="addYear">Adicionar Ano</a>
+                <a
+                    href="#"
+                    class="link"
+                    @click.prevent="addYear"
+                >Adicionar Ano</a>
             </div>
         </div>
         <el-tabs
@@ -27,12 +31,10 @@
                             </div>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
-                                    <table
-                                        class="table table-striped table-sm mb-0 f-12 table-hover"
-                                    >
+                                    <table class="table table-striped table-sm mb-0 f-12 table-hover">
                                         <thead>
-                                            <tr class="w-25">
-                                                <th>
+                                            <tr>
+                                                <th class="w-25">
                                                     Conta
                                                     <small>Mês</small>
                                                 </th>
@@ -64,7 +66,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="(q,y) in year.entries" :key="q.id">
+                                            <tr
+                                                v-for="(q,y) in year.entries"
+                                                :key="q.id"
+                                            >
                                                 <td class="w-25">
                                                     <edit-input
                                                         v-model="q.name"
@@ -95,7 +100,10 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <input class="w-100 mr-1" v-model="form.name" />
+                                                    <input
+                                                        class="w-100 mr-1"
+                                                        v-model="form.name"
+                                                    />
                                                 </td>
                                                 <template v-for="(m,i) in months">
                                                     <td :key="`${i}_form`">
@@ -125,7 +133,11 @@
                         </div>
                     </div>
                 </div>
-                <expenses :year="year" :customer="customer" :customer_area="customer_area" />
+                <expenses
+                    :year="year"
+                    :customer="customer"
+                    :customer_area="customer_area"
+                />
             </el-tab-pane>
         </el-tabs>
         <template v-else>Nenhum lançamento realizado</template>

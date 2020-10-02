@@ -5,23 +5,37 @@
                 <div class="card-header p-1 d-flex flex-row align-items-center">
                     <span class="el-icon-remove mr-2"></span>
                     <div>
-                        <edit-input v-model="section.name" :can_edit="true" @change="change" />
+                        <edit-input
+                            v-model="section.name"
+                            :can_edit="true"
+                            @change="change"
+                        />
                     </div>
                     <div class="ml-2">
-                        <select v-model="section.type" @change="change">
+                        <select
+                            v-model="section.type"
+                            @change="change"
+                        >
                             <option value="fixed">Gastos Fixos</option>
                             <option value="variable">Gastos Varíaveis</option>
                             <option value="grow">Investimento / Crescimento</option>
                         </select>
                     </div>
-                    <a href="#" @click.prevent="deleteSection" class="text-danger f-12 ml-auto">
+                    <a
+                        href="#"
+                        @click.prevent="deleteSection"
+                        class="text-danger f-12 ml-auto"
+                    >
                         <span class="el-icon-error text-danger mr-2"></span>Excluir Sessão
                     </a>
                 </div>
                 <div class="card-body p-0">
                     <div class="row">
                         <div class="col-12">
-                            <div class="table-responsive" v-if="!loading_expenses">
+                            <div
+                                class="table-responsive"
+                                v-if="!loading_expenses"
+                            >
                                 <table class="table table-striped table-sm mb-0">
                                     <thead>
                                         <tr>
@@ -85,7 +99,10 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(q,y) in section.expenses" :key="q.id">
+                                        <tr
+                                            v-for="(q,y) in section.expenses"
+                                            :key="q.id"
+                                        >
                                             <td>
                                                 <edit-input
                                                     @change="changeValue(q,m)"
@@ -115,7 +132,10 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input class="w-100 mr-1" v-model="form.name" />
+                                                <input
+                                                    class="w-100 mr-1"
+                                                    v-model="form.name"
+                                                />
                                             </td>
                                             <template v-for="(m,i) in months">
                                                 <td :key="`${i}_form`">

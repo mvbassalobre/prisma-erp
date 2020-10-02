@@ -1,5 +1,8 @@
 <template>
-    <div class="mt-4" v-loading="loading_expenses">
+    <div
+        class="mt-4"
+        v-loading="loading_expenses"
+    >
         <expense-section
             v-for="s in sections"
             :key="s.id"
@@ -17,7 +20,16 @@
                 >Adicionar Nova Sessão de despesa em {{year.value}}</a>
             </div>
         </div>
-        <cash-flow :year="year" :sections="sections" />
+
+        <cash-flow-months
+            :year="year"
+            :sections="sections"
+        />
+
+        <cash-flow
+            :year="year"
+            :sections="sections"
+        />
     </div>
 </template>
 <script>
@@ -33,6 +45,7 @@ export default {
     components: {
         "expense-section": require("./-expense-section.vue").default,
         "cash-flow": require("./-cash-flow.vue").default,
+        "cash-flow-months": require("./-cash-flow-months.vue").default,
     },
     created() {
         this.init()

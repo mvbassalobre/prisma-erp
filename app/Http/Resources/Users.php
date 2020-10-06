@@ -82,6 +82,11 @@ class Users extends Resource
                 "placeholder" => "Digite o nome aqui ...",
                 "rules" => "required|max:255"
             ]),
+            new Text([
+                "label" => "Data de Nascimento",
+                "field" => "birthday",
+                "type"  => "date",
+            ]),
             new Check([
                 "label" => "Ativo",
                 "field" => "active",

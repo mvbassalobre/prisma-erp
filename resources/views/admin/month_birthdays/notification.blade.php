@@ -1,0 +1,1 @@
+<birthday-notification hide_link></birthday-notification>

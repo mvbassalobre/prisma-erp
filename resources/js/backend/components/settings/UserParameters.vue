@@ -1,16 +1,20 @@
 <template>
-    <section-settings :settings="settings" />
+    <section-settings :pagseguro_url_notification="pagseguro_url_notification" :settings="settings" />
 </template>
 <script>
 export default {
     props: {
         settings: {
             type: Array,
-            default: () => ([])
+            default: () => [],
+        },
+        pagseguro_url_notification: {
+            type: String,
+            default: '',
         },
     },
     components: {
-        "section-settings": require("./partials/-settings.vue").default,
-    }
+        'section-settings': require('./partials/-settings.vue').default,
+    },
 }
 </script>

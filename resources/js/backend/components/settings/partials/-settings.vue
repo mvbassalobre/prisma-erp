@@ -9,13 +9,13 @@
                             <div class="table-responsive">
                                 <table class="table table-striped m-0">
                                     <tbody>
-                                        <template v-for="(setting,s) in settings">
+                                        <template v-for="(setting, s) in settings">
                                             <v-input
                                                 :key="s"
-                                                v-if="['text','integer','float'].includes(setting.type)"
+                                                v-if="['text', 'integer', 'float'].includes(setting.type)"
                                                 class="mb-3"
                                                 :label="setting.name"
-                                                :type="(['integer','float'].includes(setting.type) ? 'number' : 'text')"
+                                                :type="['integer', 'float'].includes(setting.type) ? 'number' : 'text'"
                                                 :description="setting.description"
                                                 v-model="form[setting.id]"
                                             />
@@ -38,15 +38,16 @@
                                                     <el-switch v-model="form[setting.id]" />
                                                     <template v-if="setting.description">
                                                         <br />
-                                                        <small
-                                                            style="color:gray;"
-                                                            class="mt-1"
-                                                            v-html="setting.description"
-                                                        ></small>
+                                                        <small style="color: gray" class="mt-1" v-html="setting.description"></small>
                                                     </template>
                                                 </td>
                                             </tr>
                                         </template>
+
+                                        <tr>
+                                            <td>Url de Notificação Pagseguro</td>
+                                            <td>{{ pagseguro_url_notification }}</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -62,23 +63,27 @@ export default {
     props: {
         settings: {
             type: Array,
-            default: () => []
-        }
+            default: () => [],
+        },
+        pagseguro_url_notification: {
+            type: String,
+            default: '',
+        },
     },
     data() {
         return {
             form: {},
             initialized: false,
-            timeout: null
+            timeout: null,
         }
     },
     computed: {
         uploadRoute() {
             return laravel.vstack.default_upload_route
-        }
+        },
     },
     async created() {
-        this.initValues().then(x => this.initialized = true)
+        this.initValues().then((x) => (this.initialized = true))
     },
     watch: {
         form: {
@@ -89,22 +94,25 @@ export default {
                     this.update()
                 }, 1000)
             },
-            deep: true
-        }
+            deep: true,
+        },
     },
     methods: {
         async initValues() {
             for (let i in this.settings) {
                 let value = this.settings[i].value
-                if (this.settings[i].type == "image") value = JSON.parse(value)
+                if (this.settings[i].type == 'image') value = JSON.parse(value)
                 this.$set(this.form, this.settings[i].id, value)
             }
         },
         update() {
-            this.$http.put(`${laravel.general.root_url}/admin/parameters`, this.form).then(res => { }).catch(er => {
-                console.log(er)
-            })
-        }
-    }
+            this.$http
+                .put(`${laravel.general.root_url}/admin/parameters`, this.form)
+                .then((res) => {})
+                .catch((er) => {
+                    console.log(er)
+                })
+        },
+    },
 }
 </script>

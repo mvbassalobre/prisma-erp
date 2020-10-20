@@ -5,87 +5,87 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Config;
 use CWG\PagSeguro\PagSeguroCompras;
-use Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Auth;
 use App\Http\Models\{
-    SalePayment,
-    // Sale,
+	SalePayment,
+	Tenant,
+	// Sale,
 };
+
 
 class PagseguroController extends Controller
 {
-    public function makePayment($customer, $ref)
-    {
-        $this->setAuth();
-        $this->init();
-        if (@$customer->name) {
-            if (str_word_count($customer->name) > 1) $this->pagseguro->setNomeCliente($customer->name);
-        }
-        if (@$customer->email) $this->pagseguro->setEmailCliente($customer->email);
-        $this->pagseguro->setReferencia($ref);
-    }
+	private $notification_url = null;
 
-    public function setItem($code, $name, $price, $qty)
-    {
-        $this->pagseguro->adicionarItem($code, $name, $price, $qty);
-    }
+	public function makePayment($customer, $ref)
+	{
+		$this->setAuth();
+		$this->init();
+		if (@$customer->name) {
+			if (str_word_count($customer->name) > 1) $this->pagseguro->setNomeCliente($customer->name);
+		}
+		if (@$customer->email) $this->pagseguro->setEmailCliente($customer->email);
+		$this->pagseguro->setReferencia($ref);
+	}
 
-    public function generateUrl()
-    {
-        $this->pagseguro->setNotificationURL(route("admin.pagseguro.notification"));
-        $url = $this->pagseguro->gerarURLCompra();
-        return $url;
-    }
+	public function setItem($code, $name, $price, $qty)
+	{
+		$this->pagseguro->adicionarItem($code, $name, $price, $qty);
+	}
 
-    public function notification(Request $request)
-    {
-        $this->setAuth();
-        $this->init();
-        Log::debug("pagseguro_notification", $request->all());
-        // if (@$request['notificationType'] == 'transaction') {
-        //     $cod = $request['notificationCode'];
-        //     $response = $this->consultarNotificacao($cod);
-        //     $sale = SalePayment::where("reference", $cod)->first();
-        //     if ($sale) {
-        //         $sale->status = $response["info"]["estado"];
-        //         $sale->description = $response["info"]["descricao"];
-        //         $sale->save();
-        //     }
-        // return Log::debug("pagseguro_notification", $response);
-        // }
-    }
+	public function generateUrl()
+	{
+		$this->pagseguro->setNotificationURL($this->notification_url);
+		$url = $this->pagseguro->gerarURLCompra();
+		return $url;
+	}
 
-    private function init()
-    {
-        $this->pagseguro = new PagSeguroCompras(Config::get("pagseguro.email"), Config::get("pagseguro.token"), Config::get("pagseguro.sandbox"));
-        $this->pagseguro->setNotificationURL(route("admin.pagseguro.notification"));
-    }
+	public function test_notification_route($id, Request $request)
+	{
+		dd($id, $request->all());
+	}
 
-    public function setAuth()
-    {
-        $user = Auth::user();
-        Config::set("pagseguro.sandbox", $user->getSettings("pagseguro-sandbox"));
-        Config::set("pagseguro.email", $user->getSettings("pagseguro-email"));
-        Config::set("pagseguro.token", $user->getSettings("pagseguro-token"));
-    }
+	public function notification($id, Request $request)
+	{
+		$data = $request->all();
+		$tenant = Tenant::findOrFail($id);
+		Log::debug("pagseguro_notification", $data);
+		$this->setAuth($tenant);
+		$this->init();
+		if (@$data['notificationType'] == 'transaction') {
+			$cod = $data['notificationCode'];
+			$response = $this->pagseguro->consultarNotificacao($cod);
+			Log::debug("pagseguro_notification_response", [$response]);
+			$payment = SalePayment::whereReference($response["reference"])->first();
+			if (@$payment->id) {
+				$payment->status = $response["info"]["estado"];
+				$payment->description = $response["info"]["descricao"];
+				$payment->reference = $response["reference"];
+				$payment->save();
+				Log::debug("pagseguro_notification_proccess", ["status changed"]);
+				return ["success" => true, "message" => "notification received"];
+			} else {
+				Log::debug("pagseguro_notification_proccess", ["payment not found"]);
+				return ["success" => false, "message" => "payment not found"];
+			}
+		}
+		return ["success" => false];
+	}
 
-    // private function cancelPayment($cod)
-    // {
-    //     $this->setAuth();
-    //     $this->init();
-    //     try {
-    //         $this->pagseguro->cancelar($cod);
-    //     } catch (Exception $e) {
-    //         echo $e->getMessage();
-    //     }
-    // }
+	private function init()
+	{
+		$this->pagseguro = new PagSeguroCompras(Config::get("pagseguro.email"), Config::get("pagseguro.token"), Config::get("pagseguro.sandbox"));
+		$this->pagseguro->setNotificationURL($this->notification_url);
+	}
 
-    private function getPayment($cod)
-    {
-        $this->setAuth();
-        $this->init();
-        $response = $this->pagseguro->consultarCompra($cod);
-        dd($response);
-    }
+	public function setAuth($tenant = null)
+	{
+		if (!$tenant) 	$tenant = Auth::user()->tenant;
+		Config::set("pagseguro.sandbox", $tenant->getSettings("pagseguro-sandbox"));
+		Config::set("pagseguro.email", $tenant->getSettings("pagseguro-email"));
+		Config::set("pagseguro.token", $tenant->getSettings("pagseguro-token"));
+		$this->notification_url = $tenant->pagseguro_url_notification;
+	}
 }

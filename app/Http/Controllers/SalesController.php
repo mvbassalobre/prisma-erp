@@ -9,6 +9,7 @@ use marcusvbda\vstack\Controllers\ResourceController;
 use App\Http\Models\{
 	Sale
 };
+use marcusvbda\vstack\Services\SendMail;
 
 class SalesController extends Controller
 {
@@ -17,6 +18,38 @@ class SalesController extends Controller
 		$resource = ResourcesHelpers::find("sales");
 		if (!$resource->canCreate()) abort(404);
 		return view("admin.sales.create");
+	}
+
+	public function updateDocument(Request $request)
+	{
+		$data = $request->all();
+		$sale = Sale::findOrFail($data['sale_id']);
+		$_data = @$sale->data ? (array)$sale->data : [];
+		$_data["documents"] = @$data["files"] ? $data["files"] : [];
+		$sale->data = $_data;
+		$sale->save();
+		return ["success" => true];
+	}
+
+	public function sendUrlEmail(Request $request)
+	{
+		$data = $request->all();
+		$this->sendEmailURL($data);
+		return ["success" => true];
+	}
+
+	private function sendEmailURL($data)
+	{
+		$appName = Config("app.name");
+		$name = $data["customer_name"];
+		$email = $data["email"];
+		$link = $data["url"];
+		$html = "
+                <p>Olá {$name},</p>
+                <p>Acesse a url abaixo para efetuar o pagamento :</p>
+                <a href='{$link}' target='_BLANK'>{$link}</a>
+                <p style='margin-top:30px'>Obrigado, {$appName}";
+		SendMail::to($email, "Link de Pagamento " . $appName, $html);
 	}
 
 	public function getMetrics($type, Request $request)

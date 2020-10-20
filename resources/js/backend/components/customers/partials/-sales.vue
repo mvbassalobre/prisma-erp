@@ -84,11 +84,11 @@
                                                                         Ações
                                                                     </button>
                                                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                                                        <a class="dropdown-item" href="#" @click.prevent="changeStatusModal(s)">
-                                                                            Alterar Status do Pagto
-                                                                        </a>
-                                                                        <div class="dropdown-divider" />
                                                                         <template v-if="s.payment">
+                                                                            <a class="dropdown-item" href="#" @click.prevent="changeStatusModal(s)">
+                                                                                Alterar Status do Pagto
+                                                                            </a>
+                                                                            <div class="dropdown-divider" />
                                                                             <a class="dropdown-item text-success" href="#" @click.prevent="baixa(s)">
                                                                                 Dar baixa no lançamento
                                                                             </a>
@@ -147,20 +147,20 @@
                                                                     {{ s.f_created_at.split(' - ')[1] }}
                                                                 </div>
                                                                 <div v-if="!s.payment">
-                                                                    <b class="text-danger">Transferência Bancária</b>
+                                                                    <upload-document :customer="customer" :sale="s" />
                                                                 </div>
                                                                 <template v-else>
-                                                                    <div v-if="s.payment.url">
-                                                                        <b class="text-success mr-1">Com Link de Pagto</b>
-                                                                        <url-qrcode :url="s.payment.url" />
-                                                                    </div>
                                                                     <div>
                                                                         <b class="mr-1">Status de Pagto :</b>
-                                                                        {{ s.payment.f_status }}
+                                                                        {{ s.payment.status }}
                                                                     </div>
                                                                     <div>
                                                                         <b class="mr-1">Ref. :</b>
                                                                         {{ s.payment.reference }}
+                                                                    </div>
+                                                                    <div v-if="s.payment.url">
+                                                                        <b class="text-success mr-1">Com Link de Pagto</b>
+                                                                        <url-qrcode :customer="customer" :url="s.payment.url" :default_email="customer.email" />
                                                                     </div>
                                                                 </template>
                                                             </div>
@@ -261,6 +261,7 @@ export default {
         'modal-sales': require('./-modal-sales.vue').default,
         'modal-detail': require('./-modal-detail.vue').default,
         'url-qrcode': require('./-urlQrcode.vue').default,
+        'upload-document': require('./-uploadDocument.vue').default,
     },
     methods: {
         changeStatus() {

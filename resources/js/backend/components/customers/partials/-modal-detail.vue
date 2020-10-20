@@ -77,7 +77,7 @@
                         <div class="d-flex flex-row">
                             <template v-if="['Aguardando pagamento', 'waiting'].includes(sale.payment.status)">
                                 <div class="d-flex flex-column col-md-6 col-sm-12 pl-0 mt-3">
-                                    <url-qrcode :url="sale.payment.url" />
+                                    <url-qrcode :customer="customer" :url="sale.payment.url" :default_email="customer.email" />
                                 </div>
                             </template>
                             <div class="d-flex flex-column col-md-6 col-sm-12">

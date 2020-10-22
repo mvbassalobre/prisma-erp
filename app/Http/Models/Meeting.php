@@ -35,18 +35,18 @@ class Meeting extends DefaultModel
 			$model->customer->appendToTimeline(...$model->makeHistoryText("created"));
 		});
 
-		// self::saving(function ($model) {
-		//     if ($model->getOriginal("starts_at") != $model->starts_at || $model->getOriginal("ends_at") != $model->ends_at) {
-		//         $blocking = Meeting::byBusy(Meeting::class, $model->starts_at, $model->ends_at)
-		//             ->where("id", "!=", $model->id)
-		//             ->where("customer_id", $model->customer_id)
-		//             ->where("meeting_room_id", $model->meeting_room_id)
-		//             ->first();
-		//         if ($blocking) {
-		//             abort(402, "Data e horário já ocupados por " . $blocking->subject);
-		//         }
-		//     }
-		// });
+		self::saving(function ($model) {
+			if ($model->getOriginal("starts_at") != $model->starts_at || $model->getOriginal("ends_at") != $model->ends_at) {
+				$blocking = Meeting::byBusy(Meeting::class, $model->starts_at, $model->ends_at)
+					->where("id", "!=", $model->id)
+					->where("customer_id", $model->customer_id)
+					->where("meeting_room_id", $model->meeting_room_id)
+					->first();
+				if ($blocking) {
+					abort(402, "Data e horário já ocupados por " . $blocking->subject);
+				}
+			}
+		});
 	}
 
 	public function getFStartsAtAttribute()

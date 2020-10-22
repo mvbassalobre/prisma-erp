@@ -10,6 +10,7 @@ use marcusvbda\vstack\Models\Observers\TenantObserver;
 use Auth;
 use Spatie\CalendarLinks\Link;
 use Spatie\GoogleCalendar\Event;
+use \Carbon\Carbon;
 
 class Meeting extends DefaultModel
 {
@@ -33,19 +34,6 @@ class Meeting extends DefaultModel
 
 		self::created(function ($model) {
 			$model->customer->appendToTimeline(...$model->makeHistoryText("created"));
-		});
-
-		self::saving(function ($model) {
-			if ($model->getOriginal("starts_at") != $model->starts_at || $model->getOriginal("ends_at") != $model->ends_at) {
-				$blocking = Meeting::byBusy(Meeting::class, $model->starts_at, $model->ends_at)
-					->where("id", "!=", $model->id)
-					->where("customer_id", $model->customer_id)
-					->where("meeting_room_id", $model->meeting_room_id)
-					->first();
-				if ($blocking) {
-					abort(402, "Data e horário já ocupados por " . $blocking->subject);
-				}
-			}
 		});
 	}
 
@@ -159,18 +147,34 @@ class Meeting extends DefaultModel
 	public function makeEventLink()
 	{
 		$link = Link::create($this->subject, $this->starts_at, $this->ends_at)
-			//->description('Cookies & cocktails!')
 			->address($this->room->f_address);
 
 		return $link->google();
 	}
 
-	public function scopeByBusy($query, $starts_at, $ends_at)
+	public function isOccupied($id)
 	{
-		return $query->whereBetween('starts_at', [$starts_at, $ends_at])
-			->orWhereBetween('ends_at', [$starts_at, $ends_at])
-			->orWhereRaw('? BETWEEN starts_at and ends_at', [$starts_at])
-			->orWhereRaw('? BETWEEN starts_at and ends_at', [$ends_at]);
+		$meeting = request("model.meeting_room_id");
+		$starts_at = Carbon::create(request("model.starts_at"))->setTimezone(config("app.timezone"))->startOfDay();
+		$ends_at = $starts_at->copy();
+		$starts_at->setMinutes(request("time.0") * 60);
+		$ends_at->setMinutes(request("time.1") * 60);
+		$starts_at_date = $starts_at->format('Y-m-d');
+		$starts_at_time = $starts_at->format('H');
+
+		$ends_at_time = $ends_at->format('H:i');
+		$starts_at_time = $starts_at->format('H:i');
+
+		$tenant_id = @Auth::user()->tenant_id;
+		$sql = "(
+			(Date(meetings.starts_at) = Date('$starts_at_date')) and 
+			(Time(meetings.starts_at) >= Time('$starts_at_time') and Time(meetings.ends_at) <= Time('$ends_at_time'))
+		)  
+		and meetings.meeting_room_id = $meeting
+		and meetings.tenant_id = $tenant_id";
+		$result = $this->whereRaw($sql);
+		if (@$id) $result = $result->where("id", "!=", $id);
+		return $result->count() > 0;
 	}
 
 	public function getcustomerUrlAttendanceAttribute()

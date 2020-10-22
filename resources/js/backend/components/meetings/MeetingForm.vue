@@ -1,10 +1,10 @@
 <template>
     <el-form
         ref="form"
-        :model="{form,extra}"
+        :model="{ form, extra }"
         class="row"
         label-position="left"
-        :class="{'creating-meeting': !form.id}"
+        :class="{ 'creating-meeting': !form.id }"
         v-loading.fullscreen.lock="sending"
         :element-loading-text="sendingText"
     >
@@ -20,27 +20,14 @@
                             <div class="row">
                                 <div class="col-lg-7">
                                     <el-form-item prop="form.customer_id" label="Cliente" required>
-                                        <el-select
-                                            v-model="form.customer_id"
-                                            :disabled="customer_id"
-                                            filterable
-                                        >
-                                            <el-option
-                                                v-for="status in modelsData.customers"
-                                                :key="status.id"
-                                                :value="status.id"
-                                                :label="status.name"
-                                            />
+                                        <el-select v-model="form.customer_id" :disabled="customer_id" filterable>
+                                            <el-option v-for="status in modelsData.customers" :key="status.id" :value="status.id" :label="status.name" />
                                         </el-select>
                                     </el-form-item>
                                 </div>
                                 <div class="col-lg-5">
                                     <el-form-item label="Tipo" required prop="form.type">
-                                        <el-select
-                                            v-model="form.type"
-                                            placeholder="Orçamento, pesquisa etc"
-                                            filterable
-                                        >
+                                        <el-select v-model="form.type" placeholder="Orçamento, pesquisa etc" filterable>
                                             <el-option label="Análise" value="analise" />
                                             <el-option label="Consultoria" value="consultoria" />
                                             <el-option label="Serviço" value="servico" />
@@ -50,39 +37,22 @@
                             </div>
                         </div>
                         <div class="col-sm">
-                            <status-card @send="submit" v-bind="{form,modelsData,extra}" />
+                            <status-card @send="submit" v-bind="{ form, modelsData, extra }" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-sm mt-3">
-            <location-card v-bind="{form,modelsData,extra}" />
+            <location-card v-bind="{ form, modelsData, extra }" />
         </div>
-        <div
-            class="col-12 mt-3 justify-content-end d-flex align-items-center flex-wrap"
-            v-if="!form.id"
-        >
-            <a
-                v-if="!isModal"
-                href="/admin/meetings"
-                class="mr-5 text-danger link d-none d-lg-block"
-            >
+        <div class="col-12 mt-3 justify-content-end d-flex align-items-center flex-wrap" v-if="!form.id">
+            <a v-if="!isModal" href="/admin/meetings" class="mr-5 text-danger link d-none d-lg-block">
                 <b>Cancelar</b>
             </a>
-            <button
-                class="btn btn-primary btn-sm-block"
-                :disabled="sending"
-                @click.prevent="submit"
-            >Cadastrar</button>
+            <button class="btn btn-primary btn-sm-block" :disabled="sending" @click.prevent="submit">Cadastrar</button>
         </div>
-        <before-send-dialog
-            @email="putEmailContent"
-            @send="send"
-            @no-email="removeEmailContent"
-            ref="modal"
-            v-bind="{form}"
-        />
+        <before-send-dialog @email="putEmailContent" @send="send" @no-email="removeEmailContent" ref="modal" v-bind="{ form }" />
     </el-form>
 </template>
 
@@ -92,7 +62,7 @@ import StatusCard from './-statusCard'
 import BeforeSendDialog from './dialog/-beforeSendDialog'
 export default {
     components: { LocationCard, BeforeSendDialog, StatusCard },
-    props: ["config", "isModal", "customer_id"],
+    props: ['config', 'isModal', 'customer_id'],
     data() {
         return {
             sending: false,
@@ -100,35 +70,34 @@ export default {
                 id: false,
                 subject: null,
                 type: null,
-                status_id: "",
-                starts_at: "",
-                ends_at: "",
-                customer_id: this.customer_id ? this.customer_id : "",
+                status_id: '',
+                starts_at: '',
+                ends_at: '',
+                customer_id: this.customer_id ? this.customer_id : '',
                 feedback_url: null,
                 meeting_room_id: null,
                 google_event_id: 0,
-                observations: ""
+                observations: '',
             },
             extra: {
-                meeting_duration: ["12", "14"],
+                meeting_duration: ['12', '14'],
                 scheduleLinkButton: true,
                 create_event: true,
                 sendUpdateEmail: true,
                 customEmail: false,
-                email: { subject: "", body: "" },
-                updateMessage: ""
+                email: { subject: '', body: '' },
+                updateMessage: '',
             },
             modelsData: {
                 meetingRooms: [],
                 meetingStatuses: [],
-                customers: []
+                customers: [],
             },
             attempts: {
                 meetingRooms: 0,
                 meetingStatuses: 0,
-                customers: 0
+                customers: 0,
             },
-
         }
     },
     created() {
@@ -142,14 +111,14 @@ export default {
     },
     computed: {
         getPostUrl() {
-            return this.isModal ? "/admin/meetings/create" : ""
+            return this.isModal ? '/admin/meetings/create' : ''
         },
         sendingText() {
-            let exists = !this.form.id ? "Criando reunião" : "Atualizando reunião ",
-                sending = this.extra.sendUpdateEmail ? " e enviando Email" : ""
+            let exists = !this.form.id ? 'Criando reunião' : 'Atualizando reunião ',
+                sending = this.extra.sendUpdateEmail ? ' e enviando Email' : ''
 
-            return exists + sending + "..."
-        }
+            return exists + sending + '...'
+        },
     },
     methods: {
         putEmailContent(content) {
@@ -158,31 +127,34 @@ export default {
         },
         removeEmailContent() {
             this.extra.customEmail = false
-            this.extra.email = { subject: "", body: "" }
+            this.extra.email = { subject: '', body: '' }
         },
         loadMeetingStatuses() {
             this.attempts.meetingStatuses++
-            this.$http.post("/admin/inputs/option_list", { model: `App\\Http\\Models\\MeetingStatus` })
-                .then(r => this.modelsData.meetingStatuses = r.data.data)
-                .catch(er => {
+            this.$http
+                .post('/admin/inputs/option_list', { model: `App\\Http\\Models\\MeetingStatus` })
+                .then((r) => (this.modelsData.meetingStatuses = r.data.data))
+                .catch((er) => {
                     if (this.attempts.meetingStatuses <= 3) return this.loadMeetingStatuses()
                     console.log(er)
                 })
         },
         loadMeetingRooms() {
             this.attempts.meetingRooms++
-            this.$http.post("/admin/inputs/option_list", { model: `App\\Http\\Models\\MeetingRoom` })
-                .then(r => this.modelsData.meetingRooms = r.data.data)
-                .catch(er => {
+            this.$http
+                .post('/admin/inputs/option_list', { model: `App\\Http\\Models\\MeetingRoom` })
+                .then((r) => (this.modelsData.meetingRooms = r.data.data))
+                .catch((er) => {
                     if (this.attempts.meetingRooms <= 3) return this.loadMeetingRooms()
                     console.log(er)
                 })
         },
         loadCustomers() {
             this.attempts.customers++
-            this.$http.post("/admin/inputs/option_list", { model: `App\\Http\\Models\\Customer` })
-                .then(r => this.modelsData.customers = r.data.data)
-                .catch(er => {
+            this.$http
+                .post('/admin/inputs/option_list', { model: `App\\Http\\Models\\Customer` })
+                .then((r) => (this.modelsData.customers = r.data.data))
+                .catch((er) => {
                     if (this.attempts.customers <= 3) return this.loadCustomers()
                     console.log(er)
                 })
@@ -195,7 +167,7 @@ export default {
         //     }
         // },
         submit() {
-            this.$refs.form.validate(valid => {
+            this.$refs.form.validate((valid) => {
                 if (!valid) return
 
                 if (this.extra.sendUpdateEmail) {
@@ -213,43 +185,34 @@ export default {
             return list
         },
         alertErrors(messages) {
-            let bg = document.createElement("div")
-            bg.setAttribute("id", "overlei")
+            let bg = document.createElement('div')
+            bg.setAttribute('id', 'overlei')
             document.body.appendChild(bg)
             let notification = {}
 
             let el = this.$createElement
-            let closeNotification = v => notification.close()
+            let closeNotification = (v) => notification.close()
 
             notification = this.$message.error({
-                message: el('div', [
-                    el('p', { class: "notification-message" }, messages)
-                ]),
+                message: el('div', [el('p', { class: 'notification-message' }, messages)]),
                 showClose: true,
-                customClass: "senpai-notice-meee",
-                onClose: v => {
+                customClass: 'senpai-notice-meee',
+                onClose: (v) => {
                     bg.remove()
-                }
+                },
             })
         },
         send() {
             this.sending = true
-            this.$http.post(this.getPostUrl, {
-                model: this.form,
-                time: this.extra.meeting_duration,
-                extra: this.extra
-            })
-                .finally(v => this.sending = false)
+            this.$http
+                .post(this.getPostUrl, {
+                    model: this.form,
+                    time: this.extra.meeting_duration,
+                    extra: this.extra,
+                })
+                .finally((v) => (this.sending = false))
                 .then(({ data }) => {
-                    if (!this.form.id && data.id) {
-                        if (!this.isModal) {
-                            location.replace("/admin/meetings")
-                        } else {
-                            location.reload()
-                        }
-                    } else if (this.form.id && data.id) {
-                        location.reload()
-                    }
+                    location.replace('/admin/meetings')
                 })
                 .catch(({ response }) => {
                     if (response.status === 422) {
@@ -258,8 +221,8 @@ export default {
                         this.alertErrors(response.data.message)
                     }
                 })
-        }
-    }
+        },
+    },
 }
 </script>
 

@@ -24,14 +24,14 @@ class MeetingController extends Controller
 		$ends_at = $starts_at->copy();
 		$starts_at->setMinutes(request("time.0") * 60);
 		$ends_at->setMinutes(request("time.1") * 60);
-
 		$meeting->starts_at = $starts_at;
 		$meeting->ends_at = $ends_at;
 	}
 
 	public function save(Meeting $meeting, MeetingValidator $request)
 	{
-		$model = $request->except(["model.starts_at", "model.ends_at", "model.observations", "model.f_starts_at", "model.f_ends_at"])["model"];
+		$model = $request->except(["model.starts_at", "model.ends_at", "model.observations", "model.f_starts_at", "model.f_ends_at", "code"])["model"];
+
 		$meeting->fill($model);
 
 		$this->setMeetingDates($meeting);
@@ -74,41 +74,6 @@ class MeetingController extends Controller
 	{
 		$meeting = Meeting::latest()->first();
 		return new MeetingUpdate($meeting, "Olá Mundo", "ee");
-	}
-
-	public function getMetrics($type, Request $request)
-	{
-		$resource = ResourcesHelpers::find("meetings");
-		$resourceController = new ResourceController();
-		$data = $resourceController->getData($resource, $request);
-		return $this->{"getMetric" . ucfirst($type)}($data);
-	}
-
-	protected function getmetricTotal($data)
-	{
-		return  $data->count();
-	}
-
-	protected function getmetricTeams($data)
-	{
-		return $data->selectRaw("count(*) as qty,  if(teams.name is null, 'Sem Time', teams.name)  as team_name")
-			->join("users", "users.id", "=", "meetings.user_id")
-			->join("user_team", "user_team.user_id", "=", "meetings.user_id")
-			->join("teams", "user_team.team_id", "=", "teams.id")
-			->groupBy("teams.id")
-			->orderBy("qty", "desc")
-			->pluck('qty', 'team_name')
-			->all();
-	}
-
-	protected function getmetricUsers($data)
-	{
-		return $data->selectRaw("count(*) as qty,  if(users.name is null, 'Sem Responsável', users.name)  as user_name")
-			->join("users", "users.id", "=", "meetings.user_id")
-			->groupBy("meetings.user_id")
-			->orderBy("qty", "desc")
-			->pluck('qty', 'user_name')
-			->all();
 	}
 
 	public function getCalendar(Request $request)

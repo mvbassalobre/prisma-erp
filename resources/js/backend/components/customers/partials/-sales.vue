@@ -154,11 +154,15 @@
                                                                         <b class="mr-1">Status de Pagto :</b>
                                                                         {{ s.payment.status }}
                                                                     </div>
-                                                                    <div>
+                                                                    <div v-if="s.payment.description">
+                                                                        <b class="mr-1">Descrição :</b>
+                                                                        {{ s.payment.description }}
+                                                                    </div>
+                                                                    <div v-if="s.payment.reference">
                                                                         <b class="mr-1">Ref. :</b>
                                                                         {{ s.payment.reference }}
                                                                     </div>
-                                                                    <div v-if="s.payment.url">
+                                                                    <div class="mt-2" v-if="s.payment.url">
                                                                         <b class="text-success mr-1">Com Link de Pagto</b>
                                                                         <url-qrcode :customer="customer" :url="s.payment.url" :default_email="customer.email" />
                                                                     </div>

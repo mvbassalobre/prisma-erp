@@ -8,7 +8,7 @@ class Sale extends DefaultModel
 {
 	protected $table = "sales";
 
-	protected $appends = ['f_created_at', 'f_code', 'f_customer', "f_items", "f_user", "total_items"];
+	protected $appends = ['f_created_at', 'f_updated_at', 'f_code', 'f_customer', "f_items", "f_user", "total_items"];
 
 	public $casts = [
 		"product" => "Object",
@@ -25,6 +25,12 @@ class Sale extends DefaultModel
 	{
 		if (!$this->created_at) return;
 		return @$this->created_at->format("d/m/Y - H:i:s");
+	}
+
+	public function getFUpdatedAtAttribute()
+	{
+		if (!$this->updated_at) return;
+		return @$this->updated_at->diffForHumans();
 	}
 
 	public function getFCodeAttribute()

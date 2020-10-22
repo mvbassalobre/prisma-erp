@@ -71,11 +71,13 @@ class Sales extends Resource
 			"attendance_url" => ["label" => "Código", "sortable_index" => "id"],
 			"f_customer" => ["label" => "Cliente", "sortable_index" => "customer_id"],
 			"f_pagto" => ["label" => "Status", "sortable" => false],
-			"payment->description" => ["label" => "Descrição", "sortable" => false],
+			// "payment->description" => ["label" => "Descrição", "sortable" => false],
 			"f_items" => ["label" => "Items", "sortable" => false],
 			"total_items" => ["label" => "Total", "sortable" => false],
 			"f_user" => ["label" => "Responsável", "sortable_index" => "user_id"],
 			"f_created_at" => ["label" => "Data de Lançamento", "sortable_index" => "created_at"],
+			"f_updated_at" => ["label" => "Ultima Atualização", "sortable_index" => "updated_at"],
+
 		];
 	}
 

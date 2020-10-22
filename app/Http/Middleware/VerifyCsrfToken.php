@@ -25,5 +25,6 @@ class VerifyCsrfToken extends Middleware
 		"/admin/inputs/*",
 		"/admin/api/*",
 		"/pagseguro/*",
+		"/meetings/*",
 	];
 }

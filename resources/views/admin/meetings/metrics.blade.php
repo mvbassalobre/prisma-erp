@@ -1,1 +1,0 @@
-<meetings-metric-section :get_params="{{json_encode($_GET)}}"></meetings-metric-section>

@@ -30,7 +30,7 @@ class Customer extends DefaultModel
 
 	public function setUserIdAttribute($value)
 	{
-		$user = User::where("name", $value)->first();
+		$user = User::find($value);
 		$this->attributes["user_id"] = @$user->id ? $user->id : Auth::user()->id;
 	}
 

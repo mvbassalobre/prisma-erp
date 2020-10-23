@@ -19,6 +19,8 @@ use App\Http\Models\{CustomerGoal, CustomerFluxYear, CustomerFluxYearSection, Cu
 
 class CustomersController extends Controller
 {
+	protected $months = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+
 	public function attendance($code)
 	{
 		$canAddSale = $this->canAddSale();
@@ -119,15 +121,6 @@ class CustomersController extends Controller
 		return ["success" => true, "goals" => CustomerGoal::where("customer_id", $customer->id)->get()];
 	}
 
-	public function addYearEntry($id, Request $request)
-	{
-		$year = CustomerFluxYear::findOrFail($request["year"]["id"]);
-		$data = $request->except("year");
-		$data["year_id"] = $year->id;
-		CustomerFluxYearEntries::create($data);
-		return ["success" => true, "years" => $this->getYears($year->customer_id)];
-	}
-
 	private function getYears($customer_id)
 	{
 		return CustomerFluxYear::where("customer_id", $customer_id)->with(["entries", "sections", "sections.expenses"])->get();
@@ -136,13 +129,37 @@ class CustomersController extends Controller
 	public function editFluxEntry($id, Request $request)
 	{
 		CustomerFluxYearEntries::where("id", $request["id"])->update($request->except("id"));
+		$other_entries = CustomerFluxYearEntries::where("data->reference", $request["data"]["reference"])
+			->where("year_id", ">", $request["year_id"])
+			->get();
+		foreach ($other_entries as $entry) {
+			foreach ($this->months as $month) $entry->{$month} = $request["dez"];
+			$entry->save();
+		}
 		return ["success" => true, "years" => $this->getYears($id)];
 	}
 
+
+	public function addSections($id, Request $request)
+	{
+		$customer = Customer::findOrFail($id);
+		$years = CustomerFluxYear::where("customer_id", $customer->id)->where("id", ">=", $request["year"]["id"])->get();
+		$ref =  uniqid();
+		foreach ($years as $year) {
+			$data["year_id"] = $year->id;
+			$data["data"] = ["reference" => $ref];
+			$data["name"] = $request["section"];
+			CustomerFluxYearSection::create($data);
+		}
+		return ["success" => true, "sections" => CustomerFluxYearSection::whereIn("year_id", $years->pluck('id'))->get()];
+	}
+
+
 	public function editSection($id, Request $request)
 	{
-		CustomerFluxYearSection::where("id", $request["id"])->update($request->except(["id", "expenses"]));
-		return ["success" => true, "section" => CustomerFluxYearSection::findOrFail($request["id"])->with(["expenses"])];
+		$query = CustomerFluxYearSection::where("data->reference", $request["data"]["reference"]);
+		(clone $query)->update($request->except(["id", "expenses", "year_id"]));
+		return ["success" => true, "sections" => $query->get()];
 	}
 
 	public function editGoal($id, Request $request)
@@ -167,12 +184,47 @@ class CustomersController extends Controller
 		return ["success" => true, "years" => $this->getYears($customer_id)];
 	}
 
+	public function addExpense($id, Request $request)
+	{
+		$customer = Customer::findOrFail($id);
+		$data = $request->all();
+		$origin_section = CustomerFluxYearSection::findOrFail($data["section_id"]);
+		$sections = CustomerFluxYearSection::where("data->reference", $origin_section->data->reference)->where("id", ">=", $origin_section->id)->get();
+		$ref = uniqid();
+		$years = [];
+		foreach ($sections as $section) {
+			$years[] = $section->year_id;
+			$data["section_id"] = $section->id;
+			$data["data"] = ["reference" => $ref];
+			if ($origin_section->id != $section->id) {
+				foreach ($data as $key => $key) if (!in_array($key, ['id', 'name', 'section_id', 'data', 'updated_at', 'created_at', 'deleted_at'])) $data[$key] = $data["dez"];
+			}
+			CustomerFluxSectionExpense::create($data);
+		}
+		$customer->appendToTimeline("Fluxo de Caixa", "Nova despesa adicionada no fluxo de caixa");
+		return ["success" => true, "sections" => CustomerFluxYearSection::whereIn("year_id", $years)->get()];
+	}
+
 	public function editExpense($id, Request $request)
 	{
-		CustomerFluxSectionExpense::where("id", $request["id"])->update($request->except("id"));
-		$expense = CustomerFluxSectionExpense::findOrFail($request["id"]);
-		$year_id = $expense->section->year_id;
-		return ["success" => true, "sections" => CustomerFluxYearSection::where("year_id", $year_id)->with(["expenses"])->get()];
+		$customer = Customer::findOrFail($id);
+		$data = $request->except(['updated_at', 'created_at', 'deleted_at']);
+		$origin_section = CustomerFluxYearSection::findOrFail($data["section_id"]);
+		$sections = CustomerFluxYearSection::where("data->reference", $origin_section->data->reference)->where("id", ">=", $origin_section->id)->get();
+		$years = [];
+		unset($data["id"]);
+		foreach ($sections as $section) {
+			$years[] = $section->year_id;
+			$data["section_id"] = $section->id;
+			if ($origin_section->id != $section->id) {
+				foreach ($data as $key => $key) if (!in_array($key, ['name', 'section_id', 'data'])) $data[$key] = $data["dez"];
+			}
+			$expense = $section->expenses()->where("data->reference", $data["data"]["reference"])->first();
+			$expense->fill($data);
+			$expense->save();
+		}
+		$customer->appendToTimeline("Fluxo de Caixa", "Edição de gasto de fluxo de caixa");
+		return ["success" => true, "sections" => CustomerFluxYearSection::whereIn("year_id", $years)->with(["expenses"])->get()];
 	}
 
 	public function deleteExpense($id)
@@ -201,29 +253,38 @@ class CustomersController extends Controller
 
 	public function addFluxYear($id, Request $request)
 	{
+		$years = $request->all();
+		$extend = Count($years) == 1;
 		$customer = Customer::findOrFail($id);
-		CustomerFluxYear::create([
-			"value" => $request["value"],
-			"customer_id" => $customer->id
-		]);
-		$customer->appendToTimeline("Fluxo de Caixa", "Novo ano adicionado no fluxo de caixa");
+		$last_created_year = null;
+		foreach ($years as $year) {
+			$last_created_year = CustomerFluxYear::create([
+				"value" => $year,
+				"customer_id" => $customer->id
+			]);
+		}
+		if ($extend) {
+			$last_created_year->extend();
+			$customer->appendToTimeline("Fluxo de Caixa", "Fluxo de caixa extendido em 1 ano");
+		} else $customer->appendToTimeline("Fluxo de Caixa", "Iniciado Fluxo de caixa");
 		return ["success" => true, "years" => $this->getYears($customer->id)];
 	}
 
-	public function addExpense($id, Request $request)
+	public function addYearEntry($id, Request $request)
 	{
 		$customer = Customer::findOrFail($id);
-		CustomerFluxSectionExpense::create($request->all());
-		$customer->appendToTimeline("Fluxo de Caixa", "Nova despesa adicionada no fluxo de caixa");
-		return ["success" => true, "expenses" => CustomerFluxSectionExpense::where("section_id", $request["section_id"])->get()];
-	}
-
-	public function addSections($id, Request $request)
-	{
-		$year = CustomerFluxYear::findOrFail($request["year"]["id"]);
-		$name = $request["section"];
-		CustomerFluxYearSection::create(["name" => $name, "year_id" => $year->id]);
-		return ["success" => true, "sections" => CustomerFluxYearSection::where("year_id", $year->id)->get()];
+		$years = CustomerFluxYear::where("customer_id", $customer->id)->where("id", ">=", $request["year"]["id"])->get();
+		$data = $request->except("year");
+		$entry_ref =  uniqid();
+		foreach ($years as $year) {
+			$data["year_id"] = $year->id;
+			$data["data"] = ["reference" => $entry_ref];
+			if ($year->id != $request["year"]["id"]) {
+				foreach ($data as $key => $key) if (!in_array($key, ['id', 'name', 'year_id', 'data', 'updated_at', 'created_at', 'deleted_at'])) $data[$key] = $data["dez"];
+			}
+			CustomerFluxYearEntries::create($data);
+		}
+		return ["success" => true, "years" => $this->getYears($customer->id)];
 	}
 
 	public function createAreaAccess($id)

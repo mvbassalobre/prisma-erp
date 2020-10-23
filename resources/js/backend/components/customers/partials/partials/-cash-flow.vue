@@ -2,25 +2,21 @@
     <div class="row my-4">
         <div class="col-12">
             <div class="card f-12">
-                <div class="card-header p-1">
-                    <span class="el-icon-s-opportunity mr-2" /> <b>Receita & Distribuição de Despesas Anual</b>
+                <div class="card-header p-1 d-flex flex-row justify-content-between">
+                    <div>
+                        <span class="el-icon-s-opportunity mr-2" /> <b>Receita & Distribuição de Despesas Geral até {{ year.value }}</b>
+                    </div>
+                    <small class="f-12 text-muted" v-if="loading">... Atualizando Calculo</small>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-striped table-sm mb-0 f-12">
                             <thead>
                                 <tr>
-                                    <th></th>
-                                    <th
-                                        class="text-center"
-                                        colspan="2"
-                                    >
+                                    <th class="text-center w-50" colspan="3">
                                         <b>Cenário Ideal</b>
                                     </th>
-                                    <th
-                                        class="text-center"
-                                        colspan="3"
-                                    >
+                                    <th class="text-center w-50" colspan="3">
                                         <b>Resultado & Comparação com Cenário Ideal</b>
                                     </th>
                                 </tr>
@@ -28,31 +24,53 @@
                             <tbody>
                                 <tr>
                                     <td class="colored4">Receita</td>
-                                    <td class="colored4">{{model_amount.currency()}}</td>
+                                    <td class="colored4">
+                                        <template>{{ model_amount.currency() }}</template>
+                                    </td>
                                     <td class="colored4">100%</td>
-                                    <td class="bdl">{{model_amount.currency()}}</td>
+                                    <td class="bdl">
+                                        <template>{{ model_amount.currency() }}</template>
+                                    </td>
                                     <td>100%</td>
                                 </tr>
                                 <tr>
                                     <td class="flow fixed">Gastos Fixos</td>
-                                    <td class="flow fixed">{{amoutByPercentage(50).currency()}}</td>
+                                    <td class="flow fixed">
+                                        <template>{{ amoutByPercentage(50).currency() }}</template>
+                                    </td>
                                     <td class="flow fixed">50%</td>
-                                    <td class="bdl">{{getSumByType('fixed').currency()}}</td>
-                                    <td v-html="percentageSumByType('fixed',50)" />
+                                    <td class="bdl">
+                                        <template>{{ getSumByType('fixed').currency() }}</template>
+                                    </td>
+                                    <td>
+                                        <span v-html="percentageSumByType('fixed', 50)" />
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="flow variable">Gastos Variáveis</td>
-                                    <td class="flow variable">{{amoutByPercentage(30).currency()}}</td>
+                                    <td class="flow variable">
+                                        <template>{{ amoutByPercentage(30).currency() }}</template>
+                                    </td>
                                     <td class="flow variable">30%</td>
-                                    <td class="bdl">{{getSumByType('variable').currency()}}</td>
-                                    <td v-html="percentageSumByType('variable',30)" />
+                                    <td class="bdl">
+                                        <template>{{ getSumByType('variable').currency() }}</template>
+                                    </td>
+                                    <td>
+                                        <span v-html="percentageSumByType('variable', 30)" />
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="flow grow">Investimento</td>
-                                    <td class="flow grow">{{amoutByPercentage(20).currency()}}</td>
+                                    <td class="flow grow">
+                                        <template>{{ amoutByPercentage(20).currency() }}</template>
+                                    </td>
                                     <td class="flow grow">20%</td>
-                                    <td class="bdl">{{getSumByType('grow').currency()}}</td>
-                                    <td v-html="percentageSumByType('grow',20)" />
+                                    <td class="bdl">
+                                        <template>{{ getSumByType('grow').currency() }}</template>
+                                    </td>
+                                    <td>
+                                        <span v-html="percentageSumByType('grow', 20)" />
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -64,68 +82,69 @@
 </template>
 <script>
 export default {
-    props: ["year", "sections"],
+    props: ['year', 'customer', 'sections'],
     data() {
         return {
             months: this.$getMoths(),
+            all_sections: {},
+            loading: true,
+            attempts: 0,
+            values: {
+                total: 0,
+                grow: 0,
+                fixed: 0,
+                entries: 0,
+                variable: 0,
+            },
         }
     },
     computed: {
         model_amount() {
-            let sum = this.year.entries.map(row => {
-                let value = 0
-                this.months.forEach(month => {
-                    value += Number(row[month.value])
-                })
-                return value
-            }).reduce((a, b) => a + b, 0)
-            return sum
-        }
+            return this.values.total
+        },
+    },
+    created() {
+        this.loadData()
+        setInterval(() => {
+            this.loading = true
+            setTimeout(() => {
+                this.loadData()
+            }, 2000)
+        }, 10000)
     },
     methods: {
-        entries(month) {
-            if (this.year.entries.length <= 0) return
-            return this.year.entries.map(e => Number(e[month.value])).reduce((a, b) => a + b, 0)
+        loadData() {
+            this.attempts++
+            this.$http
+                .post(`/admin/api/get-data/calcFluxTotal`, { customer_id: this.customer.id, year_id: this.year.id })
+                .then((resp) => {
+                    resp = resp.data
+                    this.attempts = 0
+                    this.$set(this.values, 'total', resp.total)
+                    this.$set(this.values, 'fixed', resp.fixed)
+                    this.$set(this.values, 'grow', resp.grow)
+                    this.$set(this.values, 'variable', resp.variable)
+                    this.loading = false
+                })
+                .catch((er) => {
+                    if (this.attempts <= 3) return this.loadData()
+                    return console.log(er)
+                })
         },
         amoutByPercentage(percentage) {
             return ((this.model_amount * percentage) / 100).toFixed(2)
         },
         getSumByType(_type) {
-            let _sum = this.sections.filter(x => x.type == _type).map(section => {
-                let sum = 0
-                section.expenses.forEach(row => {
-                    sum += this.months.map(m => Number(row[m.value])).reduce((a, b) => a + b, 0)
-                })
-                return sum
-            })
-            return _sum.reduce((a, b) => a + b, 0)
+            return this.values[_type]
         },
         percentageSumByType(_type, expected) {
             let base = Number(this.amoutByPercentage(expected))
-            let percentage = (this.getSumByType(_type) * 100) / base
+            let sum = this.getSumByType(_type)
+            let percentage = sum <= 0 ? 0 : (sum * 100) / base
             let is_red = _type != 'grow' ? percentage > expected : percentage < expected
             return `<span class="${is_red ? 'text-danger' : 'text-success'}">${percentage.toFixed(2)}%</span>`
         },
-        cash(month) {
-            if (this.sections.length <= 0) return 0
-            return this.sections.map(sec => sec.expenses.map(x => Number(x[month.value])).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0)
-        },
-        income(month) {
-            if (this.year.entries <= 0) return 0
-            return (this.year.entries.map(e => Number(e[month.value])).reduce((a, b) => a + b, 0))
-        },
-        patrimony(month) {
-            let cash = this.cash(month)
-            let entries = this.income(month)
-            let rest = 0
-            let result = this.months.filter(m => m.number <= month.number).map(x => {
-                let _cash = this.cash(x)
-                let _entries = this.income(x)
-                return _entries - _cash
-            })
-            return result.reduce((a, b) => a + b, 0)
-        }
-    }
+    },
 }
 </script>
 <style lang="scss" scoped>

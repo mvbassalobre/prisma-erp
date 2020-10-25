@@ -14,13 +14,11 @@ class AddTermToGoals extends Migration
 	public function up()
 	{
 		Schema::table('customer_goals', function (Blueprint $table) {
-			$table->dropColumn('term');
-			$table->dropColumn('term_type');
+			if (Schema::hasColumn('customer_goals', 'term'))	$table->dropColumn('term');
+			if (Schema::hasColumn('customer_goals', 'term_type'))	$table->dropColumn('term_type');
 		});
 
 		Schema::table('customer_goals', function (Blueprint $table) {
-			$table->dropColumn('term');
-			$table->dropColumn('term_type');
 			$table->date('term')->nullable();
 		});
 	}

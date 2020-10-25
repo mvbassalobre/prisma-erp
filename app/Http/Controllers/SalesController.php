@@ -23,6 +23,16 @@ class SalesController extends Controller
 		return view("admin.sales.create", compact("type", "plural", "resource_route"));
 	}
 
+	public function createProduct()
+	{
+		$resource = ResourcesHelpers::find("sales-service");
+		if (!$resource->canCreate()) abort(404);
+		$type = "Produto";
+		$plural = "produtos";
+		$resource_route = "/admin/sales-product";
+		return view("admin.sales.create", compact("type", "plural", "resource_route"));
+	}
+
 	public function updateDocument(Request $request)
 	{
 		$data = $request->all();

@@ -2,7 +2,7 @@
     <div class="schedule">
         <div class="row">
             <div class="col-12 flex-col flex__center mx-0">
-                <div class="btn-group mb-1 btn-sm" role="group">
+                <div class="btn-group mb-1 btn-sm px-0" role="group">
                     <button type="button" class="btn btn-primary btn-sm" @click="prevWeek">
                         <i class="el-icon-arrow-left mr-2" />
                         Semana Anterior

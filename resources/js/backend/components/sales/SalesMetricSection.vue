@@ -2,53 +2,26 @@
     <div class="card mb-2">
         <div class="card-header cursor-pointer" @click="opened = !opened">
             <div class="w-100 d-flex flex-row justify-content-between align-items-center">
-                <span class="el-icon-menu mr-2"></span>Detalhes da Listagem Vendas
-                <span
-                    :class="`el-icon-arrow-${!opened ? 'down' : 'up'} ml-auto`"
-                />
+                <span class="el-icon-menu mr-2"></span>Detalhes
+                <span :class="`el-icon-arrow-${!opened ? 'down' : 'up'} ml-auto`" />
             </div>
         </div>
         <div class="card-body" v-if="opened">
             <template v-if="initialized">
                 <div class="row mb-4">
-                    <div
-                        class="col-md-3 col-sm-12"
-                        element-loading-text="Carregando quantificadores ..."
-                        v-loading="loading.total"
-                    >
+                    <div class="col-md-3 col-sm-12" element-loading-text="Carregando quantificadores ..." v-loading="loading.total">
                         <h4 class="mt-4">
                             <b>Qtde :</b>
-                            {{total}}
-                            <template v-if="total>1">resultados</template>
+                            {{ total }}
+                            <template v-if="total > 1">resultados</template>
                             <template v-else>resultado</template>
                         </h4>
                     </div>
-                    <div
-                        class="col-md-3 col-sm-12"
-                        element-loading-text="Carregando Times ..."
-                        v-loading="loading.teams"
-                    >
-                        <pie-chart
-                            legend="top"
-                            :discrete="true"
-                            height="200px"
-                            :data="teams"
-                            suffix=" lançamentos(s)"
-                        />
+                    <div class="col-md-3 col-sm-12" element-loading-text="Carregando Times ..." v-loading="loading.teams">
+                        <pie-chart legend="top" :discrete="true" height="200px" :data="teams" suffix=" lançamentos(s)" />
                     </div>
-                    <div
-                        class="col-md-5 col-sm-12"
-                        element-loading-text="Carregando Usuários ..."
-                        v-loading="loading.users"
-                    >
-                        <column-chart
-                            :donut="true"
-                            :legend="false"
-                            :discrete="true"
-                            height="200px"
-                            :data="users"
-                            suffix=" lançamentos(s)"
-                        />
+                    <div class="col-md-5 col-sm-12" element-loading-text="Carregando Usuários ..." v-loading="loading.users">
+                        <column-chart :donut="true" :legend="false" :discrete="true" height="200px" :data="users" suffix=" lançamentos(s)" />
                     </div>
                 </div>
             </template>
@@ -57,7 +30,7 @@
 </template>
 <script>
 export default {
-    props: ["qty_result", "get_params"],
+    props: ['qty_result', 'get_params'],
     data() {
         return {
             opened: false,
@@ -73,14 +46,14 @@ export default {
             attempts: {
                 total: 0,
                 teams: 0,
-                users: 0
-            }
+                users: 0,
+            },
         }
     },
     watch: {
         opened(val) {
             if (val && !this.initialized) return this.initialize()
-        }
+        },
     },
     methods: {
         initialize() {
@@ -93,37 +66,46 @@ export default {
         },
         getTotal() {
             this.attempts.total++
-            this.$http.post(`/admin/sales/metrics/total`, { ...this.get_params }).then(resp => {
-                this.total = resp.data
-                this.loading.total = false
-            }).catch(er => {
-                if (this.attempts.total <= 3) return this.getTotal()
-                this.loading.total = false
-                console.log(er)
-            })
+            this.$http
+                .post(`/admin/sales/metrics/total`, { ...this.get_params })
+                .then((resp) => {
+                    this.total = resp.data
+                    this.loading.total = false
+                })
+                .catch((er) => {
+                    if (this.attempts.total <= 3) return this.getTotal()
+                    this.loading.total = false
+                    console.log(er)
+                })
         },
         getTeams() {
             this.attempts.teams++
-            this.$http.post(`/admin/sales/metrics/teams`, { ...this.get_params }).then(resp => {
-                this.teams = resp.data
-                this.loading.teams = false
-            }).catch(er => {
-                if (this.attempts.teams <= 3) return this.getTeams()
-                this.loading.teams = false
-                console.log(er)
-            })
+            this.$http
+                .post(`/admin/sales/metrics/teams`, { ...this.get_params })
+                .then((resp) => {
+                    this.teams = resp.data
+                    this.loading.teams = false
+                })
+                .catch((er) => {
+                    if (this.attempts.teams <= 3) return this.getTeams()
+                    this.loading.teams = false
+                    console.log(er)
+                })
         },
         getUsers() {
             this.attempts.users++
-            this.$http.post(`/admin/sales/metrics/users`, { ...this.get_params }).then(resp => {
-                this.users = resp.data
-                this.loading.users = false
-            }).catch(er => {
-                if (this.attempts.users <= 3) return this.getUsers()
-                this.loading.users = false
-                console.log(er)
-            })
+            this.$http
+                .post(`/admin/sales/metrics/users`, { ...this.get_params })
+                .then((resp) => {
+                    this.users = resp.data
+                    this.loading.users = false
+                })
+                .catch((er) => {
+                    if (this.attempts.users <= 3) return this.getUsers()
+                    this.loading.users = false
+                    console.log(er)
+                })
         },
-    }
+    },
 }
 </script>

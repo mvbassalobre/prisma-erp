@@ -13,11 +13,14 @@ use marcusvbda\vstack\Services\SendMail;
 
 class SalesController extends Controller
 {
-	public function create()
+	public function createService()
 	{
-		$resource = ResourcesHelpers::find("sales");
+		$resource = ResourcesHelpers::find("sales-service");
 		if (!$resource->canCreate()) abort(404);
-		return view("admin.sales.create");
+		$type = "Serviço";
+		$plural = "análises";
+		$resource_route = "/admin/sales-service";
+		return view("admin.sales.create", compact("type", "plural", "resource_route"));
 	}
 
 	public function updateDocument(Request $request)
@@ -90,6 +93,9 @@ class SalesController extends Controller
 	public function changeStatus(Request $request)
 	{
 		$sale = Sale::findOrFail($request["sale"]["id"]);
-		$sale->payment()->updateOrCreate([], ['status' => $request["new_status"]]);
+		if ($sale->type == "Produto") {
+			$sale->product_status = $request["new_status"];
+			$sale->save();
+		} else $sale->payment()->updateOrCreate([], ['status' => $request["new_status"]]);
 	}
 }

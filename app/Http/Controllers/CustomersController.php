@@ -25,30 +25,8 @@ class CustomersController extends Controller
 	{
 		$canAddSale = $this->canAddSale();
 		$customer = Customer::with("sales", "sales.user", "sales.payment")->findOrFail($code);
-		$formatted_meetings = $this->formatMeetings($customer);
 		$data = $this->getViewData($code, $customer);
-		return view("admin.customers.attendance", compact("customer", "data", "canAddSale", "formatted_meetings"));
-	}
-
-	public function formatMeetings($customer, $clientView = false)
-	{
-		$res = [];
-		foreach ($customer->meetings()->with("status")->get() as $key => $meeting) {
-			$res[$meeting->id] = [
-				"id" => (string) $meeting->id,
-				"rowId" => ($key + 1) % 4,
-				"label" => $meeting->subject . " - " . $meeting->status->name,
-				"code" => $meeting->code,
-				"link" => $clientView ? $meeting->makeEventLink() : route("meeting.edit", $meeting->code),
-				"style" => ["backgroundColor" => $meeting->status->color],
-				"time" => [
-					"start" => $meeting->starts_at->timestamp * 1000,
-					"end" => $meeting->ends_at->timestamp * 1000
-				]
-			];
-		}
-
-		return $res;
+		return view("admin.customers.attendance", compact("customer", "data", "canAddSale"));
 	}
 
 	private function canAddSale()
@@ -70,37 +48,38 @@ class CustomersController extends Controller
 		$data = $request->all();
 		$customer = Customer::findOrFail($data["customer_id"]);
 		$user = Auth::user();
-
 		$sale = Sale::create([
 			"customer_id" => $customer->id,
 			"items" => $data["items"],
 			"subtotal" => floatval($data["subtotal"]),
-			"user_id" => $user->id
+			"user_id" => $user->id,
+			"type" => $data["type"],
+			"product_status" => $data["type"] == "Produto" ? $data["product_status"] : null
 		]);
 
 		$this->makePayment($sale, $customer, $data["payment"]);
 
-		$customer->appendToTimeline("Lançamento adicionado", "O lançamento <b>" . $sale->code . "</b> foi realizada pelo usuario <b>" . $user->name . "</b>");
+		$customer->appendToTimeline("Lançamento adicionado", "Análise <b>" . $sale->id . "</b> foi realizada pelo usuario <b>" . $user->name . "</b>");
 
-		Messages::send("success", "Lançamento adicionado com sucesso !!");
+		Messages::send("success", "Análise adicionada com sucesso !!");
 		return ["success" => true];
 	}
 
 	private function makePayment($sale, $customer, $link)
 	{
-		$ref = md5($sale->id);
 		if ($link) {
+			$ref = md5($sale->id);
 			$payment = (new PagseguroController());
 			$payment->makePayment($customer, $ref);
 			foreach ($sale->items as $item) $payment->setItem($item["id"], $item["name"], $item["price"], $item["qty"]);
 			$url = $payment->generateUrl();
+			$sale->payment()->updateOrCreate([], [
+				"status" => "Aguardando pagamento",
+				"sale_id" => $sale->id,
+				"url" => @$url ? @$url : " ",
+				"reference" =>  $ref,
+			]);
 		}
-		$sale->payment()->updateOrCreate([], [
-			"status" => "waiting",
-			"sale_id" => $sale->id,
-			"url" => @$url ? @$url : " ",
-			"reference" =>  $ref,
-		]);
 	}
 
 	public function destroySale(Request $request)
@@ -367,19 +346,6 @@ class CustomersController extends Controller
 		$customer->save();
 		$customer->appendToTimeline("Area do Cliente", "O próprio cliente alterou sua senha");
 		Messages::send("success", 'Senha alterada com sucesso  !!');
-		return ["success" => true];
-	}
-
-	public function baixa(Request $request)
-	{
-		$customer = Customer::findOrFail($request["customer_id"]);
-		$user = Auth::user();
-		$sale = Sale::where("id", $request["sale"]["id"])->firstOrFail();
-		$payment = $sale->payment;
-		$payment->status = "Pagamento Aprovado";
-		$payment->save();
-		$customer->appendToTimeline("Baixa de Lançamento", "O lançamento <b>" . $request["sale"]["f_code"] . "</b> foi baixado pelo usuario <b>" . $user->name . "</b>");
-		Messages::send("success", "Lançamento baixado com sucesso !!");
 		return ["success" => true];
 	}
 

@@ -5,12 +5,13 @@
                 <nav class="nav nav-pills flex-column flex-sm-row">
                     <a
                         class="flex-sm text-sm-center nav-link mr-1"
-                        v-for="(option,i) in options"
+                        v-for="(option, i) in options"
                         :key="i"
-                        v-bind:class="{'active' : option.active}"
+                        v-bind:class="{ active: option.active }"
                         :href="`#v-pills-${option.name}`"
                         @click.prevent="setActive(option)"
-                    >{{option.label}}</a>
+                        >{{ option.label }}</a
+                    >
                 </nav>
             </div>
         </div>
@@ -18,42 +19,27 @@
             <div class="col-12">
                 <div class="row">
                     <div class="col-12">
-                        <div class="row f-12">
+                        <div class="row f-12" v-if="active == 'info'">
                             <div class="col-12">
-                                <div
-                                    class="card mb-3"
-                                    :id="`${infoData.label}`"
-                                >
+                                <div class="card mb-3" :id="`${infoData.label}`">
                                     <div class="card-body p-0">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <table class="table table-striped mb-0">
                                                     <tbody>
-                                                        <tr
-                                                            v-for="(field, i) in infoData.inputs"
-                                                            :key="i"
-                                                        >
-                                                            <td
-                                                                style="width:25%;"
-                                                                v-if="i.indexOf('IGNORE__')<0"
-                                                            >
+                                                        <tr v-for="(field, i) in infoData.inputs" :key="i">
+                                                            <td style="width: 25%" v-if="i.indexOf('IGNORE__') < 0">
                                                                 <span v-html="`<b>${i}</b>`"></span>
                                                             </td>
                                                             <td>
-                                                                <v-runtime-template
-                                                                    :key="i"
-                                                                    :template="`<span>${field===null ? '' : field}</span>`"
-                                                                />
+                                                                <v-runtime-template :key="i" :template="`<span>${field === null ? '' : field}</span>`" />
                                                             </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
-                                        <div
-                                            class="row"
-                                            v-if="!customer_area"
-                                        >
+                                        <div class="row" v-if="!customer_area">
                                             <div class="col-12">
                                                 <table class="table table-striped mb-0">
                                                     <thead>
@@ -71,35 +57,23 @@
                                                                 <b>Acesso a Area do Usuário</b>
                                                             </td>
                                                             <td colspan="4">
-                                                                <a
-                                                                    href="#"
-                                                                    class="link"
-                                                                    @click.prevent="generateUser"
-                                                                >Gerar Acesso a Area do Cliente</a>
+                                                                <a href="#" class="link" @click.prevent="generateUser">Gerar Acesso a Area do Cliente</a>
                                                             </td>
                                                         </tr>
                                                         <tr v-else>
                                                             <td>
                                                                 <b>
                                                                     Acesso a
-                                                                    <a
-                                                                        class="link"
-                                                                        target="_BLANK"
-                                                                        :href="customer_area_url"
-                                                                    >Area do Usuário</a>
+                                                                    <a class="link" target="_BLANK" :href="customer_area_url">Area do Usuário</a>
                                                                 </b>
                                                             </td>
-                                                            <td>{{customer.username}}</td>
+                                                            <td>{{ customer.username }}</td>
                                                             <td>
                                                                 <b>Senha</b>
                                                             </td>
                                                             <td>****************</td>
                                                             <td class="width:1%">
-                                                                <button
-                                                                    class="append-btn"
-                                                                    type="button"
-                                                                    @click.prevent="deleteAccess"
-                                                                >
+                                                                <button class="append-btn" type="button" @click.prevent="deleteAccess">
                                                                     <span class="el-icon-error text-danger"></span>
                                                                 </button>
                                                             </td>
@@ -114,18 +88,21 @@
                         </div>
                     </div>
                 </div>
-                <div
-                    class="tab-content"
-                    id="v-pills-tabContent"
-                >
-                    <comp-info
-                        :info="data"
-                        :active="active"
-                        :customer="customer"
-                    />
-                    <comp-timeline
+                <div class="tab-content" id="v-pills-tabContent">
+                    <comp-info :info="data" :active="active" :customer="customer" />
+                    <comp-timeline :customer="customer" :active="active" />
+                    <comp-sales
+                        :sales="customer.sales"
                         :customer="customer"
                         :active="active"
+                        :canaddsale="canaddsale"
+                        :customer_area="customer_area"
+                        name="sales"
+                        type="Serviço"
+                        :texts="{
+                            plural: 'análises',
+                            singular: 'análise',
+                        }"
                     />
                     <comp-sales
                         :sales="customer.sales"
@@ -133,18 +110,14 @@
                         :active="active"
                         :canaddsale="canaddsale"
                         :customer_area="customer_area"
+                        name="products"
+                        type="Produto"
+                        :texts="{
+                            plural: 'produtos',
+                            singular: 'produto',
+                        }"
                     />
-                    <comp-flux
-                        :customer="customer"
-                        :active="active"
-                        :customer_area="customer_area"
-                    />
-                    <comp-meetings
-                        :customer="customer"
-                        :active="active"
-                        :customer_area="customer_area"
-                        :meetings="meetings"
-                    />
+                    <comp-flux :customer="customer" :active="active" :customer_area="customer_area" />
                     <access-component
                         :sales="customer.sales"
                         :customer="customer"
@@ -159,45 +132,52 @@
     </div>
 </template>
 <script>
-import VRuntimeTemplate from "v-runtime-template"
+import VRuntimeTemplate from 'v-runtime-template'
 export default {
-    props: ["customer", "data", "canaddsale", "customer_area_url", "customer_area", "meetings"],
+    props: ['customer', 'data', 'canaddsale', 'customer_area_url', 'customer_area'],
     data() {
         return {
             backup_collapse: null,
-            active: "info",
+            active: 'info',
             options: [
-                { name: "info", label: "Dados do Cliente", active: true },
-                { name: "timeline", label: "Timeline", active: false },
-                { name: "sales", label: "Financeiro", active: false },
-                { name: "flux", label: "Planejamento", active: false },
-                { name: "meetings", label: "Reuniões", active: false },
-                { name: "access", label: "Acesso", active: false },
-            ]
+                { name: 'info', label: 'Dados do Cliente', active: true },
+                { name: 'timeline', label: 'Timeline', active: false },
+                { name: 'sales', label: 'Análises', active: false },
+                { name: 'products', label: 'Produtos', active: false },
+                { name: 'flux', label: 'Planejamento', active: false },
+                { name: 'access', label: 'Acesso', active: false },
+            ],
         }
     },
     components: {
-        "comp-info": require("./partials/-info").default,
-        "comp-timeline": require("./partials/-timeline").default,
-        "comp-sales": require("./partials/-sales").default,
-        "comp-flux": require("./partials/-flux").default,
-        "comp-meetings": require("./partials/-meetings").default,
-        "access-component": require("./partials/-accessComponent").default,
-        "v-runtime-template": VRuntimeTemplate,
+        'comp-info': require('./partials/-info').default,
+        'comp-timeline': require('./partials/-timeline').default,
+        'comp-sales': require('./partials/-sales').default,
+        'comp-flux': require('./partials/-flux').default,
+        'access-component': require('./partials/-accessComponent').default,
+        'v-runtime-template': VRuntimeTemplate,
     },
     computed: {
         has_customer_area() {
-            if ((!this.customer.username) || (!this.customer.password)) return false
+            if (!this.customer.username || !this.customer.password) return false
             return true
         },
         infoData() {
-            let info = this.data.fields.filter(({ label }) => label == "Informações")[0]
+            let info = this.data.fields.filter(({ label }) => label == 'Informações')[0]
             return info
-        }
+        },
     },
     created() {
-        if (this.customer_area) this.options.splice(this.options.findIndex(x => x.name == "sales"), 1)
-        if (!this.customer_area) this.options.splice(this.options.findIndex(x => x.name == "access"), 1)
+        if (this.customer_area)
+            this.options.splice(
+                this.options.findIndex((x) => x.name == 'sales'),
+                1
+            )
+        if (!this.customer_area)
+            this.options.splice(
+                this.options.findIndex((x) => x.name == 'access'),
+                1
+            )
         this.$root.sidebarCollapse = true
         this.initHash()
     },
@@ -205,7 +185,7 @@ export default {
         initHash() {
             let hash = window.location.hash
             if (hash) {
-                let option = this.options.find(x => x.name == hash.replace("#", ""))
+                let option = this.options.find((x) => x.name == hash.replace('#', ''))
                 if (option) this.setActive(option)
             }
         },
@@ -219,31 +199,31 @@ export default {
             }
         },
         generateUser() {
-            this.$confirm("Criar acesso a area do cliente ?", "Confirmação", {
-                confirmButtonText: "Sim",
-                cancelButtonText: "Não",
-                type: 'warning'
+            this.$confirm('Criar acesso a area do cliente ?', 'Confirmação', {
+                confirmButtonText: 'Sim',
+                cancelButtonText: 'Não',
+                type: 'warning',
             }).then(() => {
                 let loading = this.$loading()
-                this.$http.post(`/admin/customers/${this.customer.code}/create-area-access`, {}).then(resp => {
+                this.$http.post(`/admin/customers/${this.customer.code}/create-area-access`, {}).then((resp) => {
                     window.location.reload()
                 })
             })
         },
         deleteAccess() {
-            this.$confirm("Remove acesso a area do cliente ?", "Confirmação", {
-                confirmButtonText: "Sim",
-                cancelButtonText: "Não",
-                type: 'warning'
+            this.$confirm('Remove acesso a area do cliente ?', 'Confirmação', {
+                confirmButtonText: 'Sim',
+                cancelButtonText: 'Não',
+                type: 'warning',
             }).then(() => {
                 let loading = this.$loading()
-                this.$http.post(`/admin/customers/${this.customer.code}/remove-area-access`, {}).then(resp => {
-                    Cookies.remove("customer_area_user")
+                this.$http.post(`/admin/customers/${this.customer.code}/remove-area-access`, {}).then((resp) => {
+                    Cookies.remove('customer_area_user')
                     window.location.reload()
                 })
             })
-        }
-    }
+        },
+    },
 }
 </script>
 <style lang="scss" scoped>

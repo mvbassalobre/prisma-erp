@@ -1,11 +1,5 @@
 <template>
-    <div
-        class="tab-pane fade"
-        v-bind:class="{'show active' : active == 'flux'}"
-        id="v-pills-flux"
-        role="tabpanel"
-        aria-labelledby="v-pills-flux-tab"
-    >
+    <div class="tab-pane fade" v-bind:class="{ 'show active': active == 'flux' }" id="v-pills-flux" role="tabpanel" aria-labelledby="v-pills-flux-tab">
         <div class="row">
             <div class="col-12">
                 <el-tabs type="border-card">
@@ -15,6 +9,9 @@
                     <el-tab-pane label="Fluxo de Caixa">
                         <comp-entries :customer="customer" :customer_area="customer_area" />
                     </el-tab-pane>
+                    <el-tab-pane label="Reuniões">
+                        <comp-meetings :customer="customer" :customer_area="customer_area" />
+                    </el-tab-pane>
                 </el-tabs>
             </div>
         </div>
@@ -22,7 +19,7 @@
 </template>
 <script>
 export default {
-    props: ["active", "customer", "customer_area"],
+    props: ['active', 'customer', 'customer_area'],
     data() {
         return {
             loading: false,
@@ -30,8 +27,9 @@ export default {
         }
     },
     components: {
-        'comp-goals': require("./partials/-goals.vue").default,
-        'comp-entries': require("./partials/-entries.vue").default,
-    }
+        'comp-goals': require('./partials/-goals.vue').default,
+        'comp-entries': require('./partials/-entries.vue').default,
+        'comp-meetings': require('./-meetings').default,
+    },
 }
 </script>

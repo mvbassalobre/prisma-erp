@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Models\{Customer, CustomerGoal, CustomerFluxYear, CustomerFluxYearSection, CustomerFluxSectionExpense};
+use App\Http\Models\{Product, Customer, CustomerGoal, CustomerFluxYear, CustomerFluxYearSection, CustomerFluxSectionExpense};
 use Illuminate\Http\Request;
 
 class ApiController extends Controller
@@ -69,5 +69,10 @@ class ApiController extends Controller
 			}
 		}
 		return $total;
+	}
+
+	protected function getProduct(Request $request)
+	{
+		return Product::where("type", $request["type"])->get();
 	}
 }

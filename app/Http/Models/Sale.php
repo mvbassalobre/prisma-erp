@@ -45,7 +45,7 @@ class Sale extends DefaultModel
 
 	public function payment()
 	{
-		return $this->hasOne(SalePayment::class);
+		return $this->hasOne(SalePayment::class, "sale_id");
 	}
 
 	public function customer()
@@ -58,14 +58,6 @@ class Sale extends DefaultModel
 		$customer = $this->customer;
 		return "<a href='/admin/customers/" . $customer->code . "/attendance'>" . $customer->name . "</a>";
 	}
-
-	public function getFPagtoAttribute()
-	{
-		$payment = $this->payment;
-		if (!@$payment) return "Transferência Bancária";
-		return $payment->status;
-	}
-
 
 	public function getTotalItemsAttribute()
 	{

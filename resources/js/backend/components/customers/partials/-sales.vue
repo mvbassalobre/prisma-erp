@@ -1,10 +1,10 @@
 <template>
-    <div class="tab-pane fade f-12" v-bind:class="{ 'show active': active == 'sales' }" id="v-pills-sales" role="tabpanel" aria-labelledby="v-pills-sales-tab">
+    <div class="tab-pane fade f-12" v-bind:class="{ 'show active': active == name }" id="v-pills-sales" role="tabpanel" aria-labelledby="v-pills-sales-tab">
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
-                        <h5><span class="el-icon-s-finance mr-2"></span>Lançamentos Financeiros</h5>
+                        <h5><span class="el-icon-s-finance mr-2"></span>{{ texts.plural.ucfirst() }}</h5>
                         <a href="#" class="link" v-if="sales.length > 0 && canaddsale" @click.prevent="addSale">Adicionar</a>
                     </div>
                     <div class="card-body">
@@ -15,9 +15,11 @@
                                         <h1 class="mt-4">
                                             <span class="el-icon-s-finance mr-2"></span>
                                         </h1>
-                                        <h5>Cliente não possui lançamentos</h5>
-                                        <small v-if="canaddsale">Adicione um lançamento clicando no botão abaixo</small>
-                                        <button v-if="canaddsale" class="btn btn-primary mb-4 mt-3" @click="addSale">Adicionar Lançamento</button>
+                                        <h5>Cliente não possui {{ texts.plural }}</h5>
+                                        <small v-if="canaddsale">Adicione {{ texts.plural }} clicando no botão abaixo</small>
+                                        <button v-if="canaddsale" class="btn btn-primary mb-4 mt-3" @click="addSale">
+                                            Adicionar {{ texts.plural.ucfirst() }}
+                                        </button>
                                     </div>
                                 </template>
                                 <template v-else>
@@ -84,19 +86,13 @@
                                                                         Ações
                                                                     </button>
                                                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                                                        <template v-if="s.payment">
+                                                                        <template>
                                                                             <a class="dropdown-item" href="#" @click.prevent="changeStatusModal(s)">
-                                                                                Alterar Status do Pagto
-                                                                            </a>
-                                                                            <div class="dropdown-divider" />
-                                                                            <a class="dropdown-item text-success" href="#" @click.prevent="baixa(s)">
-                                                                                Dar baixa no lançamento
+                                                                                Alterar Status
                                                                             </a>
                                                                             <div class="dropdown-divider" />
                                                                         </template>
-                                                                        <a class="dropdown-item text-danger" href="#" @click.prevent="destroy(s)">
-                                                                            Excluir lançamento
-                                                                        </a>
+                                                                        <a class="dropdown-item text-danger" href="#" @click.prevent="destroy(s)"> Excluir </a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -133,9 +129,9 @@
                                                             <div class="d-flex flex-column">
                                                                 <div v-if="s.user" class="d-flex align-items-center">
                                                                     <b>Responsável :</b>
-                                                                    <a class="link ml-1" target="_BLANK" :href="`/admin/users/${s.user.code}`">{{
-                                                                        s.user.name
-                                                                    }}</a>
+                                                                    <a class="link ml-1" target="_BLANK" :href="`/admin/users/${s.user.code}`">
+                                                                        {{ s.user.name }}
+                                                                    </a>
                                                                     <small class="f-10 ml-1" v-html="s.user.f_active" />
                                                                 </div>
                                                                 <div>
@@ -146,25 +142,37 @@
                                                                     <b class="mr-1">Hora do Lançamento :</b>
                                                                     {{ s.f_created_at.split(' - ')[1] }}
                                                                 </div>
-                                                                <div v-if="!s.payment">
-                                                                    <upload-document :customer="customer" :sale="s" />
-                                                                </div>
+                                                                <template v-if="isService">
+                                                                    <div v-if="!s.payment">
+                                                                        <upload-document :customer="customer" :sale="s" />
+                                                                    </div>
+                                                                    <template v-else>
+                                                                        <div>
+                                                                            <b class="mr-1">Status :</b>
+                                                                            {{ s.payment.status }}
+                                                                        </div>
+                                                                        <div v-if="s.payment.description">
+                                                                            <b class="mr-1">Descrição :</b>
+                                                                            {{ s.payment.description }}
+                                                                        </div>
+                                                                        <div v-if="s.payment.reference">
+                                                                            <b class="mr-1">Ref. :</b>
+                                                                            {{ s.payment.reference }}
+                                                                        </div>
+                                                                        <div class="mt-2" v-if="s.payment.url">
+                                                                            <b class="text-success mr-1">Com Link de Pagto</b>
+                                                                            <url-qrcode
+                                                                                :customer="customer"
+                                                                                :url="s.payment.url"
+                                                                                :default_email="customer.email"
+                                                                            />
+                                                                        </div>
+                                                                    </template>
+                                                                </template>
                                                                 <template v-else>
                                                                     <div>
-                                                                        <b class="mr-1">Status de Pagto :</b>
-                                                                        {{ s.payment.status }}
-                                                                    </div>
-                                                                    <div v-if="s.payment.description">
-                                                                        <b class="mr-1">Descrição :</b>
-                                                                        {{ s.payment.description }}
-                                                                    </div>
-                                                                    <div v-if="s.payment.reference">
-                                                                        <b class="mr-1">Ref. :</b>
-                                                                        {{ s.payment.reference }}
-                                                                    </div>
-                                                                    <div class="mt-2" v-if="s.payment.url">
-                                                                        <b class="text-success mr-1">Com Link de Pagto</b>
-                                                                        <url-qrcode :customer="customer" :url="s.payment.url" :default_email="customer.email" />
+                                                                        <b class="mr-1">Status :</b>
+                                                                        {{ s.product_status }}
                                                                     </div>
                                                                 </template>
                                                             </div>
@@ -181,16 +189,23 @@
                 </div>
             </div>
         </div>
-        <modal-sales ref="modal_sales" :customer="customer" />
+        <modal-sales ref="modal_sales" :customer="customer" :type="type" :texts="texts" />
         <modal-detail ref="modal_detail" :customer="customer" :customer_area="customer_area" />
 
         <el-dialog title="Alteração de Status" :visible.sync="dialogStatus" width="30%" center>
-            <el-select v-model="new_status" placeholder="Selecione o status do pagamento" class="w-100">
-                <el-option label="Aguardando Pagto" value="Aguardando Pagto" />
-                <el-option label="Pagamento Efetuado" value="Pagamento Efetuado" />
-                <el-option label="Em Análise" value="Em Análise" />
-                <el-option label="Disponível" value="Disponível" />
-                <el-option label="Cancelado" value="Cancelado" />
+            <el-select v-model="new_status" placeholder="Selecione o status" class="w-100">
+                <template v-if="isService">
+                    <el-option label="Aguardando Pagto" value="Aguardando Pagto" />
+                    <el-option label="Pagamento Efetuado" value="Pagamento Efetuado" />
+                    <el-option label="Em Análise" value="Em Análise" />
+                    <el-option label="Disponível" value="Disponível" />
+                    <el-option label="Cancelado" value="Cancelado" />
+                </template>
+                <template v-else>
+                    <el-option label="Aguardando" value="Aguardando" />
+                    <el-option label="Pago" value="Pago" />
+                    <el-option label="Cancelado" value="Cancelado" />
+                </template>
             </el-select>
             <template slot="footer">
                 <div class="d-flex justify-content-end">
@@ -203,6 +218,14 @@
 <script>
 export default {
     props: {
+        type: {
+            type: String,
+            default: 'Serviço',
+        },
+        name: {
+            type: String,
+            default: 'sales',
+        },
         customer_area: {
             type: Boolean,
             default: false,
@@ -210,6 +233,10 @@ export default {
         sales: {
             type: Array,
             default: () => [],
+        },
+        texts: {
+            type: Object,
+            default: () => ({}),
         },
         customer: {
             type: Object,
@@ -225,6 +252,9 @@ export default {
         },
     },
     computed: {
+        isService() {
+            return this.type == 'Serviço'
+        },
         __sales() {
             let _sales = this._sales
             if (this.filter.code != null) _sales = this.sales.filter((row) => row.f_code.toLowerCase().indexOf(this.filter.code.toLowerCase()) >= 0)
@@ -245,7 +275,7 @@ export default {
         },
     },
     created() {
-        this._sales = this.sales
+        this._sales = this.sales.filter((x) => x.type == this.type)
     },
     data() {
         return {
@@ -291,32 +321,6 @@ export default {
         },
         showDetail(s) {
             this.$refs.modal_detail.showModal(s)
-        },
-        baixa(p) {
-            this.$confirm(`Confirma baixa desse lançamento ?`, 'Confirmação', {
-                confirmButtonText: 'Sim',
-                cancelButtonText: 'Não',
-                type: 'warning',
-            }).then(() => {
-                this.loading = this.$loading()
-                this.$http
-                    .post(laravel.general.root_url + '/admin/customers/baixa', {
-                        customer_id: this.customer.id,
-                        sale: p,
-                    })
-                    .then((res) => {
-                        window.location.reload()
-                    })
-                    .catch((er) => {
-                        this.loading.close()
-                        console.log(er)
-                        this.$message({
-                            showClose: true,
-                            message: 'Erro ao excluir',
-                            type: 'error',
-                        })
-                    })
-            })
         },
         destroy(p) {
             this.$confirm(`Confirma exclusão ?`, 'Confirmação', {

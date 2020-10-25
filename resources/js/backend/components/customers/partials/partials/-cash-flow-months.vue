@@ -104,17 +104,21 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="bdr"><b>Meta </b>/<small>Mês</small></td>
+                                        <td class="bdr"><b>Ideal </b>/<small>Mês</small></td>
                                         <td v-for="(m, i) in months" :key="`${i}_head`">
-                                            {{ amoutByPercentage(50, m).currency() }}
-                                            <b class="ml-1 text-success">50%</b>
+                                            <div class="d-flex flex-column">
+                                                <span>{{ amoutByPercentage(50, m).currency() }}</span>
+                                                <b class="ml-1 text-success">50%</b>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="bdr"><b>Alcançado </b>/<small>Mês</small></td>
                                         <td v-for="(m, i) in months" :key="`${i}_head`">
-                                            {{ getSumByType('fixed', m).currency() }}
-                                            <b class="ml-1" v-html="percentageSumByType('fixed', m, 50)" />
+                                            <div class="d-flex flex-column">
+                                                <span>{{ getSumByType('fixed', m).currency() }}</span>
+                                                <b class="ml-1" v-html="percentageSumByType('fixed', m, 50)" />
+                                            </div>
                                         </td>
                                     </tr>
 
@@ -127,17 +131,21 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="bdr"><b>Meta</b>/<small>Mês</small></td>
+                                        <td class="bdr"><b>Ideal </b>/<small>Mês</small></td>
                                         <td v-for="(m, i) in months" :key="`${i}_head`">
-                                            {{ amoutByPercentage(30, m).currency() }}
-                                            <b class="ml-1 text-success">30%</b>
+                                            <div class="d-flex flex-column">
+                                                <span>{{ amoutByPercentage(30, m).currency() }}</span>
+                                                <b class="ml-1 text-success">30%</b>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="bdr"><b>Alcançado </b>/<small>Mês</small></td>
                                         <td v-for="(m, i) in months" :key="`${i}_head`">
-                                            {{ getSumByType('variable', m).currency() }}
-                                            <b class="ml-1" v-html="percentageSumByType('variable', m, 50)" />
+                                            <div class="d-flex flex-column">
+                                                <span>{{ getSumByType('variable', m).currency() }}</span>
+                                                <b class="ml-1" v-html="percentageSumByType('variable', m, 50)" />
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -149,17 +157,21 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="bdr"><b>Meta </b>/<small>Mês</small></td>
+                                        <td class="bdr"><b>Ideal </b>/<small>Mês</small></td>
                                         <td v-for="(m, i) in months" :key="`${i}_head`">
-                                            {{ amoutByPercentage(20, m).currency() }}
-                                            <b class="ml-1 text-success">20%</b>
+                                            <div class="d-flex flex-column">
+                                                <span>{{ amoutByPercentage(20, m).currency() }}</span>
+                                                <b class="ml-1 text-success">20%</b>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="bdr"><b>Alcançado </b>/<small>Mês</small></td>
                                         <td v-for="(m, i) in months" :key="`${i}_head`">
-                                            {{ getSumByType('grow', m).currency() }}
-                                            <b class="ml-1" v-html="percentageSumByType('grow', m, 50)" />
+                                            <div class="d-flex flex-column">
+                                                <span>{{ getSumByType('grow', m).currency() }}</span>
+                                                <b class="ml-1" v-html="percentageSumByType('grow', m, 50)" />
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -190,7 +202,9 @@ export default {
             return value ? value : 0
         },
         amoutByPercentage(percentage, month) {
-            return ((this.model_amount(month) * percentage) / 100).toFixed(2)
+            let amount = this.model_amount(month)
+            if (!amount) return 0
+            return ((amount * percentage) / 100).toFixed(2)
         },
         getSumByType(_type, month) {
             let _sum = this.sections
@@ -200,12 +214,15 @@ export default {
                     section.expenses.forEach((row) => (sum += Number(row[month.value])))
                     return sum
                 })
+            if (!_sum) return 0
             return _sum.reduce((a, b) => a + b, 0)
         },
         percentageSumByType(_type, month, expected) {
             let base = Number(this.amoutByPercentage(expected, month))
-            let percentage = (this.getSumByType(_type, month) * 100) / base
+            let sum = this.getSumByType(_type, month)
+            let percentage = !sum ? 0 : (sum * 100) / base
             let is_red = _type != 'grow' ? percentage > expected : percentage < expected
+            if (percentage == Infinity) return `<span class="${is_red ? 'text-danger' : 'text-success'}">Infinito %</span>`
             return `<span class="${is_red ? 'text-danger' : 'text-success'}">${percentage.toFixed(2)}%</span>`
         },
         cash(month) {

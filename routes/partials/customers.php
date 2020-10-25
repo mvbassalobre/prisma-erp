@@ -30,7 +30,6 @@ Route::group(['prefix' => "customers"], function () {
 	Route::put('{code}/attendance/edit-expense', [CustomersController::class, 'editExpense'])->middleware(['hashids:code']);
 
 	Route::post('post_new_sale', [CustomersController::class, 'postNewSale'])->name("admin.customers.attendance.new_sale");
-	Route::post('baixa', [CustomersController::class, 'baixa'])->name("admin.customers.attendance.baixa");
 	Route::post('destroy_sale', [CustomersController::class, 'destroySale'])->name("admin.customers.attendance.destroy_sale");
 	Route::post('change_pass', [CustomersController::class, 'changePass'])->name("admin.customers.attendance.change_pass");
 });

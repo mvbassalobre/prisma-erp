@@ -1,23 +1,12 @@
 <template>
-    <div @dblclick="editField" style="height: 22px;width: 100%;">
+    <div @dblclick="editField" style="height: 22px; width: 100%">
         <template v-if="editing">
-            <template v-if="type=='select'">
-                <select
-                    ref="input"
-                    class="w-100"
-                    :value="value"
-                    @keyup.enter="(e) => changeInput(e.target.value)"
-                    @blur="(e) => changeInput(e.target.value)"
-                >
-                    <option
-                        v-for="(o,i) in options"
-                        :value="o.value"
-                        v-html="o.value ? o.label : o.value"
-                        :key="i"
-                    />
+            <template v-if="type == 'select'">
+                <select ref="input" class="w-100" :value="value" @keyup.enter="(e) => changeInput(e.target.value)" @blur="(e) => changeInput(e.target.value)">
+                    <option v-for="(o, i) in options" :value="o.value" v-html="o.value ? o.label : o.value" :key="i" />
                 </select>
             </template>
-            <template v-if="['text','number'].includes(type)">
+            <template v-if="['text', 'number', 'date'].includes(type)">
                 <input
                     ref="input"
                     class="w-100"
@@ -30,49 +19,50 @@
             </template>
         </template>
         <template v-else>
-            <div style="cursor:pointer;" v-html="val()"></div>
+            <div style="cursor: pointer" v-html="val()"></div>
         </template>
     </div>
 </template>
 <script>
+import moment, { months } from 'moment'
 export default {
     props: {
         can_edit: {
             type: Boolean,
-            default: true
+            default: true,
         },
         type: {
             type: String,
-            default: "text"
+            default: 'text',
         },
         step: {
             type: Number,
-            default: 0.01
+            default: 0.01,
         },
         currency: {
             type: Boolean,
-            default: false
+            default: false,
         },
         options: {
             type: Array,
-            default: () => ([])
-        }
+            default: () => [],
+        },
     },
     data() {
         return {
             editing: false,
-            value: this.$attrs.value ? this.$attrs.value : this.$props.value
+            value: this.$attrs.value ? this.$attrs.value : this.$props.value,
         }
     },
     watch: {
-        "$attrs.value"(val) {
+        '$attrs.value'(val) {
             this.value = val
-        }
+        },
     },
     methods: {
         changeInput(value) {
             this.editing = false
-            if (this.type == "number") value = Number(value)
+            if (this.type == 'number') value = Number(value)
             this.value = value
             this.$emit('input', value)
             this.$emit('change', value)
@@ -85,9 +75,13 @@ export default {
             })
         },
         val() {
+            if (this.type == 'date') {
+                moment.locale('pt-br')
+                return moment(this.value).format('L')
+            }
             if (this.currency) return Number(this.value ? this.value : 0).currency()
             return this.value
-        }
-    }
+        },
+    },
 }
 </script>

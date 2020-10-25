@@ -61,6 +61,12 @@ String.prototype.toClipboard = function (callback = () => { }) {
 	callback()
 }
 
+String.prototype.ucfirst = function () {
+	if (typeof this !== 'string') return ''
+	return this.charAt(0).toUpperCase() + this.slice(1)
+
+}
+
 Vue.prototype.$getMoths = () => [
 	{ name: "Janeiro", value: "jan", number: 1 },
 	{ name: "Fevereiro", value: "fev", number: 2 },

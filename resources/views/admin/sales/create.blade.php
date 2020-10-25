@@ -1,5 +1,5 @@
 @extends("templates.admin")
-@section('title',"Lançamento de Vendas")
+@section('title',"Lançamento de ".$plural)
 @section('breadcrumb')
 <div class="row">
     <div class="col-12">
@@ -9,10 +9,10 @@
                     <a href="/admin" class="link">Dashboard</a>
                 </li>
                 <li class="breadcrumb-item active">
-                    <a href="/admin/sales" class="link">Vendas</a>
+                    <a href="{{ $resource_route }}" class="link">{{ ucfirst($plural) }}</a>
                 </li>
                 <li class="breadcrumb-item active">
-                    <a href="/admin/sales/create" class="link">Seleção de Cliente para Vendas</a>
+                    <a href="/admin/sales/create" class="link">Seleção de Cliente</a>
                 </li>
             </ol>
         </nav>
@@ -20,5 +20,5 @@
 </div>
 @endsection
 @section("content")
-<select-customer-to-sale></select-customer-to-sale>
+<select-customer-to-sale type="{{ $type }}" plural="{{ $plural }}"></select-customer-to-sale>
 @endsection

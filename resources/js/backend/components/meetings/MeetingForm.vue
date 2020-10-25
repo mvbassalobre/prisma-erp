@@ -159,13 +159,6 @@ export default {
                     console.log(er)
                 })
         },
-        // loadModelData() {
-        //     for (let modelData of this.modelsToLoad) {
-        //         const [model, field] = modelData
-        //         this.$http.post("/admin/inputs/option_list", { model: `App\\Http\\Models\\${model}` })
-        //             .then(r => this.modelsData[field] = r.data.data)
-        //     }
-        // },
         submit() {
             this.$refs.form.validate((valid) => {
                 if (!valid) return
@@ -212,6 +205,7 @@ export default {
                 })
                 .finally((v) => (this.sending = false))
                 .then(({ data }) => {
+                    if (this.isModal) return window.location.reload()
                     location.replace('/admin/meetings')
                 })
                 .catch(({ response }) => {

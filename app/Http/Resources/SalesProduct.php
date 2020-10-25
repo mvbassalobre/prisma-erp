@@ -8,16 +8,16 @@ use  App\Http\Filters\Sales\{
 	SalesByTeam,
 	SalesByDateRange,
 	SalesByItem,
-	SaleByPaymentStatus
+	SaleByStatus
 };
 
-class Sales extends Resource
+class SalesProduct extends Resource
 {
-	public $model = \App\Http\Models\Sale::class;
+	public $model = \App\Http\Models\SaleProduct::class;
 
 	public function label()
 	{
-		return "Vendas";
+		return "Produtos";
 	}
 
 	public function resultsPerPage()
@@ -27,7 +27,7 @@ class Sales extends Resource
 
 	public function singularLabel()
 	{
-		return "Venda";
+		return "Produtos";
 	}
 
 	public function menu()
@@ -71,8 +71,7 @@ class Sales extends Resource
 			"attendance_url" => ["label" => "Código", "sortable_index" => "id"],
 			"f_customer" => ["label" => "Cliente", "sortable_index" => "customer_id"],
 			"f_pagto" => ["label" => "Status", "sortable" => false],
-			// "payment->description" => ["label" => "Descrição", "sortable" => false],
-			"f_items" => ["label" => "Items", "sortable" => false],
+			"f_items" => ["label" => "Items", "sortable" => false, "size" => '600px'],
 			"total_items" => ["label" => "Total", "sortable" => false],
 			"f_user" => ["label" => "Responsável", "sortable_index" => "user_id"],
 			"f_created_at" => ["label" => "Data de Lançamento", "sortable_index" => "created_at"],
@@ -112,7 +111,7 @@ class Sales extends Resource
 	public function filters()
 	{
 		return [
-			new SaleByPaymentStatus(),
+			new SaleByStatus('Produto'),
 			new SalesByUser(),
 			new SalesByTeam(),
 			new SalesByItem(),

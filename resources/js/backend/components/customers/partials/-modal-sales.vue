@@ -4,7 +4,7 @@
             <div class="card-header d-flex align-items-center justify-content-between">
                 <div>
                     <span class="el-icon-plus mr-2"></span>
-                    Adicionar lançamento ao cliente
+                    Adicionar {{ texts.singular }} ao cliente
                     <b>{{ customer.name }}</b>
                 </div>
                 <a @click.prevent="$modal.hide('modal_sales')">
@@ -107,7 +107,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" v-if="!isProduct">
                     <div class="col-12 text-right">
                         <label> <input type="checkbox" v-model="generate_payment" /> Gerar URL de Pagamento </label>
                     </div>
@@ -116,7 +116,7 @@
                     <div class="col-12">
                         <div class="d-flex flex-row align-items-center justify-content-end">
                             <a class="text-danger mr-4" href="#" @click.prevent="$modal.hide('modal_sales')">Cancelar</a>
-                            <button class="btn btn-primary" @click="submit" :disabled="!canCreate">Criar Lançamento</button>
+                            <button class="btn btn-primary" @click="submit" :disabled="!canCreate">Lançar {{ texts.singular.ucfirst() }}</button>
                         </div>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
 </template>
 <script>
 export default {
-    props: ['customer', 'customer_area'],
+    props: ['customer', 'customer_area', 'type', 'texts'],
     data() {
         return {
             loading: false,
@@ -140,9 +140,12 @@ export default {
         }
     },
     computed: {
+        isProduct() {
+            return this.type == 'Produto'
+        },
         canCreate() {
-            if (this.generate_payment) return this.subtotal > 0
-            return true
+            if (this.generate_payment) return this.subtotal > 0 && this.items.length > 0
+            return this.items.length > 0
         },
         selected_product() {
             if (!this.product_id) return this.cleanForm()
@@ -164,6 +167,9 @@ export default {
         },
     },
     methods: {
+        initializeProductMode() {
+            this.generate_payment = false
+        },
         deleteItem(item) {
             this.$confirm(`Deseja remover item (${item.name}) do lançamento ? `, 'Confirmação', {
                 confirmButtonText: 'Sim',
@@ -203,6 +209,7 @@ export default {
             this.qty = null
             this.selected_price = null
             this.generate_payment = true
+            if (this.isProduct) this.initializeProductMode()
         },
         submit() {
             this.$confirm(`Confirma lançamento ?`, 'Confirmação', {
@@ -216,6 +223,8 @@ export default {
                         items: this.items,
                         subtotal: this.subtotal,
                         payment: this.generate_payment,
+                        type: this.type,
+                        product_status: this.type == 'Produto' ? 'Aguardando' : null,
                     }
                     this._loading = this.$loading()
                     this.$http
@@ -234,10 +243,10 @@ export default {
         getProducts() {
             this.loading = true
             this.$http
-                .post(`${laravel.general.root_url}/admin/inputs/option_list`, { model: '\\App\\Http\\Models\\Product' })
+                .post(`/admin/api/get-data/getProduct`, { type: this.type })
                 .then((res) => {
                     res = res.data
-                    this.products = res.data
+                    this.products = res
                     this.loading = false
                 })
                 .catch((er) => {

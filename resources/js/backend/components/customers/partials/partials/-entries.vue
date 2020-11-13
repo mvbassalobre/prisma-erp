@@ -22,7 +22,7 @@
                                             <tr>
                                                 <th class="w-25">
                                                     Conta
-                                                    <small>Mês</small>
+                                                    <small class="ml-1">Mês</small>
                                                 </th>
                                                 <template v-for="(m, i) in months">
                                                     <th style="width: 100px" :key="`${i}_head`" class="green">

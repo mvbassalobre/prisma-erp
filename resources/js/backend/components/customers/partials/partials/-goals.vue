@@ -104,7 +104,7 @@ export default {
             return text.join(' e ')
         },
         plural(qty, worlds) {
-            return !qty ? worlds[0] : worlds[0]
+            return qty <= 1 ? worlds[0] : worlds[1]
         },
         init() {
             this.loadGoals()

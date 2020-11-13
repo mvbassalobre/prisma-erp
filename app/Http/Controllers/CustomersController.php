@@ -38,7 +38,6 @@ class CustomersController extends Controller
 	private function getViewData($code, $customer)
 	{
 		$resource = ResourcesHelpers::find("customers");
-		if (!$resource->canView()) abort(403);
 		$data = (new ResourceController())->makeViewData($code, $resource, $customer);
 		return $data;
 	}

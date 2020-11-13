@@ -4,6 +4,7 @@ namespace App\Http\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use marcusvbda\vstack\Models\Scopes\TenantScope;
+use Carbon\Carbon;
 
 class Birthday extends Model
 {
@@ -17,7 +18,11 @@ class Birthday extends Model
 
 	public function getBirthdayAttribute()
 	{
-		return STR_PAD($this->day, 2, 0, STR_PAD_LEFT) . "/" .  STR_PAD($this->month, 2, 0, STR_PAD_LEFT);
+		return  completeFormatedDate(implode("-", [
+			Carbon::now()->year,
+			STR_PAD($this->month, 2, 0, STR_PAD_LEFT),
+			STR_PAD($this->day, 2, 0, STR_PAD_LEFT)
+		]), true, true, false);
 	}
 
 	public function getFResourceAttribute()

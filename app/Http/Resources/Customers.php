@@ -6,6 +6,7 @@ use marcusvbda\vstack\Resource;
 use marcusvbda\vstack\Fields\{
 	Card,
 	Text,
+	Custom,
 	BelongsTo,
 };
 use Auth;
@@ -146,16 +147,15 @@ class Customers extends Resource
 				"field" => "cpfcnpj",
 				"placeholder" => "Digite o CPF ou CNPJ aqui ...",
 				"mask" => ['###.###.###-##', '##.###.###/####-##'],
-				"rules" => "required|max:255",
-				"required" => true,
+				"rules" => "max:255",
 				"description" => "Digite o CPF do cliente para o caso de cliente pessoa física ou CNPJ para cliente pessoa jurídica"
 			]),
 			new Text([
 				"label" => "RG/IE",
 				"field" => "ierg",
 				"placeholder" => "Digite o RG ou IE aqui ...",
-				"rules" => "required|max:255",
-				"required" => true,
+				"rules" => "max:255",
+				"mask" => ['##.###.###-#'],
 				"description" => "Digite o RG do cliente para o caso de cliente pessoa física ou IE para cliente pessoa jurídica"
 			]),
 			new Text([
@@ -202,41 +202,16 @@ class Customers extends Resource
 			])
 		]);
 		$cards[] =  new Card("Endereço", [
-			new Text([
-				"label" => "CEP",
-				"field" => "zipcode",
-				"placeholder" => "Digite o CEP aqui ...",
-				"rules" => "max:255",
-			]),
-			new Text([
-				"label" => "Rua",
-				"field" => "street",
-				"placeholder" => "Digite a rua aqui ...",
-			]),
-			new Text([
-				"label" => "Número",
-				"field" => "number",
-				"placeholder" => "Digite o número aqui ...",
-			]),
-			new Text([
-				"label" => "Complemento",
-				"field" => "complement",
-				"placeholder" => "Digite o complemento aqui ...",
-			]),
-			new Text([
-				"label" => "Bairro",
-				"field" => "district",
-				"placeholder" => "Digite a bairro aqui ...",
-			]),
-			new Text([
-				"label" => "Estado",
-				"field" => "state",
-				"placeholder" => "Digite a estado aqui ...",
-			]),
-			new Text([
-				"label" => "Cidade",
-				"field" => "city",
-				"placeholder" => "Digite a cidade aqui ...",
+			new Text(["field" => "zipcode", "hide" => true]),
+			new Text(["field" => "street", "hide" => true]),
+			new Text(["field" => "number", "hide" => true]),
+			new Text(["field" => "complement", "hide" => true]),
+			new Text(["field" => "district", "hide" => true]),
+			new Text(["field" => "district", "hide" => true]),
+			new Text(["field" => "state", "hide" => true]),
+			new Text(["field" => "city", "hide" => true]),
+			new Custom('<address-form-customer :form="form"></address-form-customer>', [
+				"params" => []
 			]),
 		]);
 		$cards[] =  new Card("Dados Bancários", [
@@ -261,6 +236,11 @@ class Customers extends Resource
 			]),
 		]);
 		return $cards;
+	}
+
+	public function canView()
+	{
+		return false;
 	}
 
 	public function canDelete()

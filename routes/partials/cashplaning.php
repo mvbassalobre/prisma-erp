@@ -11,17 +11,11 @@ Route::group(['prefix' => "cash-planing"], function () {
 	Route::delete('delete-entry/{id}', [CashPlaningController::class, 'deleteEntry']);
 	Route::put('edit-entry/{id}', [CashPlaningController::class, 'editEntry']);
 	Route::post('get-sections', [CashPlaningController::class, 'getSections']);
-	// Route::post('{code}/attendance/add-flux-year', [CustomersController::class, 'addFluxYear'])->middleware(['hashids:code']);
-	// Route::delete('/attendance/delete-flux-year/{id}', [CustomersController::class, 'deleteFluxYear']);
-	// Route::post('{code}/attendance/add-year-entry', [CustomersController::class, 'addYearEntry'])->middleware(['hashids:code']);
-	// Route::put('{code}/attendance/edit-flux-entry', [CustomersController::class, 'editFluxEntry'])->middleware(['hashids:code']);
-	// Route::delete('/attendance/delete-flux-entry/{id}', [CustomersController::class, 'deleteFluxEntry']);
-
-	// Route::put('{code}/attendance/edit-section', [CustomersController::class, 'editSection'])->middleware(['hashids:code']);
-
-	// Route::post('{code}/attendance/add-sections', [CustomersController::class, 'addSections'])->middleware(['hashids:code']);
-	// Route::delete('/attendance/delete-section/{id}', [CustomersController::class, 'deleteSection']);
-	// Route::post('{code}/attendance/add-expense', [CustomersController::class, 'addExpense'])->middleware(['hashids:code']);
-	// Route::delete('/attendance/delete-expense/{id}', [CustomersController::class, 'deleteExpense']);
-	// Route::put('{code}/attendance/edit-expense', [CustomersController::class, 'editExpense'])->middleware(['hashids:code']);
+	Route::post('add-section', [CashPlaningController::class, 'addSection']);
+	Route::delete('delete-section/{id}', [CashPlaningController::class, 'deleteSection']);
+	Route::put('edit-section/{id}', [CashPlaningController::class, 'editSection']);
+	Route::post('add-expense', [CashPlaningController::class, 'addExpense']);
+	Route::post('get-expenses', [CashPlaningController::class, 'getExpenses']);
+	Route::delete('delete-expense/{id}', [CashPlaningController::class, 'deleteExpense']);
+	Route::put('edit-expense/{id}', [CashPlaningController::class, 'editExpense']);
 });

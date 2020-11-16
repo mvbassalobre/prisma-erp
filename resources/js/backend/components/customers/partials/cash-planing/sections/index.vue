@@ -1,6 +1,6 @@
 <template>
     <div class="mt-4" v-loading="loading">
-        <!-- <expense-section v-for="s in sections" :years="years" :key="s.id" :section="s" :year="year" :customer="customer" /> -->
+        <section-row v-for="(section, s) in year.sections" :key="s" :section="section" :year="year" />
         <div class="row mt-3 mb-2">
             <div class="col-12 text-left">
                 <span class="el-icon-circle-plus mr-2"></span>
@@ -10,25 +10,29 @@
     </div>
 </template>
 <script>
+import SectionRow from './-section-row.vue'
 export default {
     props: ['year'],
+    components: {
+        SectionRow,
+    },
     computed: {
+        cash_planing() {
+            return this.$store.state.cash_planing
+        },
         loading() {
-            return false
-        },
-        sections() {
-            return []
-        },
-        months() {
-            return this.$store.getters['global/getMonths']
-        },
-        customer() {
-            return this.$store.state.customer
+            return this.cash_planing.sections_loading[this.year.id] ? this.cash_planing.sections_loading[this.year.id] : false
         },
     },
     methods: {
         addSection() {
-            console.log('addSection')
+            this.$prompt('Digite o nome da sessão de deseja criar', 'Adicionar Sessão', {
+                confirmButtonText: 'Adicionar',
+                cancelButtonText: 'Cancelar',
+                inputErrorMessage: 'Valor Inválido',
+            }).then(({ value }) => {
+                this.$store.dispatch('cash_planing/addSections', { year_id: this.year.id, section: value })
+            })
         },
     },
 }

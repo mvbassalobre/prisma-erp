@@ -15,6 +15,7 @@
                 <el-tab-pane v-for="(year, y) in years" :label="`${year.value}`" :name="`${y}`" :key="year.id">
                     <table-entries :year="year" :key="`entries_${y}`" />
                     <table-sections :year="year" :key="`sections_${y}`" />
+                    <flow-years :year="year" :years="years" />
                 </el-tab-pane>
             </el-tabs>
         </template>
@@ -23,6 +24,7 @@
 <script>
 import TableEntries from './entries'
 import TableSections from './sections'
+import FlowYears from './-flow-years.vue'
 export default {
     props: ['customer'],
     async created() {
@@ -31,6 +33,7 @@ export default {
     components: {
         TableEntries,
         TableSections,
+        FlowYears,
     },
     computed: {
         cash_planing() {

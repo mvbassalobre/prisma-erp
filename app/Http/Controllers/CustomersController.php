@@ -221,50 +221,6 @@ class CustomersController extends Controller
 		return ["success" => true, "goals" => CustomerGoal::where("customer_id", $customer_id)->get()];
 	}
 
-	public function deleteFluxYear($id)
-	{
-		$year = CustomerFluxYear::findOrFail($id);
-		$customer_id = $year->customer_id;
-		$year->delete();
-		return ["success" => true, "years" => $this->getYears($customer_id)];
-	}
-
-	public function addFluxYear($id, Request $request)
-	{
-		$years = $request->all();
-		$extend = Count($years) == 1;
-		$customer = Customer::findOrFail($id);
-		$last_created_year = null;
-		foreach ($years as $year) {
-			$last_created_year = CustomerFluxYear::create([
-				"value" => $year,
-				"customer_id" => $customer->id
-			]);
-		}
-		if ($extend) {
-			$last_created_year->extend();
-			$customer->appendToTimeline("Fluxo de Caixa", "Fluxo de caixa extendido em 1 ano");
-		} else $customer->appendToTimeline("Fluxo de Caixa", "Iniciado Fluxo de caixa");
-		return ["success" => true, "years" => $this->getYears($customer->id)];
-	}
-
-	public function addYearEntry($id, Request $request)
-	{
-		$customer = Customer::findOrFail($id);
-		$years = CustomerFluxYear::where("customer_id", $customer->id)->where("id", ">=", $request["year"]["id"])->get();
-		$data = $request->except("year");
-		$entry_ref =  uniqid();
-		foreach ($years as $year) {
-			$data["year_id"] = $year->id;
-			$data["data"] = ["reference" => $entry_ref];
-			if ($year->id != $request["year"]["id"]) {
-				foreach ($data as $key => $key) if (!in_array($key, ['id', 'name', 'year_id', 'data', 'updated_at', 'created_at', 'deleted_at'])) $data[$key] = $data["dez"];
-			}
-			CustomerFluxYearEntries::create($data);
-		}
-		return ["success" => true, "years" => $this->getYears($customer->id)];
-	}
-
 	public function createAreaAccess($id)
 	{
 		$user = Auth::user();

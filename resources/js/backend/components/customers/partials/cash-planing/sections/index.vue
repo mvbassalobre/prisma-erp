@@ -7,14 +7,18 @@
                 <a href="#" class="link" @click.prevent="addSection">Adicionar Nova Sessão de despesa em {{ year.value }}</a>
             </div>
         </div>
+        <flow-months :year="year" />
     </div>
 </template>
 <script>
 import SectionRow from './-section-row.vue'
+import FlowMonths from './-flow-months.vue'
+
 export default {
     props: ['year'],
     components: {
         SectionRow,
+        FlowMonths,
     },
     computed: {
         cash_planing() {

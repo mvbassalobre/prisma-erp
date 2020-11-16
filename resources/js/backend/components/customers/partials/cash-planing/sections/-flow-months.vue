@@ -185,21 +185,27 @@
 </template>
 <script>
 export default {
-    props: ['year', 'sections'],
-    data() {
-        return {
-            months: this.$getMoths(),
-        }
+    props: ['year'],
+    computed: {
+        months() {
+            return this.$store.getters['global/getMonths']
+        },
+        computed_entries() {
+            if (!this.year.entries) return []
+            return this.year.entries
+        },
+        computed_sections() {
+            if (!this.year.sections) return []
+            return this.year.sections
+        },
     },
     methods: {
         model_amount(month) {
-            let sum = this.year.entries.map((row) => Number(row[month.value])).reduce((a, b) => a + b, 0)
+            let sum = this.computed_entries.map((row) => Number(row[month.value])).reduce((a, b) => a + b, 0)
             return sum
         },
         entries(month) {
-            if (this.year.entries.length <= 0) return
-            let value = this.year.entries.map((e) => Number(e[month.value])).reduce((a, b) => a + b, 0)
-            return value ? value : 0
+            return this.computed_entries.map((e) => Number(e[month.value])).reduce((a, b) => a + b, 0)
         },
         amoutByPercentage(percentage, month) {
             let amount = this.model_amount(month)
@@ -207,11 +213,11 @@ export default {
             return ((amount * percentage) / 100).toFixed(2)
         },
         getSumByType(_type, month) {
-            let _sum = this.sections
+            let _sum = this.computed_sections
                 .filter((x) => x.type == _type)
                 .map((section) => {
                     let sum = 0
-                    section.expenses.forEach((row) => (sum += Number(row[month.value])))
+                    section.expenses?.forEach((row) => (sum += Number(row[month.value])))
                     return sum
                 })
             if (!_sum) return 0
@@ -226,12 +232,11 @@ export default {
             return `<span class="${is_red ? 'text-danger' : 'text-success'}">${percentage.toFixed(2)}%</span>`
         },
         cash(month) {
-            if (this.sections.length <= 0) return 0
-            return this.sections.map((sec) => sec.expenses.map((x) => Number(x[month.value])).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0)
+            return this.computed_sections.map((sec) => sec.expenses?.map((x) => Number(x[month.value])).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0)
         },
         income(month) {
-            if (this.year.entries <= 0) return 0
-            return this.year.entries.map((e) => Number(e[month.value])).reduce((a, b) => a + b, 0)
+            if (this.computed_entries <= 0) return 0
+            return this.computed_entries.map((e) => Number(e[month.value])).reduce((a, b) => a + b, 0)
         },
         patrimony(month) {
             let cash = this.cash(month)

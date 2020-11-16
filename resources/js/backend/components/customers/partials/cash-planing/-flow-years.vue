@@ -6,7 +6,6 @@
                     <div>
                         <span class="el-icon-s-opportunity mr-2" /> <b>Receita & Distribuição de Despesas Geral até {{ year.value }}</b>
                     </div>
-                    <small class="f-12 text-muted" v-if="loading">... Atualizando Calculo</small>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -82,54 +81,57 @@
 </template>
 <script>
 export default {
-    props: ['year', 'customer', 'sections'],
+    props: ['year', 'years'],
     data() {
         return {
-            months: this.$getMoths(),
             all_sections: {},
-            loading: true,
-            attempts: 0,
-            values: {
-                total: 0,
-                grow: 0,
-                fixed: 0,
-                entries: 0,
-                variable: 0,
-            },
         }
     },
     computed: {
+        last_years() {
+            return this.years.filter((x) => Number(x.value) <= Number(this.year.value))
+        },
+        months() {
+            return this.$store.getters['global/getMonths']
+        },
+        customer() {
+            return this.$store.state.cash_planing.customer
+        },
+        values() {
+            return {
+                total: this.getEntries(),
+                fixed: this.getExpense('fixed'),
+                grow: this.getExpense('grow'),
+                variable: this.getExpense('variable'),
+            }
+        },
         model_amount() {
             return this.values.total
         },
     },
-    created() {
-        this.loadData()
-        setInterval(() => {
-            this.loading = true
-            setTimeout(() => {
-                this.loadData()
-            }, 2000)
-        }, 10000)
-    },
     methods: {
-        loadData() {
-            this.attempts++
-            this.$http
-                .post(`/admin/api/get-data/calcFluxTotal`, { customer_id: this.customer.id, year_id: this.year.id })
-                .then((resp) => {
-                    resp = resp.data
-                    this.attempts = 0
-                    this.$set(this.values, 'total', resp.total)
-                    this.$set(this.values, 'fixed', resp.fixed)
-                    this.$set(this.values, 'grow', resp.grow)
-                    this.$set(this.values, 'variable', resp.variable)
-                    this.loading = false
+        getExpense(type) {
+            let total = this.last_years
+                ?.map((year) => {
+                    return year.sections
+                        ?.map((section) => {
+                            return section.expenses?.map((expense) => this.getMonthsSum(expense)).reduce((a, b) => a + b, 0)
+                        })
+                        .reduce((a, b) => a + b, 0)
                 })
-                .catch((er) => {
-                    if (this.attempts <= 3) return this.loadData()
-                    return console.log(er)
-                })
+                .reduce((a, b) => a + b, 0)
+            return total ? total : 0
+        },
+        getEntries() {
+            let total = this.last_years
+                ?.map((year) => year.entries?.map((entry) => this.getMonthsSum(entry)).reduce((a, b) => a + b, 0))
+                .reduce((a, b) => a + b, 0)
+            return total ? total : 0
+        },
+        getMonthsSum(arr) {
+            let total = 0
+            this.months.forEach((m) => (total += Number(arr[m.value])))
+            return total
         },
         amoutByPercentage(percentage) {
             return ((this.model_amount * percentage) / 100).toFixed(2)

@@ -18,4 +18,5 @@ Route::group(['prefix' => "cash-planing"], function () {
 	Route::post('get-expenses', [CashPlaningController::class, 'getExpenses']);
 	Route::delete('delete-expense/{id}', [CashPlaningController::class, 'deleteExpense']);
 	Route::put('edit-expense/{id}', [CashPlaningController::class, 'editExpense']);
+	Route::post('customer-goals', [CashPlaningController::class, 'customerGoals']);
 });

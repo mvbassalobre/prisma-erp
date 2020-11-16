@@ -3,14 +3,11 @@
         <div class="row">
             <div class="col-12">
                 <el-tabs type="border-card">
-                    <el-tab-pane label="Fluxo de Caixa">
-                        <cash-planing :customer="customer" />
-                    </el-tab-pane>
-                    <!-- <el-tab-pane label="Backup">
-                        <comp-entries :customer="customer" :customer_area="customer_area" />
-                    </el-tab-pane> -->
                     <el-tab-pane label="Objetivos">
                         <comp-goals :customer="customer" :customer_area="customer_area" />
+                    </el-tab-pane>
+                    <el-tab-pane label="Fluxo de Caixa">
+                        <cash-planing :customer="customer" />
                     </el-tab-pane>
                     <el-tab-pane label="Reuniões">
                         <comp-meetings :customer="customer" :customer_area="customer_area" />
@@ -31,9 +28,8 @@ export default {
         }
     },
     components: {
-        'comp-goals': require('./partials/-goals.vue').default,
+        'comp-goals': require('./-goals.vue').default,
         'cash-planing': require('./cash-planing').default,
-        'comp-entries': require('./partials/-entries.vue').default,
         'comp-meetings': require('./-meetings').default,
     },
 }

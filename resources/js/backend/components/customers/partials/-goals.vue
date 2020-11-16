@@ -114,7 +114,7 @@ export default {
             this.attempts++
             this.loading_goals = true
             this.$http
-                .post('/admin/api/get-data/customerGoals', {
+                .post('/admin/customers/cash-planing/customer-goals', {
                     customer_id: this.customer.id,
                 })
                 .then((resp) => {
@@ -150,7 +150,7 @@ export default {
             }).then(() => {
                 this.loading_goals = true
                 this.$http
-                    .delete(`/admin/customers/attendance/delete-goal/${goal.id}`)
+                    .delete(`/admin/customers/delete-goal/${goal.id}`)
                     .then((resp) => {
                         resp = resp.data
                         this.goals = resp.goals

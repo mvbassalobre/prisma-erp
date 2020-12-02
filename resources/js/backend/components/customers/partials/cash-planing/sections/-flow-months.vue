@@ -205,12 +205,14 @@ export default {
             return sum
         },
         entries(month) {
-            return this.computed_entries.map((e) => Number(e[month.value])).reduce((a, b) => a + b, 0)
+            let value = this.computed_entries.map((e) => Number(e[month.value])).reduce((a, b) => a + b, 0)
+            return !value ? 0 : value
         },
         amoutByPercentage(percentage, month) {
             let amount = this.model_amount(month)
             if (!amount) return 0
-            return ((amount * percentage) / 100).toFixed(2)
+            let value = ((amount * percentage) / 100).toFixed(2)
+            return !value ? 0 : value
         },
         getSumByType(_type, month) {
             let _sum = this.computed_sections
@@ -221,7 +223,8 @@ export default {
                     return sum
                 })
             if (!_sum) return 0
-            return _sum.reduce((a, b) => a + b, 0)
+            let value = _sum.reduce((a, b) => a + b, 0)
+            return !value ? 0 : value
         },
         percentageSumByType(_type, month, expected) {
             let base = Number(this.amoutByPercentage(expected, month))
@@ -232,11 +235,15 @@ export default {
             return `<span class="${is_red ? 'text-danger' : 'text-success'}">${percentage.toFixed(2)}%</span>`
         },
         cash(month) {
-            return this.computed_sections.map((sec) => sec.expenses?.map((x) => Number(x[month.value])).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0)
+            let value = this.computed_sections
+                .map((sec) => sec.expenses?.map((x) => Number(x[month.value])).reduce((a, b) => a + b, 0))
+                .reduce((a, b) => a + b, 0)
+            return !value ? 0 : value
         },
         income(month) {
             if (this.computed_entries <= 0) return 0
-            return this.computed_entries.map((e) => Number(e[month.value])).reduce((a, b) => a + b, 0)
+            let value = this.computed_entries.map((e) => Number(e[month.value])).reduce((a, b) => a + b, 0)
+            return !value ? 0 : value
         },
         patrimony(month) {
             let cash = this.cash(month)
@@ -249,7 +256,8 @@ export default {
                     let _entries = this.income(x)
                     return _entries - _cash
                 })
-            return result.reduce((a, b) => a + b, 0)
+            let value = result.reduce((a, b) => a + b, 0)
+            return !value ? 0 : value
         },
     },
 }

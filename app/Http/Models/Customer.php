@@ -148,4 +148,9 @@ class Customer extends DefaultModel
 	{
 		return @$this->user->team->name;
 	}
+
+	public function fluxYears()
+	{
+		return $this->hasMany(CustomerFluxYear::class);
+	}
 }

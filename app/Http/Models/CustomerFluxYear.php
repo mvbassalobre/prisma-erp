@@ -40,32 +40,37 @@ class CustomerFluxYear extends DefaultModel
 
 	public function getPreviousYear()
 	{
-		return  Self::where("id", "!=", $this->id)->orderBy("id", "desc")->first();
+		return $this->customer->fluxYears()->where("id", "!=", $this->id)->orderBy("id", "desc")->first();
 	}
 
 	protected function extedEntries()
 	{
-		foreach ($this->getPreviousYear()->entries as $entry) {
-			$data = [];
-			$data["year_id"] = $this->id;
-			$data["name"] = $entry->name;
-			foreach (array_keys($entry->toArray()) as $key) if (!in_array($key, ['id', 'name', 'year_id', 'deleted_at', 'created_at', 'updated_at'])) $data[$key] = $entry->dez;
-			if (@$entry->data->reference) $data["data"] = ["reference" => $entry->data->reference];
-			CustomerFluxYearEntries::create($data);
+		$previous_year = $this->getPreviousYear();
+		if ($previous_year) {
+			foreach ($previous_year->entries as $entry) {
+				$data = [];
+				$data["year_id"] = $this->id;
+				$data["name"] = $entry->name;
+				foreach (array_keys($entry->toArray()) as $key) if (!in_array($key, ['id', 'name', 'year_id', 'deleted_at', 'created_at', 'updated_at'])) $data[$key] = $entry->dez;
+				if (@$entry->data->reference) $data["data"] = ["reference" => $entry->data->reference];
+				CustomerFluxYearEntries::create($data);
+			}
 		}
 	}
 
 	protected function extedSections()
 	{
-		$year = $this->getPreviousYear();
-		foreach ($year->sections as $section) {
-			$data = [];
-			$data["name"] = $section->name;
-			$data["year_id"] = $this->id;
-			$data["data"] = $section->data;
-			$data["type"] = $section->type;
-			$created = CustomerFluxYearSection::create($data);
-			$created->extend();
+		$previous_year = $this->getPreviousYear();
+		if ($previous_year) {
+			foreach ($previous_year->sections as $section) {
+				$data = [];
+				$data["name"] = $section->name;
+				$data["year_id"] = $this->id;
+				$data["data"] = $section->data;
+				$data["type"] = $section->type;
+				$created = CustomerFluxYearSection::create($data);
+				$created->extend();
+			}
 		}
 	}
 }

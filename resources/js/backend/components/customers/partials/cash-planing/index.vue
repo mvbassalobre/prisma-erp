@@ -25,10 +25,14 @@
 import TableEntries from './entries'
 import TableSections from './sections'
 import FlowYears from './-flow-years.vue'
+import store from '~/backend/store'
 export default {
     props: ['customer'],
-    async created() {
-        await this.init()
+	store : store,
+    created() {
+		this.$nextTick(() => {
+        	this.init()
+		})
     },
     components: {
         TableEntries,
@@ -43,6 +47,7 @@ export default {
             return this.cash_planing.loading
         },
         years() {
+			console.log(this.cash_planing)
             return this.cash_planing.years
         },
         hasYears() {
@@ -50,9 +55,9 @@ export default {
         },
     },
     methods: {
-        async init() {
-            await this.$store.commit('cash_planing/setCustomer', this.customer)
-            await this.$store.dispatch('cash_planing/getYears')
+        init() {
+            this.$store.commit('cash_planing/setCustomer', this.customer)
+            this.$store.dispatch('cash_planing/getYears')
         },
         addYear() {
             if (!this.hasYears) return this.startFlux()

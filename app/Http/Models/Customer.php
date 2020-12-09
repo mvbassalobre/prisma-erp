@@ -92,7 +92,7 @@ class Customer extends DefaultModel
 	{
 		return "<div class='d-flex flex-column'>
                     <div>Atualizado " . $this->last_update . "</div>
-                    <a href='" . route('admin.customers.attendance.index', ['code' => $this->code]) . "' class='crud-btns link d-flex align-items-center'>
+                    <a href='" . route('admin.customers.attendance.index', ['code' => $this->code]) . "' class='link d-flex align-items-center'>
                         <i class='el-icon-s-finance mr-1'></i> Atendimento
                     </a>
                 </div>";

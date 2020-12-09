@@ -1873,7 +1873,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcusvbda/vstack.git",
-                "reference": "2d7cdfb6fa9476b1e494d6b3e4f013d26e462934"
+                "reference": "b2ff7a5072532421bc14d3bbdf333e39aa877904"
             },
             "require": {
                 "spatie/laravel-permission": "^3.3",
@@ -1898,7 +1898,7 @@
                     "email": "bassalobre.vinicius@gmail.com"
                 }
             ],
-            "time": "2020-11-13T15:56:42+00:00"
+            "time": "2020-12-09T14:18:16+00:00"
         },
         {
             "name": "markbaker/complex",
@@ -6107,6 +6107,7 @@
                 "faker",
                 "fixtures"
             ],
+            "abandoned": true,
             "time": "2019-12-12T13:22:17+00:00"
         },
         {
@@ -7766,5 +7767,6 @@
     "platform": {
         "php": "^7.2"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }

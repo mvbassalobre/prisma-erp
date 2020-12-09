@@ -17,7 +17,7 @@
 		<title>{{config("app.name")}} - @yield("title")</title>
 	</head>
 	<body>
-		<div id="vue_app">
+		<div id="app">
 			@yield("body")
 		</div>
 		<script src="{{ URL::asset('/assets/backend/js/manifest.js')}}"></script>

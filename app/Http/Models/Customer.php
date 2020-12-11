@@ -65,9 +65,9 @@ class Customer extends DefaultModel
 		static::addGlobalScope(new UserScope());
 	}
 
-	public function setCpfcnpjAttribute()
+	public function setCpfcnpjAttribute($val)
 	{
-		if (!@$this->attributes["cpfcnpj"]) $this->attributes["cpfcnpj"] = " ";
+		$this->attributes["cpfcnpj"] = !@$val ? " " : $val;
 	}
 
 	public function appendToTimeline($title, $desc, $tags = [])

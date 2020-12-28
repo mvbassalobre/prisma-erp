@@ -16,7 +16,7 @@
                                             v-model="form.zipcode"
                                             class="form-control"
                                             @blur="search_zipcode"
-                                            v-mask="['###.##-###']"
+                                            v-mask="['##.###-###']"
                                         />
                                     </div>
                                 </div>
@@ -50,7 +50,13 @@
                             <td>
                                 <div class="d-flex flex-column">
                                     <div class="input-group">
-                                        <input type="text" placeholder="Digite o bairro aqui ..." name="distric" v-model="form.distric" class="form-control" />
+                                        <input
+                                            type="text"
+                                            placeholder="Digite o bairro aqui ..."
+                                            name="district"
+                                            v-model="form.district"
+                                            class="form-control"
+                                        />
                                     </div>
                                 </div>
                             </td>

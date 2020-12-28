@@ -28,11 +28,11 @@ import FlowYears from './-flow-years.vue'
 import store from '~/backend/store'
 export default {
     props: ['customer'],
-	store : store,
+    store: store,
     created() {
-		this.$nextTick(() => {
-        	this.init()
-		})
+        this.$nextTick(() => {
+            this.init()
+        })
     },
     components: {
         TableEntries,
@@ -47,7 +47,6 @@ export default {
             return this.cash_planing.loading
         },
         years() {
-			console.log(this.cash_planing)
             return this.cash_planing.years
         },
         hasYears() {

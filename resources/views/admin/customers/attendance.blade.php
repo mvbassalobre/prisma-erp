@@ -14,10 +14,6 @@
                        class="link">Clientes</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="/admin/customers/{{ $customer->code }}"
-                       class="link">{{ $customer->name }}</a>
-                </li>
-                <li class="breadcrumb-item">
                     <a href="/admin/customers/attendance"
                        class="link">Atendimento</a>
                 </li>

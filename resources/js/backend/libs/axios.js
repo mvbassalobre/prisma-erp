@@ -1,4 +1,4 @@
-import Vue from 'vue'
+// import Vue from 'vue'
 import axios from 'axios'
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 const axiosRetry = require('axios-retry')

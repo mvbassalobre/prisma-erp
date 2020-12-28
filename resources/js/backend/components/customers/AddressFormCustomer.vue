@@ -16,7 +16,7 @@
                                             v-model="form.zipcode"
                                             class="form-control"
                                             @blur="search_zipcode"
-                                            v-mask="['##.###-###']"
+                                            v-mask="['#####-###']"
                                         />
                                     </div>
                                 </div>

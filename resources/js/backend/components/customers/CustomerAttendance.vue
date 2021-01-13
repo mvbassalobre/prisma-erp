@@ -184,7 +184,7 @@ export default {
     methods: {
         processField(field, label) {
             if (label == 'Data de Nascimento') {
-                const splited_date = field.split('-')
+                const splited_date = (field ?? '').split('-')
                 if (splited_date.length < 3) return field
                 return `${splited_date[2]}/${splited_date[1]}/${splited_date[0]}`
             }

@@ -227,8 +227,9 @@ export default {
             return !value ? 0 : value
         },
         percentageSumByType(_type, month, expected) {
-            let base = Number(this.amoutByPercentage(expected, month))
+            let base = Number(this.model_amount(month))
             let sum = this.getSumByType(_type, month)
+            if (_type == 'fixed') console.log(sum, base)
             let percentage = !sum ? 0 : (sum * 100) / base
             let is_red = _type != 'grow' ? percentage > expected : percentage < expected
             if (percentage == Infinity) return `<span class="${is_red ? 'text-danger' : 'text-success'}">Infinito %</span>`

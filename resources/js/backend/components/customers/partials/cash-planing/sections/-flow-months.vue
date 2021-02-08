@@ -144,7 +144,7 @@
                                         <td v-for="(m, i) in months" :key="`${i}_head`">
                                             <div class="d-flex flex-column">
                                                 <span>{{ getSumByType('variable', m).currency() }}</span>
-                                                <b class="ml-1" v-html="percentageSumByType('variable', m, 50)" />
+                                                <b class="ml-1" v-html="percentageSumByType('variable', m, 30)" />
                                             </div>
                                         </td>
                                     </tr>
@@ -170,7 +170,7 @@
                                         <td v-for="(m, i) in months" :key="`${i}_head`">
                                             <div class="d-flex flex-column">
                                                 <span>{{ getSumByType('grow', m).currency() }}</span>
-                                                <b class="ml-1" v-html="percentageSumByType('grow', m, 50)" />
+                                                <b class="ml-1" v-html="percentageSumByType('grow', m, 20)" />
                                             </div>
                                         </td>
                                     </tr>
@@ -229,7 +229,6 @@ export default {
         percentageSumByType(_type, month, expected) {
             let base = Number(this.model_amount(month))
             let sum = this.getSumByType(_type, month)
-            if (_type == 'fixed') console.log(sum, base)
             let percentage = !sum ? 0 : (sum * 100) / base
             let is_red = _type != 'grow' ? percentage > expected : percentage < expected
             if (percentage == Infinity) return `<span class="${is_red ? 'text-danger' : 'text-success'}">Infinito %</span>`

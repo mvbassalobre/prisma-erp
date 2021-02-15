@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
+use App\Http\Models\Team;
+use App\Http\Models\User;
+use App\Http\Models\Product;
 use App\Http\Models\Customer;
 use App\Http\Models\SalePayment;
 use Carbon\Carbon;
@@ -26,22 +29,26 @@ class HomeController extends Controller
 
 	public function qtyCustomers($user)
 	{
-		return ["qty" => DB::table("customers")->where("tenant_id", $user->tenant_id)->count()];
+		if (Auth::user()->hasRole(["admin"])) return ["qty" => DB::table("customers")->where("tenant_id", $user->tenant_id)->count()];
+		return ["qty" => Customer::count()];
 	}
 
 	public function qtyProducts($user)
 	{
-		return ["qty" => DB::table("products")->where("tenant_id", $user->tenant_id)->count()];
+		if (Auth::user()->hasRole(["admin"])) return ["qty" => DB::table("products")->where("tenant_id", $user->tenant_id)->count()];
+		return ["qty" => Product::count()];
 	}
 
 	public function qtyTeams($user)
 	{
-		return ["qty" => DB::table("teams")->where("tenant_id", $user->tenant_id)->count()];
+		if (Auth::user()->hasRole(["admin"])) return ["qty" => DB::table("teams")->where("tenant_id", $user->tenant_id)->count()];
+		return ["qty" => Team::count()];
 	}
 
 	public function qtyUsers($user)
 	{
-		return ["qty" => DB::table("users")->where("tenant_id", $user->tenant_id)->count()];
+		if (Auth::user()->hasRole(["admin"])) return ["qty" => DB::table("users")->where("tenant_id", $user->tenant_id)->count()];
+		return ["qty" => User::count()];
 	}
 
 	public function topUsers($user, $filter)

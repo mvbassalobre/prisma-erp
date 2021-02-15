@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use DB;
 use Auth;
 use App\Http\Models\Team;
-use App\Http\Models\User;
+use App\User;
 use App\Http\Models\Product;
 use App\Http\Models\Customer;
 use App\Http\Models\SalePayment;

@@ -1873,7 +1873,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcusvbda/vstack.git",
-                "reference": "c9e7fc6bd5f9cd750ae77db71eff4b7ef32f221c"
+                "reference": "f0cd1b5b9a3a7e6a27c702d27d488b0b4d96038f"
             },
             "require": {
                 "spatie/laravel-permission": "^3.3",
@@ -1898,7 +1898,7 @@
                     "email": "bassalobre.vinicius@gmail.com"
                 }
             ],
-            "time": "2021-01-13T19:00:46+00:00"
+            "time": "2021-02-15T17:07:15+00:00"
         },
         {
             "name": "markbaker/complex",
@@ -7712,12 +7712,12 @@
             "version": "1.9.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webmozart/assert.git",
+                "url": "https://github.com/webmozarts/assert.git",
                 "reference": "9dc4f203e36f2b486149058bade43c851dd97451"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/9dc4f203e36f2b486149058bade43c851dd97451",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/9dc4f203e36f2b486149058bade43c851dd97451",
                 "reference": "9dc4f203e36f2b486149058bade43c851dd97451",
                 "shasum": ""
             },

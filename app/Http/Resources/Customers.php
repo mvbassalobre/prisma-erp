@@ -6,7 +6,7 @@ use marcusvbda\vstack\Resource;
 use marcusvbda\vstack\Fields\{
 	Card,
 	Text,
-	Custom,
+	CustomComponent,
 	BelongsTo,
 };
 use Auth;
@@ -210,7 +210,7 @@ class Customers extends Resource
 			new Text(["field" => "district", "hide" => true]),
 			new Text(["field" => "state", "hide" => true]),
 			new Text(["field" => "city", "hide" => true]),
-			new Custom('<address-form-customer :form="form"></address-form-customer>', [
+			new CustomComponent('<address-form-customer :form="form"></address-form-customer>', [
 				"params" => []
 			]),
 		]);

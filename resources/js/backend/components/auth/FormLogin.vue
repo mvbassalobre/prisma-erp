@@ -16,7 +16,7 @@
                     <table class="w-100 my-3">
                         <v-input
                             class="mb-3"
-                            :prepend="`<i class='text-secondary'>@</i>`"
+                            label="Email"
                             type="email"
                             v-model="frm.email"
                             placeholder="Digite aqui seu email ..."
@@ -24,21 +24,16 @@
                         />
                         <v-input
                             class="mb-3"
-                            :prepend="`<i class='el-icon-lock text-secondary'></i>`"
+                            label="Senha"
                             type="password"
                             v-model="frm.password"
                             placeholder="Digite aqui sua senha ..."
                             :errors="errors.password ? errors.password : false"
                         />
                     </table>
-                    <div
-                        class="d-flex flex-row flex-wrap justify-content-between align-items-center"
-                    >
+                    <div class="d-flex flex-row flex-wrap justify-content-between align-items-center">
                         <div>
-                            <el-checkbox
-                                class="d-flex align-items-center"
-                                v-model="frm.remember"
-                            >Manter-me Logado</el-checkbox>
+                            <el-checkbox class="d-flex align-items-center" v-model="frm.remember">Manter-me Logado</el-checkbox>
                         </div>
                         <div>
                             <a class="link" href="forgot_my_password">Esqueceu a Senha ?</a>
@@ -52,15 +47,19 @@
                                     type="button"
                                     @click="socialLoginRedirect('google')"
                                     class="loginBtn loginBtn--google"
-                                    v-bind:class="{'mr-2':sociallogin.facebook.client_id}"
+                                    v-bind:class="{ 'mr-2': sociallogin.facebook.client_id }"
                                     v-if="sociallogin.google.client_id"
-                                >Google</button>
+                                >
+                                    Google
+                                </button>
                                 <button
                                     type="button"
                                     @click="socialLoginRedirect('facebook')"
                                     class="loginBtn loginBtn--facebook"
                                     v-if="sociallogin.facebook.client_id"
-                                >Facebook</button>
+                                >
+                                    Facebook
+                                </button>
                             </div>
                         </div>
                     </template>
@@ -71,7 +70,7 @@
 </template>
 <script>
 export default {
-    props: ["sociallogin"],
+    props: ['sociallogin'],
     data() {
         return {
             loading: false,
@@ -79,8 +78,8 @@ export default {
             frm: {
                 email: null,
                 password: null,
-                remember: true
-            }
+                remember: true,
+            },
         }
     },
     methods: {
@@ -89,18 +88,21 @@ export default {
         },
         submit() {
             this.loading = true
-            this.$http.post("", this.frm).then(res => {
-                let data = res.data
-                if (data.message) this.$message({ showClose: true, message: data.message.text, type: data.message.type })
-                if (data.success) return window.location.href = data.route
-                this.loading = false
-            }).catch(er => {
-                let errors = er.response.data.errors
-                this.errors = errors
-                this.loading = false
-            })
-        }
-    }
+            this.$http
+                .post('', this.frm)
+                .then((res) => {
+                    let data = res.data
+                    if (data.message) this.$message({ showClose: true, message: data.message.text, type: data.message.type })
+                    if (data.success) return (window.location.href = data.route)
+                    this.loading = false
+                })
+                .catch((er) => {
+                    let errors = er.response.data.errors
+                    this.errors = errors
+                    this.loading = false
+                })
+        },
+    },
 }
 </script>
 <style scoped lang="scss">

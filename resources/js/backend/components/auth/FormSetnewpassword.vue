@@ -15,7 +15,7 @@
                 <form class="needs-validation mt-4" novalidate v-on:submit.prevent="submit">
                     <v-input
                         class="mb-3"
-                        :prepend="`<i class='el-icon-lock text-secondary'></i>`"
+                        label="Senha"
                         type="password"
                         v-model="frm.password"
                         placeholder="Digite aqui sua senha ..."
@@ -23,16 +23,13 @@
                     />
                     <v-input
                         class="mb-3"
-                        :prepend="`<i class='el-icon-lock text-secondary'></i>`"
+                        label="Confirme"
                         type="password"
                         v-model="frm.password_confirmation"
                         placeholder="Digite aqui novamente sua senha ..."
                         :errors="errors.password_confirmation ? errors.password_confirmation : false"
                     />
-                    <button
-                        class="btn btn-secondary btn-block mt-4 mb-4"
-                        type="submit"
-                    >Definir nova senha</button>
+                    <button class="btn btn-secondary btn-block mt-4 mb-4" type="submit">Definir nova senha</button>
                     <div class="text-center">
                         Voltar ao
                         <a href="login" class="link ml-2">Login</a>
@@ -50,25 +47,28 @@ export default {
             errors: {},
             frm: {
                 password: null,
-                password_confirmation: null
-            }
+                password_confirmation: null,
+            },
         }
     },
     methods: {
         submit() {
             this.loading = true
-            this.$http.post("", this.frm).then(res => {
-                let data = res.data
-                if (data.message) this.$message({ showClose: true, message: data.message.text, type: data.message.type })
-                if (data.success) return window.location.href = data.route
-                this.loading = false
-            }).catch(er => {
-                let errors = er.response.data.errors
-                this.errors = errors
-                this.loading = false
-            })
-        }
-    }
+            this.$http
+                .post('', this.frm)
+                .then((res) => {
+                    let data = res.data
+                    if (data.message) this.$message({ showClose: true, message: data.message.text, type: data.message.type })
+                    if (data.success) return (window.location.href = data.route)
+                    this.loading = false
+                })
+                .catch((er) => {
+                    let errors = er.response.data.errors
+                    this.errors = errors
+                    this.loading = false
+                })
+        },
+    },
 }
 </script>
 <style scoped lang="scss">

@@ -1,11 +1,13 @@
 <template>
-    <div class="row mb-3" v-loading="loading">
+    <div class="row" v-loading="loading">
         <div class="col-12">
             <div class="row-responsive-table">
-                <table class="table table-striped">
+                <table class="table table-crud mb-0">
                     <tbody>
                         <tr class="mb-3">
-                            <td>Cep</td>
+                            <td class="w-25">
+                                <b class="input-title">Cep</b>
+                            </td>
                             <td>
                                 <div class="d-flex flex-column">
                                     <div class="input-group">
@@ -24,7 +26,9 @@
                         </tr>
 
                         <tr class="mb-3">
-                            <td>Cidade</td>
+                            <td class="w-25">
+                                <b class="input-title">Cidade</b>
+                            </td>
                             <td>
                                 <div class="d-flex flex-column">
                                     <div class="input-group">
@@ -35,7 +39,9 @@
                         </tr>
 
                         <tr class="mb-3">
-                            <td>Estado</td>
+                            <td class="w-25">
+                                <b class="input-title">Estado</b>
+                            </td>
                             <td>
                                 <div class="d-flex flex-column">
                                     <div class="input-group">
@@ -46,7 +52,9 @@
                         </tr>
 
                         <tr class="mb-3">
-                            <td>Bairro</td>
+                            <td class="w-25">
+                                <b class="input-title">Bairro</b>
+                            </td>
                             <td>
                                 <div class="d-flex flex-column">
                                     <div class="input-group">
@@ -63,7 +71,9 @@
                         </tr>
 
                         <tr class="mb-3">
-                            <td>Rua</td>
+                            <td class="w-25">
+                                <b class="input-title">Rua</b>
+                            </td>
                             <td>
                                 <div class="d-flex flex-column">
                                     <div class="input-group">
@@ -74,7 +84,9 @@
                         </tr>
 
                         <tr class="mb-3">
-                            <td>Número</td>
+                            <td class="w-25">
+                                <b class="input-title">Número</b>
+                            </td>
                             <td>
                                 <div class="d-flex flex-column">
                                     <div class="input-group">
@@ -85,7 +97,9 @@
                         </tr>
 
                         <tr class="mb-3">
-                            <td>Complemento</td>
+                            <td class="w-25">
+                                <b class="input-title">Complemento</b>
+                            </td>
                             <td>
                                 <div class="d-flex flex-column">
                                     <div class="input-group">

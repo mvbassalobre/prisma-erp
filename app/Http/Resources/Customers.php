@@ -211,6 +211,7 @@ class Customers extends Resource
 			new Text(["field" => "state", "hide" => true]),
 			new Text(["field" => "city", "hide" => true]),
 			new CustomComponent('<address-form-customer :form="form"></address-form-customer>', [
+				"label" => "Endereço",
 				"params" => []
 			]),
 		]);

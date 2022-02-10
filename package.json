@@ -46,7 +46,7 @@
         "laravel-echo": "^1.6.1",
         "laravel-echo-server": "^1.6.0",
         "lodash": "^4.17.15",
-        "node-sass": "^4.13.1",
+        "node-sass": "^7.0.0",
         "npm-safe-install": "^1.0.0",
         "pace-progressbar": "^1.0.9",
         "popper.js": "^1.11.0",

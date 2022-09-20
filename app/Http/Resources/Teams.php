@@ -4,13 +4,14 @@ namespace App\Http\Resources;
 
 use marcusvbda\vstack\Resource;
 use Auth;
+use marcusvbda\vstack\Controllers\ResourceController;
 use marcusvbda\vstack\Fields\{
     Card,
     Text,
     Upload,
-    BelongsToMany,
     BelongsTo,
 };
+use marcusvbda\vstack\Services\Messages;
 
 class Teams extends Resource
 {
@@ -84,11 +85,12 @@ class Teams extends Resource
                 "rules" => "required|max:255"
             ]),
         ];
-        $fields[] = new BelongsToMany([
+        $fields[] = new BelongsTo([
             "label" => "Integrantes",
             "pluck_value" => "name",
+            "multiple" => true,
             "model" => \App\User::class,
-            "field" => "users",
+            "field" => "user_ids",
             "placeholder" => "Selecione os integrantes do time"
         ]);
 
@@ -131,5 +133,30 @@ class Teams extends Resource
     public function canExport()
     {
         return false;
+    }
+
+    public function storeMethod($id, $data)
+    {
+        $target = @$id ? $this->getModelInstance()->findOrFail($id) : $this->getModelInstance();
+        $user_ids = data_get($data, "data.user_ids", []);
+        unset($data["data"]["user_ids"]);
+        foreach (array_keys($data["data"]) as $key) {
+            $target->{$key} = $data["data"][$key];
+        }
+        $target->save();
+        $controller = new ResourceController;
+        $controller->storeUploads($target, $data["upload"]);
+        $target->users()->sync($user_ids);
+        if (!request("input_origin")) {
+            Messages::send("success", "Registro salvo com sucesso !!");
+            if (request("clicked_btn") == "save") {
+                $route = route('resource.edit', ["resource" => $this->id, "code" => $target->code]);
+            } else {
+                $route = route('resource.index', ["resource" => $this->id]);
+            }
+            return ["success" => true, "route" => $route, "model" => $target];
+        } else {
+            return ["success" => true];
+        }
     }
 }

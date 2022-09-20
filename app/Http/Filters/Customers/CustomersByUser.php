@@ -12,14 +12,7 @@ class CustomersByUser extends Filter
     public $label       = "Responsável";
     public $placeholder = "";
     public $index = "customers_by_user";
-
-    public function __construct()
-    {
-        foreach (User::get() as $row) {
-            $this->options[] = (object) ["value" =>  strval($row->id), "label" => $row->name];
-        }
-        parent::__construct();
-    }
+    public $model = User::class;
 
     public function apply($query, $value)
     {

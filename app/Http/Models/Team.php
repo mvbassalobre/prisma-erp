@@ -68,4 +68,9 @@ class Team extends DefaultModel
     {
         return $this->belongsToMany(\App\User::class, "user_team");
     }
+
+    public function getUserIdsAttribute()
+    {
+        return $this->users()->pluck("id")->toArray();
+    }
 }

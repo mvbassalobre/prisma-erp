@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'default' => 'hashids',
+    'default' => 'main',
     'connections' => [
-        'hashids' => [
-            'driver' => 'hashids',
-            'salt' => 'abcdefghijklmnopqrstuvwxyz0123456789',
-            'length' => 5,
-        ]
+        'main' => [
+            'salt' => 'pdc-admin',
+            'alphabet' => '01234567890ABCDEFGHIJKLMNOPQRSTWUVXYZ',
+            'length' => '6',
+        ],
     ],
 ];

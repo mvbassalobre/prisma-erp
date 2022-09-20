@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Models;
+
 use marcusvbda\vstack\Models\DefaultModel;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Cviebrock\EloquentSluggable\Services\SlugService;
@@ -10,14 +12,14 @@ class Setting extends DefaultModel
     protected $table = "settings";
     // public $cascadeDeletes = [];
     // public $restrictDeletes = [];
-    protected $appends = ['f_created_at', 'last_update','examples'];
+    protected $appends = ['f_created_at', 'last_update', 'examples'];
 
-    public static function hasTenant() 
+    public static function hasTenant()
     {
         return false;
     }
 
-    public function sluggable()
+    public function sluggable(): array
     {
         return [
             'slug' => [
@@ -46,7 +48,6 @@ class Setting extends DefaultModel
 
     public function getExamplesAttribute()
     {
-        return '<code>$user->getSettings(["'.$this->slug.'"]);</code><br><code>$user->getSettings("'.$this->slug.'");';
+        return '<code>$user->getSettings(["' . $this->slug . '"]);</code><br><code>$user->getSettings("' . $this->slug . '");';
     }
-
 }

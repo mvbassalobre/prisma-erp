@@ -12,14 +12,7 @@ class CustomersByTeam extends Filter
     public $label       = "Time";
     public $placeholder = "";
     public $index = "customers_by_team";
-
-    public function __construct()
-    {
-        foreach (Team::get() as $row) {
-            $this->options[] = (object) ["value" =>  strval($row->id), "label" => $row->name];
-        }
-        parent::__construct();
-    }
+    public $model = Team::class;
 
     public function apply($query, $value)
     {

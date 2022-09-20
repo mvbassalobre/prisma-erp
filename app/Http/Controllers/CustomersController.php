@@ -17,7 +17,7 @@ use marcusvbda\vstack\Services\SendMail;
 use App\Http\Models\{CustomerGoal, CustomerFluxYear, CustomerFluxYearSection, CustomerFluxSectionExpense};
 
 
-class CustomersController extends Controller
+class CustomersController extends ResourceController
 {
 	protected $months = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 
@@ -25,7 +25,7 @@ class CustomersController extends Controller
 	{
 		$canAddSale = $this->canAddSale();
 		$customer = Customer::with("sales", "sales.user", "sales.payment")->findOrFail($code);
-		$data = $this->getViewData($code, $customer);
+		$data = $this->getViewData($customer);
 		return view("admin.customers.attendance", compact("customer", "data", "canAddSale"));
 	}
 
@@ -35,10 +35,12 @@ class CustomersController extends Controller
 		return ($user->getSettings("pagseguro-email") || $user->getSettings("pagseguro-email"));
 	}
 
-	private function getViewData($code, $customer)
+	private function getViewData($customer)
 	{
 		$resource = ResourcesHelpers::find("customers");
-		$data = (new ResourceController())->makeViewData($code, $resource, $customer);
+		$data = $this->getResourceEditCrudContent($customer, $resource, request());
+		$data["page_type"] = "Visualização";
+
 		return $data;
 	}
 
@@ -227,8 +229,13 @@ class CustomersController extends Controller
 		$customer = Customer::findOrFail($id);
 		$customer->username =  $this->generateAreaCustomerUsername($customer);
 		$pass = $this->generateAreaCustomerPassword($customer);
+
 		$customer->password = md5($pass);
-		$this->sendAccessEmail($customer->name, @$customer->email, $customer->username, $pass);
+		try {
+			$this->sendAccessEmail($customer->name, @$customer->email, $customer->username, $pass);
+		} catch (\Exception $e) {
+			// 
+		}
 		$customer->save();
 		$customer->appendToTimeline("Area do Cliente", "O usuário <b>$user->name</b> criou um acesso para area de cliente");
 		Messages::send("success", "Usuário criado com sucesso e um email com os dados foram enviados para o cliente !!");
@@ -265,10 +272,6 @@ class CustomersController extends Controller
 
 	private function generateAreaCustomerUsername($customer)
 	{
-		if (Customer::where("id", "!=", $customer->id)->where("data->customer_area->username", $customer->email)->count() <= 0) return $customer->email;
-		if (Customer::where("id", "!=", $customer->id)->where("data->customer_area->username", $customer->cpfcnpj)->count() <= 0) return preg_replace('/[^0-9]/', '', $customer->cpfcnpj);
-		if (Customer::where("id", "!=", $customer->id)->where("data->customer_area->username", $customer->date_exp_rg)->count() <= 0) return preg_replace('/[^0-9]/', '', $customer->date_exp_rg);
-		if (Customer::where("id", "!=", $customer->id)->where("data->customer_area->phone", $customer->phone)->count() <= 0) return preg_replace('/[^0-9]/', '', $customer->phone);
 		return uniqid();
 	}
 

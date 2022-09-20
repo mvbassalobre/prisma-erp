@@ -19,8 +19,8 @@ class Customer extends DefaultModel
 	protected $appends = ['code', 'f_created_at', 'last_update', 'phones', 'actions', 'team_name', 'f_user'];
 
 	public $casts = [
-		"timeline" => "Array",
-		"data" => "Array",
+		"timeline" => "array",
+		"data" => "array",
 	];
 
 	public static function hasTenant()
@@ -31,12 +31,15 @@ class Customer extends DefaultModel
 	public function setUserIdAttribute($value)
 	{
 		$user = User::find($value);
-		$this->attributes["user_id"] = @$user->id ? $user->id : Auth::user()->id;
+		$this->attributes["user_id"] = @$user->id ? $user->id : (@Auth::user()?->id ?? 1);
 	}
 
 	public function getFUserAttribute()
 	{
 		$user = $this->user;
+		if (!$user) {
+			return;
+		}
 		return "<a href='/admin/users/" . $user->code . "'>" . $user->name . "</a>";
 	}
 

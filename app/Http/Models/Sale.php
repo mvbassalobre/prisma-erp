@@ -12,7 +12,7 @@ class Sale extends DefaultModel
 
 	public $casts = [
 		"product" => "Object",
-		"items" => "Array",
+		"items" => "array",
 		"data" => "Object",
 	];
 

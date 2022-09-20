@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +16,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        if (config("app.force_https")) {
+            URL::forceScheme('https');
+        }
     }
 
     /**
@@ -21,8 +26,12 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
+
     public function boot()
     {
-        //
+        Schema::defaultStringLength(191);
+        Paginator::useBootstrap();
+
+        $this->loadMigrationsFrom(base_path('database/migrations'), 'migrations');
     }
 }

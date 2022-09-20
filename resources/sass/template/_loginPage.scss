@@ -1,0 +1,18 @@
+.login-page {
+    overflow-x: hidden;
+
+    .left-side {
+        background-color: #9e6de0;
+        color: white;
+
+        &.signup {
+            background: url("/assets/images/auth/login-bg.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        background: url("/assets/images/auth/login-bg.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+}

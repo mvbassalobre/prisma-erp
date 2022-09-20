@@ -15,6 +15,7 @@ use App\Http\Filters\Customers\{
 	CustomerByDateRange,
 	CustomersByTeam
 };
+use marcusvbda\vstack\Filters\FilterByPresetDate;
 
 class Customers extends Resource
 {
@@ -267,7 +268,10 @@ class Customers extends Resource
 		return [
 			new CustomersByTeam(),
 			new CustomersByUser(),
-			new CustomerByDateRange(),
+			new FilterByPresetDate([
+				"label" => "Data de Entrada",
+				"field" => "created_at",
+			]),
 		];
 	}
 

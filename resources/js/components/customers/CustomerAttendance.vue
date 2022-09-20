@@ -3,15 +3,9 @@
         <div class="row mb-2">
             <div class="col-12">
                 <nav class="nav nav-pills flex-column flex-sm-row">
-                    <a
-                        class="flex-sm text-sm-center nav-link mr-1"
-                        v-for="(option, i) in options"
-                        :key="i"
-                        v-bind:class="{ active: option.active }"
-                        :href="`#v-pills-${option.name}`"
-                        @click.prevent="setActive(option)"
-                        >{{ option.label }}</a
-                    >
+                    <a class="flex-sm text-sm-center nav-link mr-1" v-for="(option, i) in options" :key="i"
+                        v-bind:class="{ active: option.active }" :href="`#v-pills-${option.name}`"
+                        @click.prevent="setActive(option)">{{ option.label }}</a>
                 </nav>
             </div>
         </div>
@@ -23,48 +17,26 @@
                             <div class="col-12">
                                 <div class="card mb-3" :id="`${infoData.label}`">
                                     <div class="card-body p-0">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <table class="table table-striped mb-0">
-                                                    <tbody>
-                                                        <tr v-for="(field, i) in infoData.inputs" :key="i">
-                                                            <td style="width: 25%" v-if="i.indexOf('IGNORE__') < 0">
-                                                                <span v-html="`<b>${i}</b>`"></span>
-                                                            </td>
-                                                            <td>
-                                                                <v-runtime-template :key="i" :template="`<span>${processField(field, i)}</span>`" />
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
                                         <div class="row" v-if="!customer_area">
                                             <div class="col-12">
                                                 <table class="table table-striped mb-0">
-                                                    <thead>
-                                                        <tr>
-                                                            <th></th>
-                                                            <th></th>
-                                                            <th></th>
-                                                            <th></th>
-                                                            <th></th>
-                                                        </tr>
-                                                    </thead>
                                                     <tbody>
                                                         <tr v-if="!has_customer_area">
                                                             <td>
                                                                 <b>Acesso a Area do Usuário</b>
                                                             </td>
                                                             <td colspan="4">
-                                                                <a href="#" class="link" @click.prevent="generateUser">Gerar Acesso a Area do Cliente</a>
+                                                                <a href="#" class="link"
+                                                                    @click.prevent="generateUser">Gerar Acesso a Area do
+                                                                    Cliente</a>
                                                             </td>
                                                         </tr>
                                                         <tr v-else>
                                                             <td>
                                                                 <b>
                                                                     Acesso a
-                                                                    <a class="link" target="_BLANK" :href="customer_area_url">Area do Usuário</a>
+                                                                    <a class="link" target="_BLANK"
+                                                                        :href="customer_area_url">Area do Usuário</a>
                                                                 </b>
                                                             </td>
                                                             <td>{{ customer.username }}</td>
@@ -73,7 +45,8 @@
                                                             </td>
                                                             <td>****************</td>
                                                             <td class="width:1%">
-                                                                <button class="append-btn" type="button" @click.prevent="deleteAccess">
+                                                                <button class="append-btn" type="button"
+                                                                    @click.prevent="deleteAccess">
                                                                     <span class="el-icon-error text-danger"></span>
                                                                 </button>
                                                             </td>
@@ -91,41 +64,19 @@
                 <div class="tab-content" id="v-pills-tabContent">
                     <comp-info :info="data" :active="active" :customer="customer" />
                     <comp-timeline :customer="customer" :active="active" />
-                    <comp-sales
-                        :sales="customer.sales"
-                        :customer="customer"
-                        :active="active"
-                        :canaddsale="canaddsale"
-                        :customer_area="customer_area"
-                        name="sales"
-                        type="Serviço"
-                        :texts="{
+                    <comp-sales :sales="customer.sales" :customer="customer" :active="active" :canaddsale="canaddsale"
+                        :customer_area="customer_area" name="sales" type="Serviço" :texts="{
                             plural: 'análises',
                             singular: 'análise',
-                        }"
-                    />
-                    <comp-sales
-                        :sales="customer.sales"
-                        :customer="customer"
-                        :active="active"
-                        :canaddsale="canaddsale"
-                        :customer_area="customer_area"
-                        name="products"
-                        type="Produto"
-                        :texts="{
+                        }" />
+                    <comp-sales :sales="customer.sales" :customer="customer" :active="active" :canaddsale="canaddsale"
+                        :customer_area="customer_area" name="products" type="Produto" :texts="{
                             plural: 'produtos',
                             singular: 'produto',
-                        }"
-                    />
+                        }" />
                     <comp-flux :customer="customer" :active="active" :customer_area="customer_area" />
-                    <access-component
-                        :sales="customer.sales"
-                        :customer="customer"
-                        :active="active"
-                        :canaddsale="canaddsale"
-                        v-if="customer_area"
-                        :customer_area="customer_area"
-                    />
+                    <access-component :sales="customer.sales" :customer="customer" :active="active"
+                        :canaddsale="canaddsale" v-if="customer_area" :customer_area="customer_area" />
                 </div>
             </div>
         </div>
@@ -239,6 +190,7 @@ export default {
     .nav-link {
         background-color: silver;
         color: white;
+
         &.active {
             background-color: #9e6de0;
             color: white;

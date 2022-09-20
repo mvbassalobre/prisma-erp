@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use ResourcesHelpers;
 use marcusvbda\vstack\Controllers\ResourceController;
 
-class CustomersAreaController extends Controller
+class CustomerAreaController extends Controller
 {
 	public function customerArea($id)
 	{

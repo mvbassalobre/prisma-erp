@@ -131,7 +131,7 @@ export default {
                 .get('/vstack/json-api', {
                     params: { model: `\\App\\Http\\Models\\MeetingStatus` }
                 })
-                .then((r) => (this.modelsData.meetingStatuses = r.data.data))
+                .then(({ data }) => (this.modelsData.meetingStatuses = data))
                 .catch((er) => {
                     if (this.attempts.meetingStatuses <= 3) return this.loadMeetingStatuses()
                     console.log(er)
@@ -141,7 +141,7 @@ export default {
             this.attempts.meetingRooms++
             this.$http
                 .get('/vstack/json-api', { params: { model: `\\App\\Http\\Models\\MeetingRoom` } })
-                .then((r) => (this.modelsData.meetingRooms = r.data.data))
+                .then(({ data }) => (this.modelsData.meetingRooms = data))
                 .catch((er) => {
                     if (this.attempts.meetingRooms <= 3) return this.loadMeetingRooms()
                     console.log(er)
@@ -155,7 +155,7 @@ export default {
                         model: `\\App\\Http\\Models\\Customer`
                     }
                 })
-                .then((r) => (this.modelsData.customers = r.data.data))
+                .then(({ data }) => (this.modelsData.customers = data))
                 .catch((er) => {
                     if (this.attempts.customers <= 3) return this.loadCustomers()
                     console.log(er)

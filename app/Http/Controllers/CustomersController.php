@@ -17,7 +17,7 @@ use marcusvbda\vstack\Services\SendMail;
 use App\Http\Models\{CustomerGoal, CustomerFluxYear, CustomerFluxYearSection, CustomerFluxSectionExpense};
 
 
-class CustomersController extends Controller
+class CustomersController extends ResourceController
 {
 	protected $months = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 
@@ -25,7 +25,7 @@ class CustomersController extends Controller
 	{
 		$canAddSale = $this->canAddSale();
 		$customer = Customer::with("sales", "sales.user", "sales.payment")->findOrFail($code);
-		$data = $this->getViewData($code, $customer);
+		$data = $this->getViewData($customer);
 		return view("admin.customers.attendance", compact("customer", "data", "canAddSale"));
 	}
 
@@ -35,10 +35,12 @@ class CustomersController extends Controller
 		return ($user->getSettings("pagseguro-email") || $user->getSettings("pagseguro-email"));
 	}
 
-	private function getViewData($code, $customer)
+	private function getViewData($customer)
 	{
 		$resource = ResourcesHelpers::find("customers");
-		$data = (new ResourceController())->makeViewData($code, $resource, $customer);
+		$data = $this->getResourceEditCrudContent($customer, $resource, request());
+		$data["page_type"] = "Visualização";
+
 		return $data;
 	}
 

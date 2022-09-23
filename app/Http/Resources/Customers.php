@@ -31,7 +31,6 @@ class Customers extends Resource
 		return [20, 50, 100, 200];
 	}
 
-
 	public function menu()
 	{
 		return "Cadastros";
@@ -202,20 +201,25 @@ class Customers extends Resource
 				"mask" => ['(##) ####-####', '(##) #####-####']
 			])
 		]);
-		$cards[] =  new Card("Endereço", [
-			new Text(["field" => "zipcode", "hide" => true]),
-			new Text(["field" => "street", "hide" => true]),
-			new Text(["field" => "number", "hide" => true]),
-			new Text(["field" => "complement", "hide" => true]),
-			new Text(["field" => "district", "hide" => true]),
-			new Text(["field" => "district", "hide" => true]),
-			new Text(["field" => "state", "hide" => true]),
-			new Text(["field" => "city", "hide" => true]),
-			new CustomComponent('<address-form-customer :form="form"></address-form-customer>', [
+
+		$fields = [
+			new Text(["field" => "zipcode", "label" => "Cep", "hide" => true]),
+			new Text(["field" => "street", "label" => "Rua", "hide" => true]),
+			new Text(["field" => "number", "label" => "Número", "hide" => true]),
+			new Text(["field" => "complement", "label" => "Complemento", "hide" => true]),
+			new Text(["field" => "district", "label" => "Bairro", "hide" => true]),
+			new Text(["field" => "state", "label" => "Estado", "hide" => true]),
+			new Text(["field" => "city", "label" => "Cidade", "hide" => true]),
+		];
+
+
+		if (request()->page_type != "view") {
+			$fields[] = new CustomComponent('<address-form-customer :form="form"></address-form-customer>', [
 				"label" => "Endereço",
 				"params" => []
-			]),
-		]);
+			]);
+		}
+		$cards[] =  new Card("Endereço", $fields);
 		$cards[] =  new Card("Dados Bancários", [
 			new BelongsTo([
 				"label" => "Banco",
